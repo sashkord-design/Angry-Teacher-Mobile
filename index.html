@@ -38,7 +38,7 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding: 10px 8px;
+      padding: 6px 6px;
       position: relative;
     }
 
@@ -47,16 +47,16 @@
       max-width: 480px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
     }
 
     /* TOP HEADER PANEL */
     .header-panel {
       background: #f7f3e9;
       border: 3px solid var(--border-dark);
-      border-radius: 18px;
-      padding: 8px 10px;
-      box-shadow: 0px 4px 0px var(--shadow-color);
+      border-radius: 14px;
+      padding: 6px 8px;
+      box-shadow: 0px 3px 0px var(--shadow-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -65,12 +65,12 @@
     .teacher-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .teacher-avatar-svg {
-      width: 44px;
-      height: 44px;
+      width: 38px;
+      height: 38px;
       flex-shrink: 0;
     }
 
@@ -82,7 +82,7 @@
 
     .game-title {
       font-family: var(--font-heading);
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--border-dark);
       text-transform: uppercase;
       line-height: 1;
@@ -90,25 +90,25 @@
     }
 
     .game-subtitle {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       font-weight: 800;
       color: var(--accent-red);
       text-transform: uppercase;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     .stats-row {
       display: flex;
-      gap: 6px;
+      gap: 5px;
     }
 
     .stat-pill {
       background: var(--accent-gold);
       border: 2px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 3px 8px;
+      border-radius: 10px;
+      padding: 2px 6px;
       text-align: center;
-      min-width: 58px;
+      min-width: 50px;
       box-shadow: 0 2px 0 var(--shadow-color);
     }
 
@@ -118,7 +118,7 @@
     }
 
     .stat-label {
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       font-weight: 800;
       text-transform: uppercase;
       display: block;
@@ -127,7 +127,7 @@
 
     .stat-value {
       font-family: var(--font-heading);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       line-height: 1.1;
     }
 
@@ -135,39 +135,39 @@
     .definition-card {
       background: var(--primary-teal);
       border: 3px solid var(--border-dark);
-      border-radius: 18px;
-      padding: 12px 14px;
+      border-radius: 14px;
+      padding: 8px 10px;
       color: #ffffff;
-      box-shadow: 0px 4px 0px var(--shadow-color);
+      box-shadow: 0px 3px 0px var(--shadow-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      min-height: 70px;
+      gap: 8px;
+      min-height: 56px;
     }
 
     .definition-text {
-      font-size: 0.9rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.25;
       text-align: center;
       flex-grow: 1;
       font-style: italic;
     }
 
-    /* UNIFIED TIMER & NEXT BUTTON STYLES */
+    /* UNIFIED TIMER & NEXT BUTTON STYLES (COMPACT) */
     .timer-badge, .next-btn {
       background: var(--accent-gold);
       color: var(--border-dark);
       border: 2px solid var(--border-dark);
-      border-radius: 10px;
-      padding: 4px 8px;
+      border-radius: 9px;
+      padding: 2px 6px;
       font-family: var(--font-heading);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       white-space: nowrap;
       box-shadow: 0 2px 0 var(--border-dark);
-      min-width: 48px;
-      height: 38px;
+      min-width: 44px;
+      height: 34px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -188,12 +188,12 @@
 
     .next-arrow {
       font-family: var(--font-heading);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       line-height: 1;
     }
 
     .next-label {
-      font-size: 0.45rem;
+      font-size: 0.4rem;
       font-weight: 800;
       text-transform: uppercase;
       line-height: 1;
@@ -204,15 +204,14 @@
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
       width: 100%;
-      margin-top: 4px;
     }
 
-    /* 3D FLIP CARD STYLES */
+    /* 3D FLIP CARD STYLES (COMPACT HEIGHT) */
     .card {
       perspective: 1000px;
-      height: 85px;
+      height: 68px;
       cursor: pointer;
     }
 
@@ -235,13 +234,13 @@
       height: 100%;
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
-      border: 3px solid var(--border-dark);
-      border-radius: 14px;
-      box-shadow: 0px 4px 0px var(--shadow-color);
+      border: 2.5px solid var(--border-dark);
+      border-radius: 11px;
+      box-shadow: 0px 3px 0px var(--shadow-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 6px;
+      padding: 2px 4px;
     }
 
     .card-front {
@@ -251,7 +250,7 @@
 
     .card-word {
       font-family: var(--font-heading);
-      font-size: clamp(0.75rem, 3.5vw, 0.95rem);
+      font-size: clamp(0.7rem, 3.2vw, 0.88rem);
       word-break: normal;
       overflow-wrap: normal;
       hyphens: manual;
@@ -268,11 +267,11 @@
     }
 
     .card-back-text {
-      font-size: 0.65rem;
-      line-height: 1.25;
+      font-size: 0.58rem;
+      line-height: 1.2;
       font-weight: 400;
       display: -webkit-box;
-      -webkit-line-clamp: 4;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -302,28 +301,28 @@
     .modal-box {
       background: var(--bg-color);
       border: 4px solid var(--border-dark);
-      border-radius: 24px;
-      padding: 24px 20px;
+      border-radius: 20px;
+      padding: 20px 18px;
       width: 100%;
-      max-width: 360px;
+      max-width: 340px;
       text-align: center;
-      box-shadow: 0 8px 0 var(--border-dark);
+      box-shadow: 0 6px 0 var(--border-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .modal-title {
       font-family: var(--font-heading);
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: var(--accent-red);
       text-transform: uppercase;
       line-height: 1.1;
     }
 
     .modal-desc {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       line-height: 1.4;
       color: var(--dark-text);
@@ -333,20 +332,20 @@
       background: var(--accent-gold);
       color: var(--border-dark);
       border: 3px solid var(--border-dark);
-      border-radius: 14px;
-      padding: 12px 24px;
+      border-radius: 12px;
+      padding: 10px 20px;
       font-family: var(--font-heading);
-      font-size: 1.1rem;
+      font-size: 1rem;
       text-transform: uppercase;
       cursor: pointer;
-      box-shadow: 0 4px 0 var(--border-dark);
+      box-shadow: 0 3px 0 var(--border-dark);
       width: 100%;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .modal-btn:active {
       transform: translateY(2px);
-      box-shadow: 0 2px 0 var(--border-dark);
+      box-shadow: 0 1px 0 var(--border-dark);
     }
 
     .hidden {
@@ -359,7 +358,7 @@
   <!-- START & GAME OVER OVERLAY SCREEN -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
-      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:70px; height:70px;">
+      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:64px; height:64px;">
         <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
         <circle cx="72" cy="11" r="5" fill="#f39c12"/>
         <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
@@ -420,7 +419,7 @@
       </div>
     </div>
 
-    <!-- DEFINITION DISPLAY PANEL WITH UNIFIED SIZED NEXT BUTTON -->
+    <!-- DEFINITION DISPLAY PANEL -->
     <div class="definition-card">
       <div class="timer-badge" id="timer">25s</div>
       <div class="definition-text" id="def-text">Ready to play?</div>
@@ -476,7 +475,6 @@
     let waitingForNext = false;
     let audioCtx = null;
 
-    // DOM ELEMENTS
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
     const levelNumEl = document.getElementById("level-num");
@@ -488,7 +486,6 @@
     const modalDesc = document.getElementById("modal-desc");
     const modalBtn = document.getElementById("modal-btn");
 
-    // AUDIO EFFECTS (WEB AUDIO API)
     function initAudio() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -504,22 +501,16 @@
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
-        
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15);
         gain.gain.setValueAtTime(0.15, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        
         osc.start(now);
         osc.stop(now + 0.3);
-      } catch (e) {
-        // Ignore audio errors if blocked by browser
-      }
+      } catch (e) {}
     }
 
     function playErrorSound() {
@@ -528,25 +519,18 @@
         const now = audioCtx.currentTime;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(160, now);
         osc.frequency.linearRampToValueAtTime(80, now + 0.3);
-        
         gain.gain.setValueAtTime(0.2, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        
         osc.start(now);
         osc.stop(now + 0.4);
-      } catch (e) {
-        // Ignore audio errors
-      }
+      } catch (e) {}
     }
 
-    // NATURAL MALE VOICE SETUP
     let selectedMaleVoice = null;
     function loadBestMaleVoice() {
       if (!('speechSynthesis' in window)) return;
@@ -655,7 +639,6 @@
       if (cardNode.classList.contains("matched") || isGameOver || waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        // CORRECT CHOICE -> Play pleasant sound, stop timer, flip card, speak word
         playSuccessSound();
         clearInterval(timerInterval);
         waitingForNext = true;
@@ -679,7 +662,6 @@
           }, 1800);
         }
       } else {
-        // WRONG CHOICE -> Play unpleasant sound, instant Game Over!
         playErrorSound();
         clearInterval(timerInterval);
         isGameOver = true;
@@ -716,7 +698,6 @@
       modalScreen.classList.remove("hidden");
     }
 
-    // EVENT LISTENERS
     modalBtn.addEventListener("click", startGame);
 
     nextBtnEl.addEventListener("click", () => {
