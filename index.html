@@ -39,6 +39,7 @@
       align-items: center;
       min-height: 100vh;
       padding: 10px 8px;
+      position: relative;
     }
 
     #app-container {
@@ -56,29 +57,22 @@
       border-radius: 18px;
       padding: 8px 10px;
       box-shadow: 0px 4px 0px var(--shadow-color);
-      display: grid;
-      grid-template-columns: auto 1fr auto;
+      display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
     }
 
     .teacher-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .teacher-avatar {
+    /* CLASSIC BOMB TEACHER LOGO SVG */
+    .teacher-avatar-svg {
       width: 44px;
       height: 44px;
-      background-color: #e63946;
-      border: 2px solid var(--border-dark);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 2px 0 var(--border-dark);
+      flex-shrink: 0;
     }
 
     .title-block {
@@ -89,7 +83,7 @@
 
     .game-title {
       font-family: var(--font-heading);
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: var(--border-dark);
       text-transform: uppercase;
       line-height: 1;
@@ -97,11 +91,11 @@
     }
 
     .game-subtitle {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 800;
       color: var(--accent-red);
       text-transform: uppercase;
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .stats-row {
@@ -113,7 +107,7 @@
       background: var(--accent-gold);
       border: 2px solid var(--border-dark);
       border-radius: 12px;
-      padding: 3px 6px;
+      padding: 3px 8px;
       text-align: center;
       min-width: 58px;
       box-shadow: 0 2px 0 var(--shadow-color);
@@ -142,14 +136,15 @@
       background: #ffffff;
       border: 2px solid var(--border-dark);
       border-radius: 10px;
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       box-shadow: 0 2px 0 var(--shadow-color);
-      font-size: 1rem;
+      font-size: 1.1rem;
+      flex-shrink: 0;
     }
 
     .icon-btn:active {
@@ -272,32 +267,134 @@
 
     .card.matched .card-front {
       background-color: #a8dadc;
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: default;
     }
 
-    .card.wrong .card-front {
-      background-color: #f8d7da;
-      animation: shake 0.3s ease;
+    /* OVERLAY SCREEN (START / BOOM) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(31, 31, 31, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
+    .modal-box {
+      background: var(--bg-color);
+      border: 4px solid var(--border-dark);
+      border-radius: 24px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 8px 0 var(--border-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      color: var(--accent-red);
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .modal-desc {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--dark-text);
+    }
+
+    .modal-btn {
+      background: var(--accent-gold);
+      color: var(--border-dark);
+      border: 3px solid var(--border-dark);
+      border-radius: 14px;
+      padding: 12px 24px;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--border-dark);
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .modal-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--border-dark);
+    }
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
 
+  <!-- START & GAME OVER OVERLAY SCREEN -->
+  <div class="modal-overlay" id="modal-screen">
+    <div class="modal-box">
+      <!-- CLASSIC BOMB TEACHER LOGO IN MODAL -->
+      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:70px; height:70px;">
+        <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
+        <circle cx="72" cy="11" r="5" fill="#f39c12"/>
+        <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
+        <rect x="42" y="16" width="16" height="10" fill="#1f1f1f" rx="3"/>
+        <circle cx="38" cy="52" r="5" fill="#ffffff"/>
+        <circle cx="62" cy="52" r="5" fill="#ffffff"/>
+        <circle cx="39" cy="52" r="2.5" fill="#1f1f1f"/>
+        <circle cx="61" cy="52" r="2.5" fill="#1f1f1f"/>
+        <path d="M30 44 L44 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
+        <path d="M70 44 L56 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
+        <path d="M36 68 Q50 60 64 68" stroke="#1f1f1f" stroke-width="3" fill="none"/>
+      </svg>
+      
+      <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
+      
+      <div class="modal-desc" id="modal-desc">
+        Don't let the angry teacher explode — match the correct word!<br><br>
+        <strong>You have 25 seconds for each word.</strong>
+      </div>
+      
+      <button class="modal-btn" id="modal-btn">START GAME</button>
+    </div>
+  </div>
+
   <div id="app-container">
     <!-- TOP CONTROL PANEL -->
     <div class="header-panel">
       <div class="teacher-badge">
-        <div class="teacher-avatar">😡</div>
+        <!-- CLASSIC BOMB TEACHER LOGO IN HEADER -->
+        <svg class="teacher-avatar-svg" viewBox="0 0 100 100">
+          <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
+          <circle cx="72" cy="11" r="5" fill="#f39c12"/>
+          <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
+          <rect x="42" y="16" width="16" height="10" fill="#1f1f1f" rx="3"/>
+          <circle cx="38" cy="52" r="5" fill="#ffffff"/>
+          <circle cx="62" cy="52" r="5" fill="#ffffff"/>
+          <circle cx="39" cy="52" r="2.5" fill="#1f1f1f"/>
+          <circle cx="61" cy="52" r="2.5" fill="#1f1f1f"/>
+          <path d="M30 44 L44 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
+          <path d="M70 44 L56 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
+          <path d="M36 68 Q50 60 64 68" stroke="#1f1f1f" stroke-width="3" fill="none"/>
+        </svg>
+
         <div class="title-block">
           <div class="game-title">Angry Teacher</div>
-          <div class="game-subtitle">Wrong = Explode!</div>
+          <div class="game-subtitle">YOU MESS UP - HE EXPLODES!</div>
         </div>
       </div>
 
@@ -311,14 +408,12 @@
           <span class="stat-value" id="progress-val">0/9</span>
         </div>
       </div>
-
-      <button class="icon-btn" id="sound-toggle" aria-label="Toggle Sound">🔊</button>
     </div>
 
     <!-- DEFINITION PROMPT PANEL -->
     <div class="definition-card">
-      <div class="timer-badge" id="timer">20s</div>
-      <div class="definition-text" id="def-text">Loading definition...</div>
+      <div class="timer-badge" id="timer">25s</div>
+      <div class="definition-text" id="def-text">Ready to play?</div>
       <button class="icon-btn" id="tts-btn" title="Listen">🔊</button>
     </div>
 
@@ -352,7 +447,7 @@
       { word: "Provide", def: "To make available for use; supply", example: "Trees provide shade on sunny days." }
     ];
 
-    // LEVEL PROGRESSION CONFIG (Requirement 1: 9, 12, 15, 18, 21)
+    // LEVEL PROGRESSION CONFIG (9, 12, 15, 18, 21)
     const levelConfigs = [
       { level: 1, count: 9 },
       { level: 2, count: 12 },
@@ -365,8 +460,8 @@
     let score = 0;
     let targetItem = null;
     let timerInterval = null;
-    let timeLeft = 20;
-    let isSoundOn = true;
+    let timeLeft = 25;
+    let isGameOver = false;
 
     // DOM ELEMENTS
     const gridEl = document.getElementById("cards-grid");
@@ -374,8 +469,42 @@
     const levelNumEl = document.getElementById("level-num");
     const progressValEl = document.getElementById("progress-val");
     const timerEl = document.getElementById("timer");
-    const soundToggleEl = document.getElementById("sound-toggle");
     const ttsBtnEl = document.getElementById("tts-btn");
+    const modalScreen = document.getElementById("modal-screen");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalBtn = document.getElementById("modal-btn");
+
+    // SPEECH SYNTHESIS SETUP
+    let selectedVoice = null;
+    function loadBestEnglishVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      selectedVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Alex'))) 
+                   || voices.find(v => v.lang.startsWith('en'));
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadBestEnglishVoice;
+      loadBestEnglishVoice();
+    }
+
+    function speakWord(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      if (selectedVoice) utterance.voice = selectedVoice;
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // GAME CONTROL FUNCTIONS
+    function startGame() {
+      currentLevelIdx = 0;
+      isGameOver = false;
+      modalScreen.classList.add("hidden");
+      initLevel();
+    }
 
     function initLevel() {
       const config = levelConfigs[currentLevelIdx];
@@ -383,13 +512,12 @@
       score = 0;
       updateProgress();
 
-      // Shuffle & Slice Cards for current level count
       const currentCards = [...vocabularyDB]
         .sort(() => Math.random() - 0.5)
         .slice(0, config.count);
 
       renderGrid(currentCards);
-      pickNextTarget(currentCards);
+      pickNextTarget();
     }
 
     function renderGrid(cards) {
@@ -415,19 +543,17 @@
       });
     }
 
-    function pickNextTarget(cards) {
+    function pickNextTarget() {
       const remainingCards = Array.from(gridEl.children)
         .filter(c => !c.classList.contains("matched"))
         .map(c => vocabularyDB.find(v => v.word === c.dataset.word));
 
       if (remainingCards.length === 0) {
-        // Level Complete!
         if (currentLevelIdx < levelConfigs.length - 1) {
-          alert(`Great job! Level ${levelConfigs[currentLevelIdx].level} Complete!`);
           currentLevelIdx++;
           initLevel();
         } else {
-          alert("🎉 Congratulations! You completed all 5 levels!");
+          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
         }
         return;
       }
@@ -439,69 +565,61 @@
     }
 
     function handleCardClick(cardNode, item) {
-      if (cardNode.classList.contains("matched")) return;
-
-      // Flip card to show example sentence on back
-      cardNode.classList.add("flipped");
+      if (cardNode.classList.contains("matched") || isGameOver) return;
 
       if (item.word === targetItem.word) {
-        // Correct Choice
-        cardNode.classList.add("matched");
+        // CORRECT CHOICE -> Flip card to show example sentence
+        cardNode.classList.add("flipped", "matched");
         score++;
         updateProgress();
         speakWord(item.word);
 
+        clearInterval(timerInterval);
+
         setTimeout(() => {
           pickNextTarget();
-        }, 1200);
+        }, 1400);
       } else {
-        // Incorrect Choice
-        cardNode.classList.add("wrong");
-        setTimeout(() => {
-          cardNode.classList.remove("wrong", "flipped");
-        }, 1000);
+        // WRONG CHOICE -> Instant Game Over!
+        clearInterval(timerInterval);
+        isGameOver = true;
+        showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "TRY AGAIN");
       }
     }
 
     function updateProgress() {
       const total = levelConfigs[currentLevelIdx].count;
-      progressValEl.textContent = `${score} / ${total}`;
+      progressValEl.textContent = `${score}/${total}`;
     }
 
     function resetTimer() {
       clearInterval(timerInterval);
-      timeLeft = 20;
+      timeLeft = 25;
       timerEl.textContent = `${timeLeft}s`;
       timerInterval = setInterval(() => {
         timeLeft--;
         timerEl.textContent = `${timeLeft}s`;
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
-          alert("⏰ Time's up! Angry Teacher Exploded!");
-          initLevel();
+          isGameOver = true;
+          showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "TRY AGAIN");
         }
       }, 1000);
     }
 
-    function speakWord(text) {
-      if (!isSoundOn || !('speechSynthesis' in window)) return;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      window.speechSynthesis.speak(utterance);
+    function showGameOverScreen(title, desc, btnText) {
+      modalTitle.textContent = title;
+      modalDesc.innerHTML = desc;
+      modalBtn.textContent = btnText;
+      modalScreen.classList.remove("hidden");
     }
 
     // EVENT LISTENERS
-    soundToggleEl.addEventListener("click", () => {
-      isSoundOn = !isSoundOn;
-      soundToggleEl.textContent = isSoundOn ? "🔊" : "🔇";
-    });
+    modalBtn.addEventListener("click", startGame);
 
     ttsBtnEl.addEventListener("click", () => {
       if (targetItem) speakWord(targetItem.word);
     });
-
-    // START GAME
-    initLevel();
   </script>
 </body>
 </html>
