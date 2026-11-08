@@ -155,7 +155,8 @@
       font-style: italic;
     }
 
-    .timer-badge {
+    /* UNIFIED TIMER & NEXT BUTTON STYLES */
+    .timer-badge, .next-btn {
       background: var(--accent-gold);
       color: var(--border-dark);
       border: 2px solid var(--border-dark);
@@ -165,23 +166,14 @@
       font-size: 0.85rem;
       white-space: nowrap;
       box-shadow: 0 2px 0 var(--border-dark);
-    }
-
-    /* NEXT BUTTON WITH ARROW AND SUB-LABEL */
-    .next-btn {
-      background: var(--accent-gold);
-      border: 2px solid var(--border-dark);
-      border-radius: 12px;
-      width: 50px;
-      height: 48px;
+      min-width: 48px;
+      height: 38px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 0 var(--border-dark);
       flex-shrink: 0;
-      transition: opacity 0.2s;
     }
 
     .next-btn:active {
@@ -190,24 +182,22 @@
     }
 
     .next-btn.disabled {
-      opacity: 0.4;
+      opacity: 0.35;
       pointer-events: none;
     }
 
     .next-arrow {
       font-family: var(--font-heading);
-      font-size: 1.1rem;
-      color: var(--border-dark);
+      font-size: 0.95rem;
       line-height: 1;
     }
 
     .next-label {
-      font-size: 0.5rem;
+      font-size: 0.45rem;
       font-weight: 800;
       text-transform: uppercase;
-      color: var(--border-dark);
       line-height: 1;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     /* 3 COLUMNS CARDS GRID */
@@ -430,7 +420,7 @@
       </div>
     </div>
 
-    <!-- DEFINITION DISPLAY PANEL WITH NEXT BUTTON -->
+    <!-- DEFINITION DISPLAY PANEL WITH UNIFIED SIZED NEXT BUTTON -->
     <div class="definition-card">
       <div class="timer-badge" id="timer">25s</div>
       <div class="definition-text" id="def-text">Ready to play?</div>
@@ -484,6 +474,7 @@
     let timeLeft = 25;
     let isGameOver = false;
     let waitingForNext = false;
+    let audioCtx = null;
 
     // DOM ELEMENTS
     const gridEl = document.getElementById("cards-grid");
@@ -497,13 +488,69 @@
     const modalDesc = document.getElementById("modal-desc");
     const modalBtn = document.getElementById("modal-btn");
 
+    // AUDIO EFFECTS (WEB AUDIO API)
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSuccessSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
+        
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } catch (e) {
+        // Ignore audio errors if blocked by browser
+      }
+    }
+
+    function playErrorSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+        
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } catch (e) {
+        // Ignore audio errors
+      }
+    }
+
     // NATURAL MALE VOICE SETUP
     let selectedMaleVoice = null;
     function loadBestMaleVoice() {
       if (!('speechSynthesis' in window)) return;
       const voices = window.speechSynthesis.getVoices();
-      
-      // Look for natural/enhanced male English voices (Google UK English Male, Daniel, Oliver, David, George, Microsoft Ryan/George, etc.)
       selectedMaleVoice = voices.find(v => v.lang.startsWith('en') && (
         v.name.includes('Google UK English Male') || 
         v.name.includes('Daniel') || 
@@ -525,14 +572,15 @@
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-GB'; // British English sounds richer/more natural for male voices
+      utterance.lang = 'en-GB';
       if (selectedMaleVoice) utterance.voice = selectedMaleVoice;
-      utterance.rate = 0.88; // Natural conversational tempo
-      utterance.pitch = 0.92; // Natural masculine depth
+      utterance.rate = 0.88;
+      utterance.pitch = 0.92;
       window.speechSynthesis.speak(utterance);
     }
 
     function startGame() {
+      initAudio();
       currentLevelIdx = 0;
       isGameOver = false;
       modalScreen.classList.add("hidden");
@@ -589,6 +637,7 @@
           currentLevelIdx++;
           initLevel();
         } else {
+          playSuccessSound();
           showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
         }
         return;
@@ -606,7 +655,8 @@
       if (cardNode.classList.contains("matched") || isGameOver || waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        // CORRECT CHOICE -> Stop timer, flip card, speak word naturally, wait for NEXT click
+        // CORRECT CHOICE -> Play pleasant sound, stop timer, flip card, speak word
+        playSuccessSound();
         clearInterval(timerInterval);
         waitingForNext = true;
         
@@ -615,10 +665,8 @@
         updateProgress();
         speakWord(item.word);
 
-        // Enable Next Arrow Button
         nextBtnEl.classList.remove("disabled");
 
-        // Check if level is fully completed
         const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
         if (remainingUnmatched.length === 0) {
           setTimeout(() => {
@@ -631,7 +679,8 @@
           }, 1800);
         }
       } else {
-        // WRONG CHOICE -> Instant Game Over!
+        // WRONG CHOICE -> Play unpleasant sound, instant Game Over!
+        playErrorSound();
         clearInterval(timerInterval);
         isGameOver = true;
         showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "TRY AGAIN");
@@ -653,6 +702,7 @@
         timerEl.textContent = `${timeLeft}s`;
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
+          playErrorSound();
           isGameOver = true;
           showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "TRY AGAIN");
         }
