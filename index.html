@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Angry Teacher - Mobile Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f7f3e9;
+      --card-bg: #fffdf7;
+      --card-back-bg: #1e3a40;
+      --primary-teal: #2b6777;
+      --accent-gold: #e5a93c;
+      --accent-red: #d9534f;
+      --dark-text: #222222;
+      --border-dark: #1f1f1f;
+      --shadow-color: rgba(31, 31, 31, 0.85);
+      --font-heading: 'Fredoka', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: var(--font-body);
+      color: var(--dark-text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px 8px;
+    }
+
+    #app-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* TOP HEADER PANEL */
+    .header-panel {
+      background: #f7f3e9;
+      border: 3px solid var(--border-dark);
+      border-radius: 18px;
+      padding: 8px 10px;
+      box-shadow: 0px 4px 0px var(--shadow-color);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .teacher-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .teacher-avatar {
+      width: 44px;
+      height: 44px;
+      background-color: #e63946;
+      border: 2px solid var(--border-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 2px 0 var(--border-dark);
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .game-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      color: var(--border-dark);
+      text-transform: uppercase;
+      line-height: 1;
+      letter-spacing: 0.5px;
+    }
+
+    .game-subtitle {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--accent-red);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .stat-pill {
+      background: var(--accent-gold);
+      border: 2px solid var(--border-dark);
+      border-radius: 12px;
+      padding: 3px 6px;
+      text-align: center;
+      min-width: 58px;
+      box-shadow: 0 2px 0 var(--shadow-color);
+    }
+
+    .stat-pill.teal {
+      background: var(--primary-teal);
+      color: #ffffff;
+    }
+
+    .stat-label {
+      font-size: 0.55rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: block;
+      opacity: 0.9;
+    }
+
+    .stat-value {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      line-height: 1.1;
+    }
+
+    .icon-btn {
+      background: #ffffff;
+      border: 2px solid var(--border-dark);
+      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--shadow-color);
+      font-size: 1rem;
+    }
+
+    .icon-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0px 0 var(--shadow-color);
+    }
+
+    /* DEFINITION DISPLAY PANEL */
+    .definition-card {
+      background: var(--primary-teal);
+      border: 3px solid var(--border-dark);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: #ffffff;
+      box-shadow: 0px 4px 0px var(--shadow-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 70px;
+    }
+
+    .definition-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.3;
+      text-align: center;
+      flex-grow: 1;
+      font-style: italic;
+    }
+
+    .timer-badge {
+      background: var(--accent-gold);
+      color: var(--border-dark);
+      border: 2px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 4px 8px;
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      white-space: nowrap;
+      box-shadow: 0 2px 0 var(--border-dark);
+    }
+
+    /* 3 COLUMNS CARDS GRID */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    /* 3D FLIP CARD STYLES */
+    .card {
+      perspective: 1000px;
+      height: 85px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.4s ease;
+      transform-style: preserve-3d;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border: 3px solid var(--border-dark);
+      border-radius: 14px;
+      box-shadow: 0px 4px 0px var(--shadow-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 6px;
+    }
+
+    .card-front {
+      background-color: var(--card-bg);
+      color: var(--border-dark);
+    }
+
+    .card-word {
+      font-family: var(--font-heading);
+      font-size: clamp(0.75rem, 3.5vw, 0.95rem);
+      word-break: normal;
+      overflow-wrap: normal;
+      hyphens: manual;
+      text-align: center;
+      line-height: 1.1;
+      width: 100%;
+    }
+
+    .card-back {
+      background-color: var(--card-back-bg);
+      color: #ffffff;
+      transform: rotateY(180deg);
+      border-color: var(--border-dark);
+    }
+
+    .card-back-text {
+      font-size: 0.65rem;
+      line-height: 1.25;
+      font-weight: 400;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card.matched .card-front {
+      background-color: #a8dadc;
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .card.wrong .card-front {
+      background-color: #f8d7da;
+      animation: shake 0.3s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-container">
+    <!-- TOP CONTROL PANEL -->
+    <div class="header-panel">
+      <div class="teacher-badge">
+        <div class="teacher-avatar">😡</div>
+        <div class="title-block">
+          <div class="game-title">Angry Teacher</div>
+          <div class="game-subtitle">Wrong = Explode!</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill">
+          <span class="stat-label">Level</span>
+          <span class="stat-value" id="level-num">1</span>
+        </div>
+        <div class="stat-pill teal">
+          <span class="stat-label">Progress</span>
+          <span class="stat-value" id="progress-val">0/9</span>
+        </div>
+      </div>
+
+      <button class="icon-btn" id="sound-toggle" aria-label="Toggle Sound">🔊</button>
+    </div>
+
+    <!-- DEFINITION PROMPT PANEL -->
+    <div class="definition-card">
+      <div class="timer-badge" id="timer">20s</div>
+      <div class="definition-text" id="def-text">Loading definition...</div>
+      <button class="icon-btn" id="tts-btn" title="Listen">🔊</button>
+    </div>
+
+    <!-- CARDS GRID (3 PER ROW) -->
+    <div class="cards-grid" id="cards-grid"></div>
+  </div>
+
+  <script>
+    // FULL VOCABULARY DATABASE WITH EXAMPLE SENTENCES FOR CARD BACKS
+    const vocabularyDB = [
+      { word: "Notice", def: "To become aware of something or someone", example: "Did you notice her new haircut today?" },
+      { word: "Challenge", def: "A call to take part in a difficult contest", example: "He accepted the challenge with enthusiasm." },
+      { word: "Imagine", def: "To form a mental image of something", example: "Can you imagine living on Mars?" },
+      { word: "Refuse", def: "To indicate that one is unwilling to do something", example: "They refuse to give up hope." },
+      { word: "Wonder", def: "A feeling of amazement caused by something beautiful", example: "I wonder what will happen next." },
+      { word: "Future", def: "A period of time following the moment of speaking", example: "We must plan carefully for the future." },
+      { word: "Forgive", def: "To stop feeling angry toward someone", example: "She decided to forgive his mistake." },
+      { word: "Achieve", def: "To successfully bring about a desired result", example: "Hard work helps you achieve your goals." },
+      { word: "Believe", def: "To accept something as true or real", example: "Always believe in your own potential." },
+      { word: "Organize", def: "To arrange into a structured whole", example: "Help me organize these files alphabetically." },
+      { word: "Discover", def: "To find something unexpectedly or during a search", example: "Scientists discover new species every year." },
+      { word: "Reduce", def: "To make smaller or less in amount or degree", example: "We should reduce plastic consumption." },
+      { word: "Solve", def: "To find an answer or explanation for a problem", example: "Can you solve this complex math puzzle?" },
+      { word: "Support", def: "To bear weight or give help to someone", example: "Friends always support each other in tough times." },
+      { word: "Succeed", def: "To achieve the desired aim or result", example: "If you practice daily, you will succeed." },
+      { word: "Value", def: "The regard that something is held to deserve", example: "I value your honest opinion very much." },
+      { word: "Create", def: "To bring something into existence", example: "Artists create beauty out of chaos." },
+      { word: "Explore", def: "To travel through an unfamiliar area to learn", example: "Let's explore the old town streets." },
+      { word: "Improve", def: "To make or become better", example: "Reading books helps improve your vocabulary." },
+      { word: "Protect", def: "To keep safe from harm or injury", example: "Wear a helmet to protect your head." },
+      { word: "Provide", def: "To make available for use; supply", example: "Trees provide shade on sunny days." }
+    ];
+
+    // LEVEL PROGRESSION CONFIG (Requirement 1: 9, 12, 15, 18, 21)
+    const levelConfigs = [
+      { level: 1, count: 9 },
+      { level: 2, count: 12 },
+      { level: 3, count: 15 },
+      { level: 4, count: 18 },
+      { level: 5, count: 21 }
+    ];
+
+    let currentLevelIdx = 0;
+    let score = 0;
+    let targetItem = null;
+    let timerInterval = null;
+    let timeLeft = 20;
+    let isSoundOn = true;
+
+    // DOM ELEMENTS
+    const gridEl = document.getElementById("cards-grid");
+    const defTextEl = document.getElementById("def-text");
+    const levelNumEl = document.getElementById("level-num");
+    const progressValEl = document.getElementById("progress-val");
+    const timerEl = document.getElementById("timer");
+    const soundToggleEl = document.getElementById("sound-toggle");
+    const ttsBtnEl = document.getElementById("tts-btn");
+
+    function initLevel() {
+      const config = levelConfigs[currentLevelIdx];
+      levelNumEl.textContent = config.level;
+      score = 0;
+      updateProgress();
+
+      // Shuffle & Slice Cards for current level count
+      const currentCards = [...vocabularyDB]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, config.count);
+
+      renderGrid(currentCards);
+      pickNextTarget(currentCards);
+    }
+
+    function renderGrid(cards) {
+      gridEl.innerHTML = "";
+      cards.forEach(item => {
+        const cardNode = document.createElement("div");
+        cardNode.className = "card";
+        cardNode.dataset.word = item.word;
+
+        cardNode.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-word">${item.word}</div>
+            </div>
+            <div class="card-back">
+              <div class="card-back-text">"${item.example}"</div>
+            </div>
+          </div>
+        `;
+
+        cardNode.addEventListener("click", () => handleCardClick(cardNode, item));
+        gridEl.appendChild(cardNode);
+      });
+    }
+
+    function pickNextTarget(cards) {
+      const remainingCards = Array.from(gridEl.children)
+        .filter(c => !c.classList.contains("matched"))
+        .map(c => vocabularyDB.find(v => v.word === c.dataset.word));
+
+      if (remainingCards.length === 0) {
+        // Level Complete!
+        if (currentLevelIdx < levelConfigs.length - 1) {
+          alert(`Great job! Level ${levelConfigs[currentLevelIdx].level} Complete!`);
+          currentLevelIdx++;
+          initLevel();
+        } else {
+          alert("🎉 Congratulations! You completed all 5 levels!");
+        }
+        return;
+      }
+
+      targetItem = remainingCards[Math.floor(Math.random() * remainingCards.length)];
+      defTextEl.textContent = `"${targetItem.def}"`;
+
+      resetTimer();
+    }
+
+    function handleCardClick(cardNode, item) {
+      if (cardNode.classList.contains("matched")) return;
+
+      // Flip card to show example sentence on back
+      cardNode.classList.add("flipped");
+
+      if (item.word === targetItem.word) {
+        // Correct Choice
+        cardNode.classList.add("matched");
+        score++;
+        updateProgress();
+        speakWord(item.word);
+
+        setTimeout(() => {
+          pickNextTarget();
+        }, 1200);
+      } else {
+        // Incorrect Choice
+        cardNode.classList.add("wrong");
+        setTimeout(() => {
+          cardNode.classList.remove("wrong", "flipped");
+        }, 1000);
+      }
+    }
+
+    function updateProgress() {
+      const total = levelConfigs[currentLevelIdx].count;
+      progressValEl.textContent = `${score} / ${total}`;
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 20;
+      timerEl.textContent = `${timeLeft}s`;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert("⏰ Time's up! Angry Teacher Exploded!");
+          initLevel();
+        }
+      }, 1000);
+    }
+
+    function speakWord(text) {
+      if (!isSoundOn || !('speechSynthesis' in window)) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // EVENT LISTENERS
+    soundToggleEl.addEventListener("click", () => {
+      isSoundOn = !isSoundOn;
+      soundToggleEl.textContent = isSoundOn ? "🔊" : "🔇";
+    });
+
+    ttsBtnEl.addEventListener("click", () => {
+      if (targetItem) speakWord(targetItem.word);
+    });
+
+    // START GAME
+    initLevel();
+  </script>
+</body>
+</html>
