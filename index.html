@@ -68,7 +68,6 @@
       gap: 8px;
     }
 
-    /* CLASSIC BOMB TEACHER LOGO SVG */
     .teacher-avatar-svg {
       width: 44px;
       height: 44px;
@@ -132,26 +131,6 @@
       line-height: 1.1;
     }
 
-    .icon-btn {
-      background: #ffffff;
-      border: 2px solid var(--border-dark);
-      border-radius: 10px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 0 var(--shadow-color);
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    .icon-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 0px 0 var(--shadow-color);
-    }
-
     /* DEFINITION DISPLAY PANEL */
     .definition-card {
       background: var(--primary-teal);
@@ -186,6 +165,49 @@
       font-size: 0.85rem;
       white-space: nowrap;
       box-shadow: 0 2px 0 var(--border-dark);
+    }
+
+    /* NEXT BUTTON WITH ARROW AND SUB-LABEL */
+    .next-btn {
+      background: var(--accent-gold);
+      border: 2px solid var(--border-dark);
+      border-radius: 12px;
+      width: 50px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--border-dark);
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+
+    .next-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0px 0 var(--border-dark);
+    }
+
+    .next-btn.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .next-arrow {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--border-dark);
+      line-height: 1;
+    }
+
+    .next-label {
+      font-size: 0.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--border-dark);
+      line-height: 1;
+      margin-top: 2px;
     }
 
     /* 3 COLUMNS CARDS GRID */
@@ -347,7 +369,6 @@
   <!-- START & GAME OVER OVERLAY SCREEN -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
-      <!-- CLASSIC BOMB TEACHER LOGO IN MODAL -->
       <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:70px; height:70px;">
         <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
         <circle cx="72" cy="11" r="5" fill="#f39c12"/>
@@ -377,7 +398,6 @@
     <!-- TOP CONTROL PANEL -->
     <div class="header-panel">
       <div class="teacher-badge">
-        <!-- CLASSIC BOMB TEACHER LOGO IN HEADER -->
         <svg class="teacher-avatar-svg" viewBox="0 0 100 100">
           <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
           <circle cx="72" cy="11" r="5" fill="#f39c12"/>
@@ -410,11 +430,14 @@
       </div>
     </div>
 
-    <!-- DEFINITION PROMPT PANEL -->
+    <!-- DEFINITION DISPLAY PANEL WITH NEXT BUTTON -->
     <div class="definition-card">
       <div class="timer-badge" id="timer">25s</div>
       <div class="definition-text" id="def-text">Ready to play?</div>
-      <button class="icon-btn" id="tts-btn" title="Listen">🔊</button>
+      <button class="next-btn disabled" id="next-btn" title="Next Word">
+        <span class="next-arrow">→</span>
+        <span class="next-label">next</span>
+      </button>
     </div>
 
     <!-- CARDS GRID (3 PER ROW) -->
@@ -422,7 +445,6 @@
   </div>
 
   <script>
-    // FULL VOCABULARY DATABASE WITH EXAMPLE SENTENCES FOR CARD BACKS
     const vocabularyDB = [
       { word: "Notice", def: "To become aware of something or someone", example: "Did you notice her new haircut today?" },
       { word: "Challenge", def: "A call to take part in a difficult contest", example: "He accepted the challenge with enthusiasm." },
@@ -447,7 +469,6 @@
       { word: "Provide", def: "To make available for use; supply", example: "Trees provide shade on sunny days." }
     ];
 
-    // LEVEL PROGRESSION CONFIG (9, 12, 15, 18, 21)
     const levelConfigs = [
       { level: 1, count: 9 },
       { level: 2, count: 12 },
@@ -462,6 +483,7 @@
     let timerInterval = null;
     let timeLeft = 25;
     let isGameOver = false;
+    let waitingForNext = false;
 
     // DOM ELEMENTS
     const gridEl = document.getElementById("cards-grid");
@@ -469,36 +491,47 @@
     const levelNumEl = document.getElementById("level-num");
     const progressValEl = document.getElementById("progress-val");
     const timerEl = document.getElementById("timer");
-    const ttsBtnEl = document.getElementById("tts-btn");
+    const nextBtnEl = document.getElementById("next-btn");
     const modalScreen = document.getElementById("modal-screen");
     const modalTitle = document.getElementById("modal-title");
     const modalDesc = document.getElementById("modal-desc");
     const modalBtn = document.getElementById("modal-btn");
 
-    // SPEECH SYNTHESIS SETUP
-    let selectedVoice = null;
-    function loadBestEnglishVoice() {
+    // NATURAL MALE VOICE SETUP
+    let selectedMaleVoice = null;
+    function loadBestMaleVoice() {
       if (!('speechSynthesis' in window)) return;
       const voices = window.speechSynthesis.getVoices();
-      selectedVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Alex'))) 
-                   || voices.find(v => v.lang.startsWith('en'));
+      
+      // Look for natural/enhanced male English voices (Google UK English Male, Daniel, Oliver, David, George, Microsoft Ryan/George, etc.)
+      selectedMaleVoice = voices.find(v => v.lang.startsWith('en') && (
+        v.name.includes('Google UK English Male') || 
+        v.name.includes('Daniel') || 
+        v.name.includes('Oliver') || 
+        v.name.includes('David') || 
+        v.name.includes('George') || 
+        v.name.includes('Ryan') ||
+        v.name.toLowerCase().includes('male')
+      )) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) 
+         || voices.find(v => v.lang.startsWith('en'));
     }
+
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = loadBestEnglishVoice;
-      loadBestEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = loadBestMaleVoice;
+      loadBestMaleVoice();
     }
 
     function speakWord(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      if (selectedVoice) utterance.voice = selectedVoice;
-      utterance.rate = 0.9;
+      utterance.lang = 'en-GB'; // British English sounds richer/more natural for male voices
+      if (selectedMaleVoice) utterance.voice = selectedMaleVoice;
+      utterance.rate = 0.88; // Natural conversational tempo
+      utterance.pitch = 0.92; // Natural masculine depth
       window.speechSynthesis.speak(utterance);
     }
 
-    // GAME CONTROL FUNCTIONS
     function startGame() {
       currentLevelIdx = 0;
       isGameOver = false;
@@ -517,6 +550,8 @@
         .slice(0, config.count);
 
       renderGrid(currentCards);
+      waitingForNext = false;
+      nextBtnEl.classList.add("disabled");
       pickNextTarget();
     }
 
@@ -549,6 +584,7 @@
         .map(c => vocabularyDB.find(v => v.word === c.dataset.word));
 
       if (remainingCards.length === 0) {
+        clearInterval(timerInterval);
         if (currentLevelIdx < levelConfigs.length - 1) {
           currentLevelIdx++;
           initLevel();
@@ -560,25 +596,40 @@
 
       targetItem = remainingCards[Math.floor(Math.random() * remainingCards.length)];
       defTextEl.textContent = `"${targetItem.def}"`;
+      waitingForNext = false;
+      nextBtnEl.classList.add("disabled");
 
       resetTimer();
     }
 
     function handleCardClick(cardNode, item) {
-      if (cardNode.classList.contains("matched") || isGameOver) return;
+      if (cardNode.classList.contains("matched") || isGameOver || waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        // CORRECT CHOICE -> Flip card to show example sentence
+        // CORRECT CHOICE -> Stop timer, flip card, speak word naturally, wait for NEXT click
+        clearInterval(timerInterval);
+        waitingForNext = true;
+        
         cardNode.classList.add("flipped", "matched");
         score++;
         updateProgress();
         speakWord(item.word);
 
-        clearInterval(timerInterval);
+        // Enable Next Arrow Button
+        nextBtnEl.classList.remove("disabled");
 
-        setTimeout(() => {
-          pickNextTarget();
-        }, 1400);
+        // Check if level is fully completed
+        const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
+        if (remainingUnmatched.length === 0) {
+          setTimeout(() => {
+            if (currentLevelIdx < levelConfigs.length - 1) {
+              currentLevelIdx++;
+              initLevel();
+            } else {
+              showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
+            }
+          }, 1800);
+        }
       } else {
         // WRONG CHOICE -> Instant Game Over!
         clearInterval(timerInterval);
@@ -597,6 +648,7 @@
       timeLeft = 25;
       timerEl.textContent = `${timeLeft}s`;
       timerInterval = setInterval(() => {
+        if (waitingForNext || isGameOver) return;
         timeLeft--;
         timerEl.textContent = `${timeLeft}s`;
         if (timeLeft <= 0) {
@@ -617,8 +669,10 @@
     // EVENT LISTENERS
     modalBtn.addEventListener("click", startGame);
 
-    ttsBtnEl.addEventListener("click", () => {
-      if (targetItem) speakWord(targetItem.word);
+    nextBtnEl.addEventListener("click", () => {
+      if (waitingForNext && !isGameOver) {
+        pickNextTarget();
+      }
     });
   </script>
 </body>
