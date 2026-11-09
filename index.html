@@ -217,7 +217,7 @@
       margin-top: 1px;
     }
 
-    /* 3 COLUMNS CARDS GRID (FIXED 3x3 = 9 CARDS) */
+    /* 3 COLUMNS CARDS GRID (FIXED 3x3) */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -440,7 +440,7 @@
       
       <div class="modal-desc" id="modal-desc">
         Don't let the angry teacher explode — match the correct word!<br><br>
-        <strong>Each level features 9 cards with random words.</strong>
+        <strong>You have 25 seconds for each word.</strong>
       </div>
       
       <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
@@ -499,7 +499,6 @@
   </div>
 
   <script>
-    // 40 WORDS PER LEVEL (TOTAL 200 WORDS POOL)
     const vocabularyDBByLevel = {
       1: [
         { word: "Notice", def: "To see or hear someone or something", example: "Did you notice her new haircut today?" },
@@ -745,7 +744,6 @@
     const modalButtonsContainer = document.getElementById("modal-buttons-container");
     const levelPillBtn = document.getElementById("level-pill-btn");
 
-    // Load saved progress from localStorage
     function loadProgress() {
       const saved = localStorage.getItem("angryTeacherMaxLevel");
       if (saved) {
@@ -863,7 +861,6 @@
       updateProgress();
 
       const levelWordsPool = vocabularyDBByLevel[config.level] || vocabularyDBByLevel[1];
-      // Pick 9 random words from the 40-word pool
       currentCardsPool = [...levelWordsPool]
         .sort(() => Math.random() - 0.5)
         .slice(0, 9);
@@ -970,7 +967,7 @@
     }
 
     function updateProgress() {
-      const total = 9; // Fixed 9 cards per level
+      const total = 9;
       progressValEl.textContent = `${score}/${total}`;
     }
 
@@ -1072,14 +1069,13 @@
     function showStartScreen() {
       loadProgress();
       modalTitle.textContent = "ANGRY TEACHER";
-      modalDesc.innerHTML = `Don't let the angry teacher explode — match the correct word!<br><br><strong>Each level features 9 cards with random words.</strong>`;
+      modalDesc.innerHTML = `Don't let the angry teacher explode — match the correct word!<br><br><strong>You have 25 seconds for each word.</strong>`;
       modalButtonsContainer.innerHTML = `
         <button class="modal-btn" id="modal-start-btn">START GAME</button>
         <button class="modal-btn secondary" id="modal-levels-btn">SELECT LEVEL</button>
       `;
 
       document.getElementById("modal-start-btn").addEventListener("click", () => {
-        // Start from current max unlocked or level 1
         startGame(0);
       });
 
@@ -1088,14 +1084,12 @@
       });
     }
 
-    // Click on Level Pill header opens Level Select Menu
     levelPillBtn.addEventListener("click", () => {
       clearInterval(timerInterval);
       modalScreen.classList.remove("hidden");
       showLevelSelectMenu();
     });
 
-    // Initial load
     loadProgress();
     showStartScreen();
 
