@@ -68,9 +68,11 @@
       gap: 6px;
     }
 
-    .teacher-avatar-svg {
-      width: 30px;
-      height: 30px;
+    /* Стилі для вашого нового логотипу-картинки */
+    .teacher-avatar-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
       flex-shrink: 0;
     }
 
@@ -409,21 +411,10 @@
 </head>
 <body>
 
+  <!-- Стартове вікно із вашою новою картинкою -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
-      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:54px; height:54px;">
-        <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
-        <circle cx="72" cy="11" r="5" fill="#f39c12"/>
-        <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
-        <rect x="42" y="16" width="16" height="10" fill="#1f1f1f" rx="3"/>
-        <circle cx="38" cy="52" r="5" fill="#ffffff"/>
-        <circle cx="62" cy="52" r="5" fill="#ffffff"/>
-        <circle cx="39" cy="52" r="2.5" fill="#1f1f1f"/>
-        <circle cx="61" cy="52" r="2.5" fill="#1f1f1f"/>
-        <path d="M30 44 L44 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-        <path d="M70 44 L56 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-        <path d="M36 68 Q50 60 64 68" stroke="#1f1f1f" stroke-width="3" fill="none"/>
-      </svg>
+      <img src="teacher-face.png" alt="Angry Teacher" class="teacher-avatar-img" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid #1f1f1f; object-fit: cover;" />
       
       <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
       
@@ -441,19 +432,8 @@
   <div id="app-container">
     <div class="header-panel">
       <div class="teacher-badge">
-        <svg class="teacher-avatar-svg" viewBox="0 0 100 100">
-          <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
-          <circle cx="72" cy="11" r="5" fill="#f39c12"/>
-          <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
-          <rect x="42" y="16" width="16" height="10" fill="#1f1f1f" rx="3"/>
-          <circle cx="38" cy="52" r="5" fill="#ffffff"/>
-          <circle cx="62" cy="52" r="5" fill="#ffffff"/>
-          <circle cx="39" cy="52" r="2.5" fill="#1f1f1f"/>
-          <circle cx="61" cy="52" r="2.5" fill="#1f1f1f"/>
-          <path d="M30 44 L44 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-          <path d="M70 44 L56 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-          <path d="M36 68 Q50 60 64 68" stroke="#1f1f1f" stroke-width="3" fill="none"/>
-        </svg>
+        <!-- Іконка в шапці гри -->
+        <img src="teacher-face.png" alt="Teacher" class="teacher-avatar-img" style="border-radius: 50%; border: 1.5px solid #1f1f1f;" />
 
         <div class="title-block">
           <div class="game-title">Angry Teacher</div>
