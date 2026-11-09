@@ -436,7 +436,6 @@
   <script>
     // CEFR-GRADED VOCABULARY DATABASE (LEVELS 1-5)
     const vocabularyDBByLevel = {
-      // LEVEL 1: A2 (Elementary / Easy)
       1: [
         { word: "Notice", def: "To become aware of something or someone", example: "Did you notice her new haircut today?" },
         { word: "Refuse", def: "To indicate that one is unwilling to do something", example: "They refuse to give up hope." },
@@ -455,7 +454,6 @@
         { word: "Improve", def: "To make or become better", example: "Reading books helps improve your vocabulary." }
       ],
 
-      // LEVEL 2: B1- (Pre-Intermediate)
       2: [
         { word: "Challenge", def: "A call to take part in a difficult contest", example: "He accepted the challenge with enthusiasm." },
         { word: "Imagine", def: "To form a mental image of something", example: "Can you imagine living on Mars?" },
@@ -474,7 +472,6 @@
         { word: "Doubt", def: "A feeling of uncertainty or lack of conviction", example: "I have no doubt that you will pass." }
       ],
 
-      // LEVEL 3: B1+ (Intermediate)
       3: [
         { word: "Achieve", def: "To successfully bring about a desired result", example: "Hard work helps you achieve your goals." },
         { word: "Succeed", def: "To achieve the desired aim or result", example: "If you practice daily, you will succeed." },
@@ -482,4 +479,312 @@
         { word: "Encourage", def: "To give support, confidence, or hope to someone", example: "Parents should encourage children to read." },
         { word: "Distribute", def: "To hand shares of something out to people", example: "Volunteers distribute food to the homeless." },
         { word: "Audience", def: "The assembled spectators or listeners", example: "The audience clapped loudly after the show." },
-        { word: "
+        { word: "Campaign", def: "A series of operations to achieve a goal", example: "The charity launched a new winter campaign." },
+        { word: "Category", def: "A class or division of people or things", example: "Books are sorted by category in the library." },
+        { word: "Character", def: "The mental and moral qualities of an individual", example: "Honesty is a core part of his character." },
+        { word: "Confirm", def: "To establish the truth or correctness of", example: "Please confirm your flight reservation." },
+        { word: "Consider", def: "To think carefully about something", example: "Consider all options before deciding." },
+        { word: "Demonstrate", def: "To clearly show the truth or existence of", example: "Let me demonstrate how this machine works." },
+        { word: "Develop", def: "To grow or cause to grow and become mature", example: "Software engineers develop mobile apps." },
+        { word: "Device", def: "A thing made or adapted for a purpose", example: "A smartphone is a pocket communication device." },
+        { word: "Efficient", def: "Achieving maximum productivity with minimum waste", example: "Electric cars are very energy efficient." }
+      ],
+
+      4: [
+        { word: "Analyze", def: "To examine methodically and in detail", example: "We need to analyze the test results." },
+        { word: "Collaborate", def: "To work jointly on an activity", example: "Artists often collaborate on big murals." },
+        { word: "Evaluate", def: "To form an idea of the amount or value of", example: "Teachers evaluate students at end of term." },
+        { word: "Generate", def: "To produce or create something", example: "Wind turbines generate clean electricity." },
+        { word: "Appreciate", def: "To recognize the full worth of something", example: "I really appreciate your kind help." },
+        { word: "Approach", def: "To come near or nearer to something", example: "The train began to approach the station." },
+        { word: "Complex", def: "Consisting of many different and connected parts", example: "The human brain is a complex organ." },
+        { word: "Concept", def: "An abstract idea or general notion", example: "The concept of time fascinates physicists." },
+        { word: "Conscious", def: "Aware of and responding to one's surroundings", example: "She was fully conscious during the procedure." },
+        { word: "Contribute", def: "To give something in order to help achieve", example: "Everyone can contribute to a cleaner city." },
+        { word: "Crucial", def: "Of extreme importance; decisive", example: "Timing is crucial for this experiment." },
+        { word: "Diverse", def: "Showing a great deal of variety", example: "Our team has a diverse range of skills." },
+        { word: "Emphasize", def: "To give special importance to something", example: "The teacher emphasized the spelling rules." },
+        { word: "Establish", def: "To set up on a permanent or firm basis", example: "The company was established in 2010." },
+        { word: "Evidence", def: "The available body of facts indicating truth", example: "Police found clear evidence at the crime scene." },
+        { word: "Examine", def: "To inspect someone or something in detail", example: "Doctors examine patients to diagnose illness." },
+        { word: "Feature", def: "A distinctive attribute or aspect of something", example: "Autofocus is a great camera feature." },
+        { word: "Flexible", def: "Capable of bending easily without breaking", example: "Yoga helps keep your body flexible." }
+      ],
+
+      5: [
+        { word: "Endure", def: "To suffer something painful or difficult patiently", example: "Pioneers had to endure harsh winters." },
+        { word: "Exceed", def: "To be greater in number or size than a quantity", example: "Speed limits must not be exceeded." },
+        { word: "Substantial", def: "Of considerable importance, size, or worth", example: "They made a substantial donation to charity." },
+        { word: "Tremendous", def: "Very great in amount, scale, or intensity", example: "This new technology has tremendous potential." },
+        { word: "Inevitable", def: "Certain to happen; unavoidable", example: "Change is an inevitable part of life." },
+        { word: "Competent", def: "Having the necessary ability or skills", example: "She is a highly competent manager." },
+        { word: "Constant", def: "Occurring continuously over a period", example: "There is a constant hum from the fridge." },
+        { word: "Decline", def: "To become smaller, fewer, or worse", example: "Sales began to decline in autumn." },
+        { word: "Determine", def: "To cause something to occur in a particular way", example: "Hard work will determine your success." },
+        { word: "Dynamic", def: "Characterized by constant change or progress", example: "The tech industry is very dynamic." },
+        { word: "Emerge", def: "To move out of or away from something into view", example: "The sun began to emerge from behind clouds." },
+        { word: "Enormous", def: "Very large in size or quantity", example: "They adopted an enormous dog." },
+        { word: "Extensive", def: "Covering a large area; large in amount", example: "The library has an extensive collection of maps." },
+        { word: "Fierce", def: "Having or displaying an aggressive intensity", example: "There was fierce competition for the prize." },
+        { word: "Fortunate", def: "Favored by or involving good luck", example: "We were fortunate to catch the last train." },
+        { word: "Genuine", def: "Truly what something is said to be; authentic", example: "This ring is made of genuine gold." },
+        { word: "Gradual", def: "Taking place or progressing slowly by degrees", example: "There was a gradual change in weather." },
+        { word: "Guarantee", def: "A formal promise or assurance", example: "The store offers a two-year guarantee." },
+        { word: "Integrate", def: "To combine one thing with another so they become a whole", example: "They plan to integrate new tech into the system." },
+        { word: "Persevere", def: "To continue in a course of action even in difficulty", example: "If you persevere, you will overcome any obstacle." },
+        { word: "Prevalent", def: "Widespread in a particular area or at a particular time", example: "Mobile devices are prevalent everywhere today." }
+      ]
+    };
+
+    const levelConfigs = [
+      { level: 1, count: 9 },
+      { level: 2, count: 12 },
+      { level: 3, count: 15 },
+      { level: 4, count: 18 },
+      { level: 5, count: 21 }
+    ];
+
+    let currentLevelIdx = 0;
+    let score = 0;
+    let targetItem = null;
+    let timerInterval = null;
+    let timeLeft = 25;
+    let isGameOver = false;
+    let waitingForNext = false;
+    let audioCtx = null;
+    let currentCardsPool = [];
+
+    const gridEl = document.getElementById("cards-grid");
+    const defTextEl = document.getElementById("def-text");
+    const levelNumEl = document.getElementById("level-num");
+    const progressValEl = document.getElementById("progress-val");
+    const timerEl = document.getElementById("timer");
+    const nextBtnEl = document.getElementById("next-btn");
+    const modalScreen = document.getElementById("modal-screen");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDesc = document.getElementById("modal-desc");
+    const modalBtn = document.getElementById("modal-btn");
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSuccessSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } catch (e) {}
+    }
+
+    function playErrorSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } catch (e) {}
+    }
+
+    let selectedMaleVoice = null;
+    function loadBestMaleVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      selectedMaleVoice = voices.find(v => v.lang.startsWith('en') && (
+        v.name.includes('Google UK English Male') || 
+        v.name.includes('Daniel') || 
+        v.name.includes('Oliver') || 
+        v.name.includes('David') || 
+        v.name.includes('George') || 
+        v.name.includes('Ryan') ||
+        v.name.toLowerCase().includes('male')
+      )) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) 
+         || voices.find(v => v.lang.startsWith('en'));
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadBestMaleVoice;
+      loadBestMaleVoice();
+    }
+
+    function speakWord(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-GB';
+      if (selectedMaleVoice) utterance.voice = selectedMaleVoice;
+      utterance.rate = 0.88;
+      utterance.pitch = 0.92;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function startGame() {
+      initAudio();
+      currentLevelIdx = 0;
+      isGameOver = false;
+      modalScreen.classList.add("hidden");
+      initLevel();
+    }
+
+    function initLevel() {
+      const config = levelConfigs[currentLevelIdx];
+      levelNumEl.textContent = config.level;
+      score = 0;
+      updateProgress();
+
+      const levelWordsPool = vocabularyDBByLevel[config.level] || vocabularyDBByLevel[1];
+      currentCardsPool = [...levelWordsPool]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, config.count);
+
+      renderGrid(currentCardsPool);
+      waitingForNext = false;
+      nextBtnEl.classList.add("disabled");
+      pickNextTarget();
+    }
+
+    function renderGrid(cards) {
+      gridEl.innerHTML = "";
+      cards.forEach(item => {
+        const cardNode = document.createElement("div");
+        cardNode.className = "card";
+        cardNode.dataset.word = item.word;
+
+        cardNode.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">
+              <div class="card-word">${item.word}</div>
+            </div>
+            <div class="card-back">
+              <div class="card-back-text">"${item.example}"</div>
+            </div>
+          </div>
+        `;
+
+        cardNode.addEventListener("click", () => handleCardClick(cardNode, item));
+        gridEl.appendChild(cardNode);
+      });
+    }
+
+    function pickNextTarget() {
+      const remainingCards = Array.from(gridEl.children)
+        .filter(c => !c.classList.contains("matched"))
+        .map(c => currentCardsPool.find(v => v.word === c.dataset.word));
+
+      if (remainingCards.length === 0) {
+        clearInterval(timerInterval);
+        if (currentLevelIdx < levelConfigs.length - 1) {
+          currentLevelIdx++;
+          initLevel();
+        } else {
+          playSuccessSound();
+          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
+        }
+        return;
+      }
+
+      targetItem = remainingCards[Math.floor(Math.random() * remainingCards.length)];
+      defTextEl.textContent = `"${targetItem.def}"`;
+      waitingForNext = false;
+      nextBtnEl.classList.add("disabled");
+
+      resetTimer();
+    }
+
+    function handleCardClick(cardNode, item) {
+      if (cardNode.classList.contains("matched") || isGameOver || waitingForNext) return;
+
+      if (item.word === targetItem.word) {
+        playSuccessSound();
+        clearInterval(timerInterval);
+        waitingForNext = true;
+        
+        cardNode.classList.add("flipped", "matched");
+        score++;
+        updateProgress();
+        speakWord(item.word);
+
+        nextBtnEl.classList.remove("disabled");
+
+        const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
+        if (remainingUnmatched.length === 0) {
+          setTimeout(() => {
+            if (currentLevelIdx < levelConfigs.length - 1) {
+              currentLevelIdx++;
+              initLevel();
+            } else {
+              showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
+            }
+          }, 1800);
+        }
+      } else {
+        playErrorSound();
+        clearInterval(timerInterval);
+        isGameOver = true;
+        showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "TRY AGAIN");
+      }
+    }
+
+    function updateProgress() {
+      const total = levelConfigs[currentLevelIdx].count;
+      progressValEl.textContent = `${score}/${total}`;
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 25;
+      timerEl.textContent = `${timeLeft}s`;
+      timerInterval = setInterval(() => {
+        if (waitingForNext || isGameOver) return;
+        timeLeft--;
+        timerEl.textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          playErrorSound();
+          isGameOver = true;
+          showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "TRY AGAIN");
+        }
+      }, 1000);
+    }
+
+    function showGameOverScreen(title, desc, btnText) {
+      modalTitle.textContent = title;
+      modalDesc.innerHTML = desc;
+      modalBtn.textContent = btnText;
+      modalScreen.classList.remove("hidden");
+    }
+
+    modalBtn.addEventListener("click", startGame);
+
+    nextBtnEl.addEventListener("click", () => {
+      if (waitingForNext && !isGameOver) {
+        pickNextTarget();
+      }
+    });
+  </script>
+</body>
+</html>
