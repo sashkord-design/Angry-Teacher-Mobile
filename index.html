@@ -725,7 +725,9 @@
     let score = 0;
     let targetItem = null;
     let timerInterval = null;
+    let levelTimerInterval = null;
     let timeLeft = 25;
+    let levelSecondsElapsed = 0;
     let isGameOver = false;
     let waitingForNext = false;
     let audioCtx = null;
@@ -751,11 +753,27 @@
       }
     }
 
-    function saveProgress() {
-      if (currentLevelIdx + 1 > maxUnlockedLevel) {
-        maxUnlockedLevel = currentLevelIdx + 1;
+    function saveProgress(completedLevelIdx) {
+      // Якщо пройшли рівень, розблоковуємо наступний
+      const nextLvlNum = completedLevelIdx + 2;
+      if (nextLvlNum > maxUnlockedLevel && nextLvlNum <= levelConfigs.length) {
+        maxUnlockedLevel = nextLvlNum;
         localStorage.setItem("angryTeacherMaxLevel", maxUnlockedLevel);
       }
+    }
+
+    function getBestTime(lvlIdx) {
+      const best = localStorage.getItem(`angryTeacherBestTime_lvl_${lvlIdx + 1}`);
+      return best ? parseInt(best, 10) : null;
+    }
+
+    function saveBestTime(lvlIdx, seconds) {
+      const currentBest = getBestTime(lvlIdx);
+      if (currentBest === null || seconds < currentBest) {
+        localStorage.setItem(`angryTeacherBestTime_lvl_${lvlIdx + 1}`, seconds);
+        return true; // новий рекорд
+      }
+      return false;
     }
 
     function initAudio() {
@@ -795,6 +813,57 @@
       } catch (e) {}
     }
 
+    // REALISTIC EXPLOSION SOUND
+    function playExplosionSound() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        // Low boom oscillator
+        const osc = audioCtx.createOscillator();
+        const oscGain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(25, now + 0.8);
+
+        oscGain.gain.setValueAtTime(0.4, now);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+        osc.connect(oscGain);
+        oscGain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.8);
+
+        // White noise buffer for explosion crunch
+        const bufferSize = audioCtx.sampleRate * 0.8;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, now);
+        filter.frequency.linearRampToValueAtTime(100, now + 0.8);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.35, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+
+        noise.start(now);
+        noise.stop(now + 0.8);
+      } catch (e) {}
+    }
+
+    // ERROR / WRONG GUESS SOUND
     function playErrorSound() {
       try {
         initAudio();
@@ -802,14 +871,14 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(160, now);
-        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(90, now + 0.35);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start(now);
-        osc.stop(now + 0.4);
+        osc.stop(now + 0.35);
       } catch (e) {}
     }
 
@@ -860,6 +929,14 @@
       score = 0;
       updateProgress();
 
+      levelSecondsElapsed = 0;
+      clearInterval(levelTimerInterval);
+      levelTimerInterval = setInterval(() => {
+        if (!isGameOver && !waitingForNext) {
+          levelSecondsElapsed++;
+        }
+      }, 1000);
+
       const levelWordsPool = vocabularyDBByLevel[config.level] || vocabularyDBByLevel[1];
       currentCardsPool = [...levelWordsPool]
         .sort(() => Math.random() - 0.5)
@@ -901,13 +978,16 @@
 
       if (remainingCards.length === 0) {
         clearInterval(timerInterval);
+        clearInterval(levelTimerInterval);
         playSuccessSound();
-        saveProgress();
+        saveProgress(currentLevelIdx);
+
+        const isNewRecord = saveBestTime(currentLevelIdx, levelSecondsElapsed);
         
         if (currentLevelIdx < levelConfigs.length - 1) {
-          showLevelCompletedScreen();
+          showLevelCompletedScreen(isNewRecord, levelSecondsElapsed);
         } else {
-          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", () => startGame(0));
+          showGameOverScreen("VICTORY!", `🎉 You beat all 5 levels in ${levelSecondsElapsed}s! True Doctor of Philosophy!`, "PLAY AGAIN", () => startGame(0));
         }
         return;
       }
@@ -948,11 +1028,14 @@
           if (remainingUnmatched.length === 0) {
             setTimeout(() => {
               clearInterval(timerInterval);
-              saveProgress();
+              clearInterval(levelTimerInterval);
+              saveProgress(currentLevelIdx);
+              const isNewRecord = saveBestTime(currentLevelIdx, levelSecondsElapsed);
+
               if (currentLevelIdx < levelConfigs.length - 1) {
-                showLevelCompletedScreen();
+                showLevelCompletedScreen(isNewRecord, levelSecondsElapsed);
               } else {
-                showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", () => startGame(0));
+                showGameOverScreen("VICTORY!", `🎉 You beat all 5 levels in ${levelSecondsElapsed}s! True Doctor of Philosophy!`, "PLAY AGAIN", () => startGame(0));
               }
             }, 1200);
           }
@@ -960,7 +1043,9 @@
 
       } else {
         playErrorSound();
+        playExplosionSound();
         clearInterval(timerInterval);
+        clearInterval(levelTimerInterval);
         isGameOver = true;
         showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
       }
@@ -981,20 +1066,25 @@
         timerEl.textContent = `${timeLeft}s`;
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
+          clearInterval(levelTimerInterval);
           playErrorSound();
+          playExplosionSound();
           isGameOver = true;
           showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "RETRY LEVEL", () => startGame(currentLevelIdx));
         }
       }, 1000);
     }
 
-    function showLevelCompletedScreen() {
+    function showLevelCompletedScreen(isNewRecord, totalSeconds) {
       const currentTitle = levelConfigs[currentLevelIdx].title;
       const nextLevelIndex = currentLevelIdx + 1;
       const nextTitle = levelConfigs[nextLevelIndex].title;
+      const best = getBestTime(currentLevelIdx);
 
       modalTitle.textContent = "LEVEL PASSED!";
-      modalDesc.innerHTML = `🎉 Great job! You unlocked the rank of <strong>${currentTitle}</strong>.<br><br>Ready for the next challenge as a <strong>${nextTitle}</strong>?`;
+      modalDesc.innerHTML = `🎉 Great job! You unlocked the rank of <strong>${currentTitle}</strong>.<br>` +
+        `⏱ Time: <strong>${totalSeconds}s</strong> ${isNewRecord ? '🔥 (NEW RECORD!)' : `<span style="font-size:0.75rem; opacity:0.8;">(Best: ${best}s)</span>`}<br><br>` +
+        `Ready for the next challenge as a <strong>${nextTitle}</strong>?`;
       
       modalButtonsContainer.innerHTML = `
         <button class="modal-btn" id="next-level-btn">NEXT LEVEL (${nextTitle})</button>
@@ -1041,10 +1131,13 @@
       let gridHtml = '<div class="level-select-grid">';
       levelConfigs.forEach((cfg, idx) => {
         const isUnlocked = (idx + 1) <= maxUnlockedLevel;
+        const bestTime = getBestTime(idx);
+        const timeStr = bestTime !== null ? `<br><span style="font-size:0.55rem; color:#2b6777;">Best: ${bestTime}s</span>` : '';
         gridHtml += `
           <button class="level-sel-btn ${isUnlocked ? '' : 'locked'}" data-lvl="${idx}" ${isUnlocked ? '' : 'disabled'}>
             <strong>Lvl ${cfg.level}</strong>
             <span style="font-size:0.6rem; opacity:0.8;">${cfg.title}</span>
+            ${timeStr}
           </button>
         `;
       });
@@ -1076,7 +1169,9 @@
       `;
 
       document.getElementById("modal-start-btn").addEventListener("click", () => {
-        startGame(0);
+        // Запускаємо з максимального доступного рівня або з першого
+        const startLvl = Math.min(maxUnlockedLevel - 1, levelConfigs.length - 1);
+        startGame(startLvl >= 0 ? startLvl : 0);
       });
 
       document.getElementById("modal-levels-btn").addEventListener("click", () => {
@@ -1086,6 +1181,7 @@
 
     levelPillBtn.addEventListener("click", () => {
       clearInterval(timerInterval);
+      clearInterval(levelTimerInterval);
       modalScreen.classList.remove("hidden");
       showLevelSelectMenu();
     });
