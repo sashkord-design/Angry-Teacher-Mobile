@@ -60,7 +60,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 42px;
+      height: 44px;
     }
 
     .teacher-badge {
@@ -95,13 +95,14 @@
       gap: 4px;
     }
 
-    .stat-pill {
+    /* LEVEL PILL STYLING */
+    .stat-pill.level-pill {
       background: var(--accent-gold);
       border: 2px solid var(--border-dark);
       border-radius: 8px;
-      padding: 1px 5px;
+      padding: 2px 6px;
       text-align: center;
-      min-width: 44px;
+      min-width: 75px;
       box-shadow: 0 1.5px 0 var(--shadow-color);
       display: flex;
       flex-direction: column;
@@ -111,6 +112,15 @@
     .stat-pill.teal {
       background: var(--primary-teal);
       color: #ffffff;
+      border: 2px solid var(--border-dark);
+      border-radius: 8px;
+      padding: 2px 6px;
+      text-align: center;
+      min-width: 55px;
+      box-shadow: 0 1.5px 0 var(--shadow-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .stat-label {
@@ -124,8 +134,17 @@
 
     .stat-value {
       font-family: var(--font-heading);
-      font-size: 0.75rem;
+      font-size: 0.7rem;
+      line-height: 1.1;
+      margin-top: 1px;
+    }
+
+    .level-title-sub {
+      font-size: 0.45rem;
+      font-weight: 700;
+      text-transform: uppercase;
       line-height: 1;
+      opacity: 0.85;
       margin-top: 1px;
     }
 
@@ -418,9 +437,9 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-pill">
-          <span class="stat-label">Level</span>
-          <span class="stat-value" id="level-num">1</span>
+        <div class="stat-pill level-pill">
+          <span class="stat-value" id="level-num">LEVEL 1</span>
+          <span class="level-title-sub" id="level-title-sub">Freshman</span>
         </div>
         <div class="stat-pill teal">
           <span class="stat-label">Progress</span>
@@ -562,6 +581,7 @@
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
     const levelNumEl = document.getElementById("level-num");
+    const levelTitleSubEl = document.getElementById("level-title-sub");
     const progressValEl = document.getElementById("progress-val");
     const timerEl = document.getElementById("timer");
     const nextBtnEl = document.getElementById("next-btn");
@@ -579,7 +599,6 @@
       }
     }
 
-    // PLEASANT HIGH BELL CHIME SOUND
     function playSuccessSound() {
       try {
         initAudio();
@@ -591,7 +610,6 @@
         osc1.type = 'sine';
         osc2.type = 'triangle';
 
-        // Bell frequencies (E6 and B6 notes for a bright magical chime)
         osc1.frequency.setValueAtTime(1318.51, now); 
         osc2.frequency.setValueAtTime(1975.54, now);
 
@@ -669,7 +687,8 @@
 
     function initLevel() {
       const config = levelConfigs[currentLevelIdx];
-      levelNumEl.textContent = `${config.level} (${config.title})`;
+      levelNumEl.textContent = `LEVEL ${config.level}`;
+      levelTitleSubEl.textContent = config.title;
       score = 0;
       updateProgress();
 
@@ -801,8 +820,8 @@
 
     function showLevelCompletedScreen() {
       const currentTitle = levelConfigs[currentLevelIdx].title;
-      currentLevelIdx++;
-      const nextTitle = levelConfigs[currentLevelIdx].title;
+      const nextLevelIndex = currentLevelIdx + 1;
+      const nextTitle = levelConfigs[nextLevelIndex].title;
 
       modalTitle.textContent = "LEVEL PASSED!";
       modalDesc.innerHTML = `🎉 Great job! You unlocked the rank of <strong>${currentTitle}</strong>.<br><br>Ready for the next challenge as a <strong>${nextTitle}</strong>?`;
@@ -816,6 +835,7 @@
 
       document.getElementById("next-level-btn").addEventListener("click", () => {
         modalScreen.classList.add("hidden");
+        currentLevelIdx = nextLevelIndex; // Корректно переходимо на наступний рівень
         initLevel();
       });
 
