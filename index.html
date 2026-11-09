@@ -239,6 +239,7 @@
       align-items: center;
       justify-content: center;
       padding: 2px 4px;
+      transition: background-color 0.3s ease;
     }
 
     .card-front {
@@ -274,10 +275,15 @@
       overflow: hidden;
     }
 
+    /* HIGHLIGHT STATE (WARM GOLDEN GLOW) */
+    .card.highlighted .card-front {
+      background-color: #f9d98c;
+      border-color: #e5a93c;
+    }
+
     .card.matched .card-front {
       background-color: #a8dadc;
-      opacity: 0.6;
-      cursor: default;
+      opacity: 0.8;
     }
 
     /* OVERLAY SCREEN (START / BOOM) */
@@ -431,105 +437,105 @@
   </div>
 
   <script>
-    // CEFR-GRADED VOCABULARY DATABASE WITH RICHER DEFINITIONS
+    // CEFR-GRADED VOCABULARY DATABASE (EASIER DEFINITIONS FOR L1 & L2)
     const vocabularyDBByLevel = {
       1: [
-        { word: "Notice", def: "To become aware of or pay attention to a person, object, or event", example: "Did you notice her new haircut today?" },
-        { word: "Refuse", def: "To indicate firmly that one is unwilling to accept or do something", example: "They refuse to give up hope." },
-        { word: "Decide", def: "To make a choice or come to a firm resolution after thinking", example: "It is hard to decide which laptop to buy." },
-        { word: "Avoid", def: "To intentionally keep away from a person, place, or bad habit", example: "Try to avoid eating junk food late at night." },
-        { word: "Accept", def: "To willingly take or agree to something offered or suggested", example: "He decided to accept the job offer." },
-        { word: "Future", def: "The period of time that will come after the present moment", example: "We must plan carefully for the future." },
-        { word: "Forgive", def: "To stop feeling angry or resentful toward someone for an offense", example: "She decided to forgive his mistake." },
-        { word: "Believe", def: "To accept a statement as true, real, or worthy of trust", example: "Always believe in your own potential." },
-        { word: "Protect", def: "To keep someone or something safe from harm, injury, or loss", example: "Wear a helmet to protect your head." },
-        { word: "Provide", def: "To supply, furnish, or make something available for use", example: "Trees provide shade on sunny days." },
-        { word: "Create", def: "To bring something new into existence through skill or imagination", example: "Artists create beauty out of chaos." },
-        { word: "Expect", def: "To regard something as highly likely to happen in the future", example: "I expect to finish this report by Friday." },
-        { word: "Explain", def: "To make an idea or situation clear to someone by describing it", example: "Can you explain this math rule to me?" },
-        { word: "Choose", def: "To pick out or select someone or something from several options", example: "You can choose any dessert you like." },
-        { word: "Improve", def: "To enhance the quality, value, or condition of something", example: "Reading books helps improve your vocabulary." }
+        { word: "Notice", def: "To see or hear someone or something", example: "Did you notice her new haircut today?" },
+        { word: "Refuse", def: "To say no when someone asks you to do something", example: "They refuse to give up hope." },
+        { word: "Decide", def: "To choose something after thinking about it", example: "It is hard to decide which laptop to buy." },
+        { word: "Avoid", def: "To try not to do something or stay away from it", example: "Try to avoid eating junk food late at night." },
+        { word: "Accept", def: "To take something that someone offers you", example: "He decided to accept the job offer." },
+        { word: "Future", def: "The time that will happen after now", example: "We must plan carefully for the future." },
+        { word: "Forgive", def: "To stop feeling angry at someone who made a mistake", example: "She decided to forgive his mistake." },
+        { word: "Believe", def: "To think that something is true or real", example: "Always believe in your own potential." },
+        { word: "Protect", def: "To keep someone or something safe", example: "Wear a helmet to protect your head." },
+        { word: "Provide", def: "To give someone something that they need", example: "Trees provide shade on sunny days." },
+        { word: "Create", def: "To make something new", example: "Artists create beauty out of chaos." },
+        { word: "Expect", def: "To think that something will happen", example: "I expect to finish this report by Friday." },
+        { word: "Explain", def: "To tell someone details so they understand", example: "Can you explain this math rule to me?" },
+        { word: "Choose", def: "To pick one thing out of many options", example: "You can choose any dessert you like." },
+        { word: "Improve", def: "To make something better than before", example: "Reading books helps improve your vocabulary." }
       ],
 
       2: [
-        { word: "Challenge", def: "A demanding task or situation that tests someone's ability or resolve", example: "He accepted the challenge with enthusiasm." },
-        { word: "Imagine", def: "To form a vivid mental picture or concept of something not present", example: "Can you imagine living on Mars?" },
-        { word: "Discover", def: "To find or learn something unexpectedly or through patient search", example: "Scientists discover new species every year." },
-        { word: "Reduce", def: "To make something smaller, lower in amount, degree, or size", example: "We should reduce plastic consumption." },
-        { word: "Solve", def: "To find a correct answer, explanation, or solution for a problem", example: "Can you solve this complex math puzzle?" },
-        { word: "Support", def: "To give assistance, encouragement, or financial help to someone", example: "Friends always support each other in tough times." },
-        { word: "Organize", def: "To arrange elements into a structured, neat, or systematic order", example: "Help me organize these files alphabetically." },
-        { word: "Explore", def: "To travel through an unfamiliar area to discover its features", example: "Let's explore the old town streets." },
-        { word: "Advantage", def: "A favorable condition or circumstance that puts one in a better position", example: "Speaking two languages is a big advantage." },
-        { word: "Attitude", def: "A settled way of thinking or feeling that reflects in behavior", example: "A positive attitude helps you overcome stress." },
-        { word: "Budget", def: "A planned estimation of income and expenditure for a set period", example: "We must stick to our monthly budget." },
-        { word: "Culture", def: "The ideas, customs, social behavior, and arts of a society", example: "Japanese culture has deep ancient traditions." },
-        { word: "Curious", def: "Eager to know, learn, or investigate interesting things", example: "Children are naturally curious about the world." },
-        { word: "Desire", def: "A strong feeling of wanting to have or accomplish something", example: "He has a strong desire to travel." },
-        { word: "Doubt", def: "A feeling of uncertainty, disbelief, or lack of conviction", example: "I have no doubt that you will pass." }
+        { word: "Challenge", def: "Something new and difficult to do", example: "He accepted the challenge with enthusiasm." },
+        { word: "Imagine", def: "To picture something in your mind", example: "Can you imagine living on Mars?" },
+        { word: "Discover", def: "To find something for the first time", example: "Scientists discover new species every year." },
+        { word: "Reduce", def: "To make something smaller or less", example: "We should reduce plastic consumption." },
+        { word: "Solve", def: "To find the correct answer to a problem", example: "Can you solve this complex math puzzle?" },
+        { word: "Support", def: "To help someone when they are in trouble", example: "Friends always support each other in tough times." },
+        { word: "Organize", def: "To put things in good order", example: "Help me organize these files alphabetically." },
+        { word: "Explore", def: "To look around a new place to learn about it", example: "Let's explore the old town streets." },
+        { word: "Advantage", def: "Something good that helps you succeed", example: "Speaking two languages is a big advantage." },
+        { word: "Attitude", def: "The way you think or feel about things", example: "A positive attitude helps you overcome stress." },
+        { word: "Budget", def: "A plan of how much money you can spend", example: "We must stick to our monthly budget." },
+        { word: "Culture", def: "The traditions and arts of a country", example: "Japanese culture has deep ancient traditions." },
+        { word: "Curious", def: "Wanting to know or learn more about things", example: "Children are naturally curious about the world." },
+        { word: "Desire", def: "A strong wish to have or do something", example: "He has a strong desire to travel." },
+        { word: "Doubt", def: "A feeling when you are not sure about something", example: "I have no doubt that you will pass." }
       ],
 
       3: [
-        { word: "Achieve", def: "To successfully reach a desired goal through skill, effort, or courage", example: "Hard work helps you achieve your goals." },
-        { word: "Succeed", def: "To accomplish a purpose, intention, or expected favorable outcome", example: "If you practice daily, you will succeed." },
-        { word: "Convince", def: "To persuade someone firmly to believe or do something through argument", example: "She tried to convince him to join the trip." },
-        { word: "Encourage", def: "To inspire with courage, spirit, or confidence to take action", example: "Parents should encourage children to read." },
-        { word: "Distribute", def: "To parcel out, hand over, or share out among a group of people", example: "Volunteers distribute food to the homeless." },
-        { word: "Audience", def: "The assembled group of listeners, viewers, or readers at an event", example: "The audience clapped loudly after the show." },
-        { word: "Campaign", def: "A planned series of organized actions intended to achieve a goal", example: "The charity launched a new winter campaign." },
-        { word: "Category", def: "A specific class or group of things recognized as having shared traits", example: "Books are sorted by category in the library." },
-        { word: "Character", def: "The distinctive mental and moral qualities that define an individual", example: "Honesty is a core part of his character." },
-        { word: "Confirm", def: "To verify, validate, or establish the truth and accuracy of a fact", example: "Please confirm your flight reservation." },
-        { word: "Consider", def: "To think deeply and carefully about a decision or potential option", example: "Consider all options before deciding." },
-        { word: "Demonstrate", def: "To clearly show, explain, or prove the operation of something", example: "Let me demonstrate how this machine works." },
+        { word: "Achieve", def: "To successfully reach a desired goal through skill or effort", example: "Hard work helps you achieve your goals." },
+        { word: "Succeed", def: "To accomplish a purpose or expected favorable outcome", example: "If you practice daily, you will succeed." },
+        { word: "Convince", def: "To persuade someone firmly to believe or do something", example: "She tried to convince him to join the trip." },
+        { word: "Encourage", def: "To inspire with confidence or hope to take action", example: "Parents should encourage children to read." },
+        { word: "Distribute", def: "To hand out or share something among a group of people", example: "Volunteers distribute food to the homeless." },
+        { word: "Audience", def: "The assembled group of listeners or viewers at an event", example: "The audience clapped loudly after the show." },
+        { word: "Campaign", def: "A planned series of organized actions to achieve a goal", example: "The charity launched a new winter campaign." },
+        { word: "Category", def: "A specific class or group of things with shared traits", example: "Books are sorted by category in the library." },
+        { word: "Character", def: "The distinctive mental and moral qualities of a person", example: "Honesty is a core part of his character." },
+        { word: "Confirm", def: "To verify or establish the truth and accuracy of a fact", example: "Please confirm your flight reservation." },
+        { word: "Consider", def: "To think deeply and carefully about a decision or option", example: "Consider all options before deciding." },
+        { word: "Demonstrate", def: "To clearly show, explain, or prove how something works", example: "Let me demonstrate how this machine works." },
         { word: "Develop", def: "To grow, expand, or cause something to become more advanced", example: "Software engineers develop mobile apps." },
-        { word: "Device", def: "A piece of mechanical or electronic equipment designed for a task", example: "A smartphone is a pocket communication device." },
-        { word: "Efficient", def: "Achieving maximum productivity with minimum wasted effort or expense", example: "Electric cars are very energy efficient." }
+        { word: "Device", def: "A piece of electronic equipment designed for a specific task", example: "A smartphone is a pocket communication device." },
+        { word: "Efficient", def: "Achieving maximum productivity with minimum wasted effort", example: "Electric cars are very energy efficient." }
       ],
 
       4: [
-        { word: "Analyze", def: "To examine methodically and in detail to explain or interpret it", example: "We need to analyze the test results." },
-        { word: "Collaborate", def: "To work jointly with others on an activity or creative project", example: "Artists often collaborate on big murals." },
-        { word: "Evaluate", def: "To assess and judge the quality, significance, or value of something", example: "Teachers evaluate students at end of term." },
+        { word: "Analyze", def: "To examine methodically and in detail to interpret it", example: "We need to analyze the test results." },
+        { word: "Collaborate", def: "To work jointly with others on an activity or project", example: "Artists often collaborate on big murals." },
+        { word: "Evaluate", def: "To assess and judge the quality or significance of something", example: "Teachers evaluate students at end of term." },
         { word: "Generate", def: "To produce, create, or bring into existence through a process", example: "Wind turbines generate clean electricity." },
-        { word: "Appreciate", def: "To fully recognize the value, significance, or quality of something", example: "I really appreciate your kind help." },
-        { word: "Approach", def: "To come near in distance, time, or quality; or a way of dealing with a task", example: "The train began to approach the station." },
-        { word: "Complex", def: "Consisting of many interconnected, intricate, or complicated parts", example: "The human brain is a complex organ." },
-        { word: "Concept", def: "An abstract idea, principle, or general notion conceived in the mind", example: "The concept of time fascinates physicists." },
-        { word: "Conscious", def: "Being fully aware of and responsive to one's environment and thoughts", example: "She was fully conscious during the procedure." },
-        { word: "Contribute", def: "To give something (money, time, effort) to help achieve a common aim", example: "Everyone can contribute to a cleaner city." },
-        { word: "Crucial", def: "Extremely significant or decisive for the success or failure of something", example: "Timing is crucial for this experiment." },
-        { word: "Diverse", def: "Showing a wide variety of distinct, different, or unalike elements", example: "Our team has a diverse range of skills." },
-        { word: "Emphasize", def: "To give special importance, prominence, or stress to a point", example: "The teacher emphasized the spelling rules." },
-        { word: "Establish", def: "To set up, found, or create an organization on a firm basis", example: "The company was established in 2010." },
-        { word: "Evidence", def: "The available body of facts or information proving a belief or proposition", example: "Police found clear evidence at the crime scene." },
-        { word: "Examine", def: "To inspect someone or something thoroughly in order to determine condition", example: "Doctors examine patients to diagnose illness." },
-        { word: "Feature", def: "A distinctive characteristic, special capability, or aspect of a product", example: "Autofocus is a great camera feature." },
-        { word: "Flexible", def: "Capable of bending or adapting easily to changing situations", example: "Yoga helps keep your body flexible." }
+        { word: "Appreciate", def: "To fully recognize the value or quality of something", example: "I really appreciate your kind help." },
+        { word: "Approach", def: "To come near in distance, time, or quality", example: "The train began to approach the station." },
+        { word: "Complex", def: "Consisting of many interconnected or complicated parts", example: "The human brain is a complex organ." },
+        { word: "Concept", def: "An abstract idea, principle, or general notion", example: "The concept of time fascinates physicists." },
+        { word: "Conscious", def: "Being fully aware of and responsive to one's environment", example: "She was fully conscious during the procedure." },
+        { word: "Contribute", def: "To give effort or money to help achieve a common aim", example: "Everyone can contribute to a cleaner city." },
+        { word: "Crucial", def: "Extremely significant or decisive for the success of something", example: "Timing is crucial for this experiment." },
+        { word: "Diverse", def: "Showing a wide variety of distinct and different elements", example: "Our team has a diverse range of skills." },
+        { word: "Emphasize", def: "To give special importance or prominence to a point", example: "The teacher emphasized the spelling rules." },
+        { word: "Establish", def: "To set up or create an organization on a firm basis", example: "The company was established in 2010." },
+        { word: "Evidence", def: "The available body of facts proving a proposition", example: "Police found clear evidence at the crime scene." },
+        { word: "Examine", def: "To inspect someone or something thoroughly", example: "Doctors examine patients to diagnose illness." },
+        { word: "Feature", def: "A distinctive characteristic or aspect of a product", example: "Autofocus is a great camera feature." },
+        { word: "Flexible", def: "Capable of adapting easily to changing situations", example: "Yoga helps keep your body flexible." }
       ],
 
       5: [
-        { word: "Endure", def: "To patiently suffer through a difficult or painful situation over time", example: "Pioneers had to endure harsh winters." },
-        { word: "Exceed", def: "To be greater than an established limit, expectation, or quantity", example: "Speed limits must not be exceeded." },
-        { word: "Substantial", def: "Of considerable importance, size, value, or real significance", example: "They made a substantial donation to charity." },
-        { word: "Tremendous", def: "Extremely great in scale, amount, force, or intensity", example: "This new technology has tremendous potential." },
-        { word: "Inevitable", def: "Certain to happen, unavoidable, and impossible to prevent", example: "Change is an inevitable part of life." },
-        { word: "Competent", def: "Having the necessary knowledge, skill, or capacity to do something well", example: "She is a highly competent manager." },
-        { word: "Constant", def: "Occurring continuously over a prolonged period without interruption", example: "There is a constant hum from the fridge." },
-        { word: "Decline", def: "To gradually become smaller, fewer, or weaker in quality or condition", example: "Sales began to decline in autumn." },
-        { word: "Determine", def: "To firmly establish or dictate an outcome as a direct result of action", example: "Hard work will determine your success." },
-        { word: "Dynamic", def: "Characterized by continuous activity, progress, and energetic change", example: "The tech industry is very dynamic." },
-        { word: "Emerge", def: "To move out of concealment or away from a background into full view", example: "The sun began to emerge from behind clouds." },
-        { word: "Enormous", def: "Extraordinarily large in scale, extent, degree, or physical size", example: "They adopted an enormous dog." },
-        { word: "Extensive", def: "Covering a broad area, scope, or comprehensive range of details", example: "The library has an extensive collection of maps." },
-        { word: "Fierce", def: "Having or showing intense, aggressive, or powerful determination", example: "There was fierce competition for the prize." },
-        { word: "Fortunate", def: "Favored by good luck, advantageous circumstances, or prosperity", example: "We were fortunate to catch the last train." },
-        { word: "Genuine", def: "Truly authentic, real, and free from hypocrisy or imitation", example: "This ring is made of genuine gold." },
-        { word: "Gradual", def: "Taking place, changing, or developing by small, steady degrees over time", example: "There was a gradual change in weather." },
-        { word: "Guarantee", def: "A formal promise or assurance that certain conditions will be met", example: "The store offers a two-year guarantee." },
-        { word: "Integrate", def: "To combine two or more things to form a unified, harmonious whole", example: "They plan to integrate new tech into the system." },
-        { word: "Persevere", def: "To persistently continue a course of action despite difficulties or delays", example: "If you persevere, you will overcome any obstacle." },
-        { word: "Prevalent", def: "Widespread, dominant, or commonly accepted in a particular place or time", example: "Mobile devices are prevalent everywhere today." }
+        { word: "Endure", def: "To patiently suffer through a difficult situation over time", example: "Pioneers had to endure harsh winters." },
+        { word: "Exceed", def: "To be greater than an established limit or quantity", example: "Speed limits must not be exceeded." },
+        { word: "Substantial", def: "Of considerable importance, size, value, or worth", example: "They made a substantial donation to charity." },
+        { word: "Tremendous", def: "Extremely great in scale, amount, or intensity", example: "This new technology has tremendous potential." },
+        { word: "Inevitable", def: "Certain to happen and impossible to prevent", example: "Change is an inevitable part of life." },
+        { word: "Competent", def: "Having the necessary skill or capacity to do something well", example: "She is a highly competent manager." },
+        { word: "Constant", def: "Occurring continuously over a prolonged period", example: "There is a constant hum from the fridge." },
+        { word: "Decline", def: "To gradually become smaller, fewer, or weaker", example: "Sales began to decline in autumn." },
+        { word: "Determine", def: "To firmly establish an outcome as a direct result", example: "Hard work will determine your success." },
+        { word: "Dynamic", def: "Characterized by continuous activity and energetic change", example: "The tech industry is very dynamic." },
+        { word: "Emerge", def: "To move out of concealment into full view", example: "The sun began to emerge from behind clouds." },
+        { word: "Enormous", def: "Extraordinarily large in scale, extent, or size", example: "They adopted an enormous dog." },
+        { word: "Extensive", def: "Covering a broad area or comprehensive range of details", example: "The library has an extensive collection of maps." },
+        { word: "Fierce", def: "Having or showing intense or powerful determination", example: "There was fierce competition for the prize." },
+        { word: "Fortunate", def: "Favored by good luck or advantageous circumstances", example: "We were fortunate to catch the last train." },
+        { word: "Genuine", def: "Truly authentic, real, and free from imitation", example: "This ring is made of genuine gold." },
+        { word: "Gradual", def: "Developing by small, steady degrees over time", example: "There was a gradual change in weather." },
+        { word: "Guarantee", def: "A formal promise that certain conditions will be met", example: "The store offers a two-year guarantee." },
+        { word: "Integrate", def: "To combine two or more things to form a unified whole", example: "They plan to integrate new tech into the system." },
+        { word: "Persevere", def: "To continue a course of action despite difficulties", example: "If you persevere, you will overcome any obstacle." },
+        { word: "Prevalent", def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }
       ]
     };
 
@@ -571,6 +577,7 @@
       }
     }
 
+    // HIGH-PITCH BRIGHT SUCCESS SOUND
     function playSuccessSound() {
       try {
         initAudio();
@@ -578,8 +585,8 @@
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15);
+        osc.frequency.setValueAtTime(659.25, now); // E5
+        osc.frequency.exponentialRampToValueAtTime(987.77, now + 0.15); // B5 (Higher chime)
         gain.gain.setValueAtTime(0.15, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
         osc.connect(gain);
@@ -713,31 +720,45 @@
     }
 
     function handleCardClick(cardNode, item) {
-      if (cardNode.classList.contains("matched") || isGameOver || waitingForNext) return;
+      // Allow manual flipping for already matched cards
+      if (cardNode.classList.contains("matched")) {
+        cardNode.classList.toggle("flipped");
+        return;
+      }
+
+      if (isGameOver || waitingForNext) return;
 
       if (item.word === targetItem.word) {
         playSuccessSound();
         clearInterval(timerInterval);
         waitingForNext = true;
         
-        cardNode.classList.add("flipped", "matched");
+        // Step 1: Highlight with warm golden color
+        cardNode.classList.add("highlighted");
         score++;
         updateProgress();
         speakWord(item.word);
 
         nextBtnEl.classList.remove("disabled");
 
-        const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
-        if (remainingUnmatched.length === 0) {
-          setTimeout(() => {
-            if (currentLevelIdx < levelConfigs.length - 1) {
-              currentLevelIdx++;
-              initLevel();
-            } else {
-              showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
-            }
-          }, 1800);
-        }
+        // Step 2: After 1.5s delay, flip card and mark matched
+        setTimeout(() => {
+          cardNode.classList.remove("highlighted");
+          cardNode.classList.add("flipped", "matched");
+
+          const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
+          if (remainingUnmatched.length === 0) {
+            setTimeout(() => {
+              if (currentLevelIdx < levelConfigs.length - 1) {
+                currentLevelIdx++;
+                initLevel();
+              } else {
+                showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
+              }
+            }, 1200);
+          }
+        }, 1500);
+
       } else {
         playErrorSound();
         clearInterval(timerInterval);
