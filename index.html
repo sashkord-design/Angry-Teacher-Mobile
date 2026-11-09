@@ -1,495 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Angry Teacher - Mobile Edition</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color: #f7f3e9;
-      --card-bg: #fffdf7;
-      --card-back-bg: #1e3a40;
-      --primary-teal: #2b6777;
-      --accent-gold: #e5a93c;
-      --accent-red: #d9534f;
-      --dark-text: #222222;
-      --border-dark: #1f1f1f;
-      --shadow-color: rgba(31, 31, 31, 0.85);
-      --font-heading: 'Fredoka', sans-serif;
-      --font-body: 'Outfit', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      font-family: var(--font-body);
-      color: var(--dark-text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 5px 6px;
-      position: relative;
-    }
-
-    #app-container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    /* SLIM TOP HEADER PANEL */
-    .header-panel {
-      background: #f7f3e9;
-      border: 2.5px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 4px 8px;
-      box-shadow: 0px 2.5px 0px var(--shadow-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 44px;
-    }
-
-    .teacher-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .teacher-avatar-svg {
-      width: 30px;
-      height: 30px;
-      flex-shrink: 0;
-    }
-
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .game-title {
-      font-family: var(--font-heading);
-      font-size: 0.95rem;
-      color: var(--border-dark);
-      text-transform: uppercase;
-      line-height: 1;
-      letter-spacing: 0.5px;
-    }
-
-    .stats-row {
-      display: flex;
-      gap: 4px;
-    }
-
-    /* LEVEL PILL STYLING */
-    .stat-pill.level-pill {
-      background: var(--accent-gold);
-      border: 2px solid var(--border-dark);
-      border-radius: 8px;
-      padding: 2px 6px;
-      text-align: center;
-      min-width: 75px;
-      box-shadow: 0 1.5px 0 var(--shadow-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .stat-pill.teal {
-      background: var(--primary-teal);
-      color: #ffffff;
-      border: 2px solid var(--border-dark);
-      border-radius: 8px;
-      padding: 2px 6px;
-      text-align: center;
-      min-width: 55px;
-      box-shadow: 0 1.5px 0 var(--shadow-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .stat-label {
-      font-size: 0.45rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      display: block;
-      opacity: 0.9;
-      line-height: 1;
-    }
-
-    .stat-value {
-      font-family: var(--font-heading);
-      font-size: 0.7rem;
-      line-height: 1.1;
-      margin-top: 1px;
-    }
-
-    .level-title-sub {
-      font-size: 0.45rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      line-height: 1;
-      opacity: 0.85;
-      margin-top: 1px;
-    }
-
-    /* EXPANDED DEFINITION DISPLAY PANEL */
-    .definition-card {
-      background: var(--primary-teal);
-      border: 3px solid var(--border-dark);
-      border-radius: 14px;
-      padding: 10px 10px;
-      color: #ffffff;
-      box-shadow: 0px 3px 0px var(--shadow-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      min-height: 68px;
-    }
-
-    .definition-text {
-      font-size: 0.85rem;
-      font-weight: 600;
-      line-height: 1.3;
-      text-align: center;
-      flex-grow: 1;
-      font-style: italic;
-    }
-
-    /* UNIFIED TIMER & NEXT BUTTON STYLES */
-    .timer-badge, .next-btn {
-      background: var(--accent-gold);
-      color: var(--border-dark);
-      border: 2px solid var(--border-dark);
-      border-radius: 9px;
-      padding: 2px 6px;
-      font-family: var(--font-heading);
-      font-size: 0.8rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 0 var(--border-dark);
-      min-width: 44px;
-      height: 36px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .next-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 0px 0 var(--border-dark);
-    }
-
-    .next-btn.disabled {
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    .next-arrow {
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
-      line-height: 1;
-    }
-
-    .next-label {
-      font-size: 0.4rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      line-height: 1;
-      margin-top: 1px;
-    }
-
-    /* 3 COLUMNS CARDS GRID (FIXED 3x3) */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 6px;
-      width: 100%;
-    }
-
-    .card {
-      perspective: 1000px;
-      height: 82px;
-      cursor: pointer;
-    }
-
-    .card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      transition: transform 0.4s ease;
-      transform-style: preserve-3d;
-    }
-
-    .card.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .card-front, .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      border: 2.5px solid var(--border-dark);
-      border-radius: 11px;
-      box-shadow: 0px 3px 0px var(--shadow-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px 4px;
-      transition: background-color 0.3s ease;
-    }
-
-    .card-front {
-      background-color: var(--card-bg);
-      color: var(--border-dark);
-    }
-
-    .card-word {
-      font-family: var(--font-heading);
-      font-size: clamp(0.7rem, 3.2vw, 0.88rem);
-      text-align: center;
-      line-height: 1.1;
-      width: 100%;
-    }
-
-    .card-back {
-      background-color: var(--card-back-bg);
-      color: #ffffff;
-      transform: rotateY(180deg);
-      border-color: var(--border-dark);
-      padding: 3px 5px;
-    }
-
-    .card-back-text {
-      font-size: 0.52rem;
-      line-height: 1.15;
-      font-weight: 400;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .card.highlighted .card-front {
-      background-color: #f9d98c;
-      border-color: #e5a93c;
-    }
-
-    .card.matched .card-front {
-      background-color: #a8dadc;
-      opacity: 0.8;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(31, 31, 31, 0.85);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 16px;
-    }
-
-    .modal-box {
-      background: var(--bg-color);
-      border: 4px solid var(--border-dark);
-      border-radius: 20px;
-      padding: 20px 18px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
-      box-shadow: 0 6px 0 var(--border-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-title {
-      font-family: var(--font-heading);
-      font-size: 1.3rem;
-      color: var(--accent-red);
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
-
-    .modal-desc {
-      font-size: 0.85rem;
-      font-weight: 600;
-      line-height: 1.4;
-      color: var(--dark-text);
-    }
-
-    .modal-btn {
-      background: var(--accent-gold);
-      color: var(--border-dark);
-      border: 3px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 9px 16px;
-      font-family: var(--font-heading);
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: 0 3px 0 var(--border-dark);
-      width: 100%;
-    }
-
-    .modal-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 var(--border-dark);
-    }
-
-    .modal-btn.secondary {
-      background: var(--primary-teal);
-      color: #ffffff;
-    }
-
-    .level-select-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      width: 100%;
-      margin-top: 4px;
-    }
-
-    .level-sel-btn {
-      background: var(--card-bg);
-      border: 2px solid var(--border-dark);
-      border-radius: 10px;
-      padding: 8px 6px;
-      font-family: var(--font-heading);
-      font-size: 0.75rem;
-      cursor: pointer;
-      box-shadow: 0 2px 0 var(--border-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .level-sel-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 0px 0 var(--border-dark);
-    }
-
-    .level-sel-btn.locked {
-      background: #e0dcd0;
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="modal-overlay" id="modal-screen">
-    <div class="modal-box">
-      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:54px; height:54px;">
-        <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
-        <circle cx="72" cy="11" r="5" fill="#f39c12"/>
-        <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
-        <rect x="42" y="16" width="16" height="10" fill="#1f1f1f" rx="3"/>
-        <circle cx="38" cy="52" r="5" fill="#ffffff"/>
-        <circle cx="62" cy="52" r="5" fill="#ffffff"/>
-        <circle cx="39" cy="52" r="2.5" fill="#1f1f1f"/>
-        <circle cx="61" cy="52" r="2.5" fill="#1f1f1f"/>
-        <path d="M30 44 L44 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-        <path d="M70 44 L56 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-        <path d="M36 68 Q50 60 64 68" stroke="#1f1f1f" stroke-width="3" fill="none"/>
-      </svg>
-      
-      <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
-      
-      <div class="modal-desc" id="modal-desc">
-        Don't let the angry teacher explode — match the correct word!<br><br>
-        <strong>You have 25 seconds for each word.</strong>
-      </div>
-      
-      <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
-        <button class="modal-btn" id="modal-start-main-btn">START GAME</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="app-container">
-    <div class="header-panel">
-      <div class="teacher-badge">
-        <svg class="teacher-avatar-svg" viewBox="0 0 100 100">
-          <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
-          <circle cx="72" cy="11" r="5" fill="#f39c12"/>
-          <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
-          <rect x="42" y="16" width="16" height="10" fill="#1f1f1f" rx="3"/>
-          <circle cx="38" cy="52" r="5" fill="#ffffff"/>
-          <circle cx="62" cy="52" r="5" fill="#ffffff"/>
-          <circle cx="39" cy="52" r="2.5" fill="#1f1f1f"/>
-          <circle cx="61" cy="52" r="2.5" fill="#1f1f1f"/>
-          <path d="M30 44 L44 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-          <path d="M70 44 L56 49" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round"/>
-          <path d="M36 68 Q50 60 64 68" stroke="#1f1f1f" stroke-width="3" fill="none"/>
-        </svg>
-
-        <div class="title-block">
-          <div class="game-title">Angry Teacher</div>
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-pill level-pill" id="level-pill-btn" style="cursor: pointer;" title="Select Level">
-          <span class="stat-value" id="level-num">LEVEL 1</span>
-          <span class="level-title-sub" id="level-title-sub">Freshman</span>
-        </div>
-        <div class="stat-pill teal">
-          <span class="stat-label">Progress</span>
-          <span class="stat-value" id="progress-val">0/9</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="definition-card">
-      <div class="timer-badge" id="timer">25s</div>
-      <div class="definition-text" id="def-text">Ready to play?</div>
-      <button class="next-btn disabled" id="next-btn" title="Next Word">
-        <span class="next-arrow">→</span>
-        <span class="next-label">next</span>
-      </button>
-    </div>
-
-    <div class="cards-grid" id="cards-grid"></div>
-  </div>
-
-  <script>
+<script>
     const vocabularyDBByLevel = {
       1: [
         { word: "Notice", entries: [{ def: "To see or hear someone or something", example: "Did you notice her new haircut today?" }, { def: "To become aware of something through observation", example: "I did not notice any strange signs." }] },
@@ -628,11 +137,11 @@
         { word: "Guarantee", entries: [{ def: "A formal promise that certain conditions will be met", example: "The store offers a two-year product guarantee." }, { def: "To provide assurance against defects", example: "Manufacturers guarantee high quality standards." }] },
         { word: "Integrate", entries: [{ def: "To combine two or more things to form a unified whole", example: "They plan to integrate new tech into the system." }, { def: "To blend into a community seamlessly", example: "New immigrants integrate quickly through work." }] },
         { word: "Persevere", entries: [{ def: "To continue a course of action despite difficulties", example: "If you persevere, you will overcome any obstacle." }, { def: "To maintain steadfast effort in pursuits", example: "Researchers persevere despite failed tests." }] },
-        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }, { def: "Dominant in occurrence across society", example: "Remote work models are increasingly prevalent." }] },
+        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }] },
         { word: "Ambiguous", entries: [{ def: "Open to more than one interpretation; unclear", example: "His ambiguous reply left us in deep doubt." }, { def: "Lacking specific definition or clarity", example: "The contract clauses were legally ambiguous." }] },
         { word: "Benevolent", entries: [{ def: "Well meaning and kindly; charitable in nature", example: "She was a benevolent founder of the clinic." }, { def: "Marked by disposition to do good", example: "The billionaire established benevolent trusts." }] },
         { word: "Candid", entries: [{ def: "Truthful and straightforward; frank in expression", example: "He gave a candid interview about past mistakes." }, { def: "Unposed and natural in photography", example: "The photographer captured candid street smiles." }] },
-        { word: "Meticulous", entries: [{ def: "Showing great attention to detail; precise", example: "The artist did meticulous work on the portrait." }, { def: "Extremely careful in execution", example: "Surgeons require meticulous precision." }] },
+        { word: "Meticulous", entries: [{ def: "Smart attention to detail; precise execution", example: "The artist did meticulous work on the portrait." }, { def: "Extremely careful in execution", example: "Surgeons require meticulous precision." }] },
         { word: "Resilient", entries: [{ def: "Able to withstand or recover quickly from hardships", example: "Children are often remarkably resilient after setbacks." }, { def: "Springing back to original shape after stretch", example: "Rubber bands are highly resilient materials." }] },
         { word: "Skeptical", entries: [{ def: "Not easily convinced; having reservations or doubts", example: "Experts remain skeptical about the new discovery." }, { def: "Inclined to question unproven claims", example: "Scientists are naturally skeptical of anomalies." }] }
       ]
@@ -803,41 +312,45 @@
       } catch (e) {}
     }
 
-    // ПОШУК ТА ВИБІР ПРИРОДНОГО ЧОЛОВІЧОГО ГОЛОСУ (БАС/БАРИТОН)
-    let selectedDeepMaleVoice = null;
-    function loadDeepMaleVoice() {
-      if (!('speechSynthesis' in window)) return;
+    // ПОКРАЩЕНИЙ АВТОПОШУК ГЛИБОКОГО ЧОЛОВІЧОГО ГОЛОСУ ДЛЯ МОБІЛЬНИХ ТА ПК
+    function getBestMaleVoice() {
+      if (!('speechSynthesis' in window)) return null;
       const voices = window.speechSynthesis.getVoices();
       
-      // Шукаємо преміум або чоловічі англійські голоси
-      selectedDeepMaleVoice = voices.find(v => v.lang.startsWith('en') && (
+      // Порядок пріоритетів: шукаємо характерні чоловічі імена / мітки в системі
+      return voices.find(v => v.lang.startsWith('en') && (
         v.name.includes('Google UK English Male') || 
+        v.name.includes('Google US English') ||
         v.name.includes('Daniel') || 
         v.name.includes('Oliver') || 
         v.name.includes('David') || 
         v.name.includes('George') || 
         v.name.includes('Ryan') ||
         v.name.includes('Arthur') ||
+        v.name.includes('Alex') ||
         v.name.toLowerCase().includes('male')
       )) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) 
-         || voices.find(v => v.lang.startsWith('en'));
+         || voices.find(v => v.lang.startsWith('en')) || voices[0];
     }
 
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = loadDeepMaleVoice;
-      loadDeepMaleVoice();
+      window.speechSynthesis.onvoiceschanged = getBestMaleVoice;
     }
 
-    // ФУНКЦІЯ ОЗВУЧЕННЯ НИЗЬКИМ ПРИРОДНИМ ЧОЛОВІЧИМ ГОЛОСОМ
     function speakWord(text) {
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-GB';
-      if (selectedDeepMaleVoice) utterance.voice = selectedDeepMaleVoice;
-      utterance.rate = 0.88; // спокійна, розбірлива швидкість
-      utterance.pitch = 0.82; // знижуємо тональність для ефекту глибокого басу
+      utterance.lang = 'en-US'; // універсальна локаль для мобільних пристроїв
+      
+      const voice = getBestMaleVoice();
+      if (voice) {
+        utterance.voice = voice;
+      }
+      
+      utterance.rate = 0.85; // плавна і розмірена швидкість
+      utterance.pitch = 0.75; // сильніше занижуємо тон для перетворення на глибокий бас
       
       window.speechSynthesis.speak(utterance);
     }
@@ -955,7 +468,6 @@
         score++;
         updateProgress();
         
-        // ОЗВУЧЕННЯ ПРАВИЛЬНОГО СЛОВА НИЗЬКИМ ГОЛОСОМ
         speakWord(item.word);
 
         nextBtnEl.classList.remove("disabled");
@@ -1137,5 +649,3 @@
       }
     });
   </script>
-</body>
-</html>
