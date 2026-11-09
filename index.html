@@ -490,7 +490,6 @@
   </div>
 
   <script>
-    // БАЗА ДАНИХ: РІВНО ПО 27 СЛІВ НА КОЖНИЙ РІВЕНЬ З АЛЬТЕРНАТИВНИМИ ВИЗНАЧЕННЯМИ
     const vocabularyDBByLevel = {
       1: [
         { word: "Notice", entries: [{ def: "To see or hear someone or something", example: "Did you notice her new haircut today?" }, { def: "To become aware of something through observation", example: "I did not notice any strange signs." }] },
@@ -804,6 +803,45 @@
       } catch (e) {}
     }
 
+    // ПОШУК ТА ВИБІР ПРИРОДНОГО ЧОЛОВІЧОГО ГОЛОСУ (БАС/БАРИТОН)
+    let selectedDeepMaleVoice = null;
+    function loadDeepMaleVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      
+      // Шукаємо преміум або чоловічі англійські голоси
+      selectedDeepMaleVoice = voices.find(v => v.lang.startsWith('en') && (
+        v.name.includes('Google UK English Male') || 
+        v.name.includes('Daniel') || 
+        v.name.includes('Oliver') || 
+        v.name.includes('David') || 
+        v.name.includes('George') || 
+        v.name.includes('Ryan') ||
+        v.name.includes('Arthur') ||
+        v.name.toLowerCase().includes('male')
+      )) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) 
+         || voices.find(v => v.lang.startsWith('en'));
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadDeepMaleVoice;
+      loadDeepMaleVoice();
+    }
+
+    // ФУНКЦІЯ ОЗВУЧЕННЯ НИЗЬКИМ ПРИРОДНИМ ЧОЛОВІЧИМ ГОЛОСОМ
+    function speakWord(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-GB';
+      if (selectedDeepMaleVoice) utterance.voice = selectedDeepMaleVoice;
+      utterance.rate = 0.88; // спокійна, розбірлива швидкість
+      utterance.pitch = 0.82; // знижуємо тональність для ефекту глибокого басу
+      
+      window.speechSynthesis.speak(utterance);
+    }
+
     function startGame(levelIdx = 0) {
       initAudio();
       currentLevelIdx = levelIdx;
@@ -916,6 +954,9 @@
         cardNode.classList.add("highlighted");
         score++;
         updateProgress();
+        
+        // ОЗВУЧЕННЯ ПРАВИЛЬНОГО СЛОВА НИЗЬКИМ ГОЛОСОМ
+        speakWord(item.word);
 
         nextBtnEl.classList.remove("disabled");
 
