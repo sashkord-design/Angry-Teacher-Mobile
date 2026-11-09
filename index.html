@@ -217,18 +217,19 @@
       margin-top: 1px;
     }
 
-    /* 3 COLUMNS CARDS GRID */
+    /* 3 COLUMNS CARDS GRID (FIXED 3x3 = 9 CARDS) */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
       gap: 6px;
       width: 100%;
     }
 
-    /* 3D FLIP CARD STYLES */
+    /* 3D FLIP CARD STYLES OPTIMIZED FOR 3x3 */
     .card {
       perspective: 1000px;
-      height: 68px;
+      height: 74px;
       cursor: pointer;
     }
 
@@ -333,19 +334,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .modal-title {
       font-family: var(--font-heading);
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       color: var(--accent-red);
       text-transform: uppercase;
       line-height: 1.1;
     }
 
     .modal-desc {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
       line-height: 1.4;
       color: var(--dark-text);
@@ -356,14 +359,13 @@
       color: var(--border-dark);
       border: 3px solid var(--border-dark);
       border-radius: 12px;
-      padding: 10px 20px;
+      padding: 9px 16px;
       font-family: var(--font-heading);
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 0 3px 0 var(--border-dark);
       width: 100%;
-      margin-top: 4px;
     }
 
     .modal-btn:active {
@@ -376,6 +378,40 @@
       color: #ffffff;
     }
 
+    .level-select-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .level-sel-btn {
+      background: var(--card-bg);
+      border: 2px solid var(--border-dark);
+      border-radius: 10px;
+      padding: 8px 6px;
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--border-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .level-sel-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 0px 0 var(--border-dark);
+    }
+
+    .level-sel-btn.locked {
+      background: #e0dcd0;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -386,7 +422,7 @@
   <!-- START & CHECKPOINT OVERLAY SCREEN -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
-      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:64px; height:64px;">
+      <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:54px; height:54px;">
         <path d="M45 20 Q55 5 70 12" stroke="#d9534f" stroke-width="4" fill="none" stroke-dasharray="3,3"/>
         <circle cx="72" cy="11" r="5" fill="#f39c12"/>
         <circle cx="50" cy="58" r="34" fill="#d9534f" stroke="#1f1f1f" stroke-width="4"/>
@@ -404,7 +440,7 @@
       
       <div class="modal-desc" id="modal-desc">
         Don't let the angry teacher explode — match the correct word!<br><br>
-        <strong>You have 25 seconds for each word.</strong>
+        <strong>Each level features 9 cards with random words.</strong>
       </div>
       
       <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
@@ -437,7 +473,7 @@
       </div>
 
       <div class="stats-row">
-        <div class="stat-pill level-pill">
+        <div class="stat-pill level-pill" id="level-pill-btn" style="cursor: pointer;" title="Select Level">
           <span class="stat-value" id="level-num">LEVEL 1</span>
           <span class="level-title-sub" id="level-title-sub">Freshman</span>
         </div>
@@ -458,11 +494,12 @@
       </button>
     </div>
 
-    <!-- CARDS GRID (3 PER ROW) -->
+    <!-- CARDS GRID (FIXED 3x3) -->
     <div class="cards-grid" id="cards-grid"></div>
   </div>
 
   <script>
+    // 40 WORDS PER LEVEL (TOTAL 200 WORDS POOL)
     const vocabularyDBByLevel = {
       1: [
         { word: "Notice", def: "To see or hear someone or something", example: "Did you notice her new haircut today?" },
@@ -479,7 +516,32 @@
         { word: "Expect", def: "To think that something will happen", example: "I expect to finish this report by Friday." },
         { word: "Explain", def: "To tell someone details so they understand", example: "Can you explain this math rule to me?" },
         { word: "Choose", def: "To pick one thing out of many options", example: "You can choose any dessert you like." },
-        { word: "Improve", def: "To make something better than before", example: "Reading books helps improve your vocabulary." }
+        { word: "Improve", def: "To make something better than before", example: "Reading books helps improve your vocabulary." },
+        { word: "Allow", def: "To let someone do something or have something", example: "Dogs are not allowed in this shop." },
+        { word: "Appear", def: "To become noticeable or to start to be seen", example: "The sun began to appear through the clouds." },
+        { word: "Arrive", def: "To reach a place at the end of a journey", example: "What time will the train arrive?" },
+        { word: "Borrow", def: "To take and use something with the promise to return it", example: "Can I borrow your pen for a second?" },
+        { word: "Breathe", def: "To take air into your lungs and let it out", example: "Relax, close your eyes, and breathe deeply." },
+        { word: "Catch", def: "To capture or grab something moving through the air", example: "He tried to catch the flying ball." },
+        { word: "Clean", def: "Free from dirt, marks, or stains", example: "Keep your room clean and tidy." },
+        { word: "Climb", def: "To go up or ascend using feet and hands", example: "They love to climb mountains on weekends." },
+        { word: "Collect", def: "To bring things together from different places", example: "She likes to collect vintage stamps." },
+        { word: "Common", def: "Happening often or existing in large numbers", example: "Colds are very common in winter." },
+        { word: "Compare", def: "To look at things to see how they are similar", example: "Compare these two smartphones before buying." },
+        { word: "Complain", def: "To express dissatisfaction about something", example: "He always complains about the weather." },
+        { word: "Complete", def: "To finish making or doing something", example: "Please complete the form in black ink." },
+        { word: "Connect", def: "To join two or more things together", example: "Connect your phone to the charger." },
+        { word: "Continue", def: "To keep doing something without stopping", example: "Let's continue our lesson tomorrow." },
+        { word: "Control", def: "To have power over someone or something", example: "You must learn to control your temper." },
+        { word: "Correct", def: "Free from error; true or accurate", example: "Your answer to this test question is correct." },
+        { word: "Damage", def: "Physical harm caused to something", example: "The storm caused major damage to roofs." },
+        { word: "Danger", def: "The possibility of suffering harm or injury", example: "Children should be kept away from danger." },
+        { word: "Deliver", def: "To bring goods or letters to a destination", example: "The postman will deliver a parcel today." },
+        { word: "Depend", def: "Be controlled or determined by something else", example: "Success depends on your daily effort." },
+        { word: "Describe", def: "To give an account in words of someone or something", example: "Can you describe the missing dog?" },
+        { word: "Desert", def: "A dry, barren area of land covered with sand", example: "It is very hot during the day in the desert." },
+        { word: "Direct", def: "Extending in a straight line without stopping", example: "We took a direct flight to Paris." },
+        { word: "Discuss", def: "To talk about something with someone else", example: "We need to discuss our vacation plans." }
       ],
       2: [
         { word: "Challenge", def: "Something new and difficult to do", example: "He accepted the challenge with enthusiasm." },
@@ -496,7 +558,32 @@
         { word: "Culture", def: "The traditions and arts of a country", example: "Japanese culture has deep ancient traditions." },
         { word: "Curious", def: "Wanting to know or learn more about things", example: "Children are naturally curious about the world." },
         { word: "Desire", def: "A strong wish to have or do something", example: "He has a strong desire to travel." },
-        { word: "Doubt", def: "A feeling when you are not sure about something", example: "I have no doubt that you will pass." }
+        { word: "Doubt", def: "A feeling when you are not sure about something", example: "I have no doubt that you will pass." },
+        { word: "Ancient", def: "Belonging to the very distant past in history", example: "They explored ancient ruins in Rome." },
+        { word: "Arrange", def: "To put things in a neat, attractive order", example: "She likes to arrange flowers in a vase." },
+        { word: "Artificial", def: "Made by humans rather than occurring naturally", example: "This juice contains artificial flavors." },
+        { word: "Audience", def: "The assembled spectators or listeners at an event", example: "The audience clapped loudly after the show." },
+        { word: "Average", def: "Constitutinng a typical or middle value", example: "His grades are well above average." },
+        { word: "Benefit", def: "An advantage or profit gained from something", example: "Regular exercise has great health benefits." },
+        { word: "Brilliant", def: "Exceptionally clever, bright, or talented", example: "She had a brilliant idea for the project." },
+        { word: "Campaign", def: "A planned series of actions to achieve a goal", example: "The charity launched a new winter campaign." },
+        { word: "Category", def: "A class or division of people or things", example: "Books are sorted by category in the library." },
+        { word: "Celebrate", def: "To mark a special day with festivities", example: "We gathered to celebrate her birthday." },
+        { word: "Century", def: "A period of one hundred years", example: "This castle was built many centuries ago." },
+        { word: "Character", def: "The mental and moral qualities of an individual", example: "Honesty is a core part of his character." },
+        { word: "Claim", def: "To state that something is true without proof", example: "He claims to have seen a UFO." },
+        { word: "Comfort", def: "A state of physical ease and freedom from pain", example: "Her words brought great comfort to him." },
+        { word: "Commercial", def: "Concerned with or engaged in commerce or trade", example: "The commercial success of the film was huge." },
+        { word: "Commit", def: "To pledge or bind to a certain course of action", example: "You need to commit time to learn coding." },
+        { word: "Communicate", def: "To share or exchange information successfully", example: "Good leaders communicate clearly with their team." },
+        { word: "Community", def: "A group of people living in the same place", example: "Our local community is very friendly." },
+        { word: "Compare", def: "To estimate note similarity between items", example: "Compare the prices before buying." },
+        { word: "Competent", def: "Having the necessary ability or skills", example: "She is a highly competent manager." },
+        { word: "Complex", def: "Consisting of many different connected parts", example: "The human brain is a complex organ." },
+        { word: "Concept", def: "An abstract idea or general notion", example: "The concept of time fascinates physicists." },
+        { word: "Conclude", def: "To bring something to an end", example: "To conclude, I want to thank everyone." },
+        { word: "Condition", def: "The state of something, especially physical fitness", example: "The car is in excellent condition." },
+        { word: "Confirm", def: "To establish the truth or correctness of", example: "Please confirm your flight reservation." }
       ],
       3: [
         { word: "Achieve", def: "To successfully reach a desired goal through skill or effort", example: "Hard work helps you achieve your goals." },
@@ -504,16 +591,41 @@
         { word: "Convince", def: "To persuade someone firmly to believe or do something", example: "She tried to convince him to join the trip." },
         { word: "Encourage", def: "To inspire with confidence or hope to take action", example: "Parents should encourage children to read." },
         { word: "Distribute", def: "To hand out or share something among a group of people", example: "Volunteers distribute food to the homeless." },
-        { word: "Audience", def: "The assembled group of listeners or viewers at an event", example: "The audience clapped loudly after the show." },
         { word: "Campaign", def: "A planned series of organized actions to achieve a goal", example: "The charity launched a new winter campaign." },
-        { word: "Category", def: "A specific class or group of things with shared traits", example: "Books are sorted by category in the library." },
         { word: "Character", def: "The distinctive mental and moral qualities of a person", example: "Honesty is a core part of his character." },
         { word: "Confirm", def: "To verify or establish the truth and accuracy of a fact", example: "Please confirm your flight reservation." },
         { word: "Consider", def: "To think deeply and carefully about a decision or option", example: "Consider all options before deciding." },
         { word: "Demonstrate", def: "To clearly show, explain, or prove how something works", example: "Let me demonstrate how this machine works." },
         { word: "Develop", def: "To grow, expand, or cause something to become more advanced", example: "Software engineers develop mobile apps." },
         { word: "Device", def: "A piece of electronic equipment designed for a specific task", example: "A smartphone is a pocket communication device." },
-        { word: "Efficient", def: "Achieving maximum productivity with minimum wasted effort", example: "Electric cars are very energy efficient." }
+        { word: "Efficient", def: "Achieving maximum productivity with minimum wasted effort", example: "Electric cars are very energy efficient." },
+        { word: "Connect", def: "To bring together so as to form a link or association", example: "Connect the printer to your laptop." },
+        { word: "Conscious", def: "Aware of and responding to one's surroundings", example: "She was fully conscious during the procedure." },
+        { word: "Constant", def: "Occurring continuously over a prolonged period", example: "There is a constant hum from the fridge." },
+        { word: "Construct", def: "To build or erect something, typically a building or road", example: "Workers construct a bridge across the river." },
+        { word: "Consume", def: "To eat, drink, or ingest food and energy resources", example: "Cars consume a lot of fossil fuel." },
+        { word: "Contain", def: "To have inside or enclose within bounds", example: "This box contains old family photos." },
+        { word: "Contribute", def: "To give something in order to help achieve a common aim", example: "Everyone can contribute to a cleaner city." },
+        { word: "Control", def: "The power to influence or direct behavior and systems", example: "You must learn to control your emotions." },
+        { word: "Cooperate", def: "To act jointly with others for mutual benefit", example: "Please cooperate with the police officers." },
+        { word: "Courage", def: "The ability to do something that frightens you", example: "It took great courage to speak up." },
+        { word: "Critical", def: "Expressing adverse comments or crucial turning points", example: "Critical thinking is vital in modern science." },
+        { word: "Crucial", def: "Of extreme importance; decisive for success", example: "Timing is crucial for this experiment." },
+        { word: "Current", def: "Belonging to the present time; happening now", example: "What is your current address?" },
+        { word: "Decade", def: "A period of ten consecutive years", example: "She lived in Paris for a whole decade." },
+        { word: "Decline", def: "To become smaller, fewer, or worse in quality", example: "Sales began to decline in autumn." },
+        { word: "Defend", def: "To resist an attack or protect from harm", example: "Soldiers defended their homeland." },
+        { word: "Define", def: "To state or describe the exact nature of a term", example: "Can you define this technical term?" },
+        { word: "Delay", def: "To make someone or something late or slow down", example: "Bad weather caused a flight delay." },
+        { word: "Demand", def: "An insistent and peremptory request for action", example: "There is high demand for fresh fruit." },
+        { word: "Depend", def: "Be controlled or determined by external factors", example: "Success depends on your daily effort." },
+        { word: "Desire", def: "A strong feeling of wanting to have something", example: "He has a strong desire to travel." },
+        { word: "Destroy", def: "To end the existence of by damaging heavily", example: "Storms can destroy crops quickly." },
+        { word: "Detail", def: "An individual fact or item of information", example: "Pay attention to every small detail." },
+        { word: "Determine", def: "To cause something to occur in a specific way", example: "Hard work will determine your success." },
+        { word: "Direct", def: "Moving without stopping or intermediary shifts", example: "We took a direct flight to London." },
+        { word: "Discuss", def: "To talk about something with another person", example: "Let us discuss the plan over lunch." },
+        { word: "Distribute", def: "To share out items among a group", example: "Volunteers distribute food to the homeless." }
       ],
       4: [
         { word: "Analyze", def: "To examine methodically and in detail to interpret it", example: "We need to analyze the test results." },
@@ -533,7 +645,29 @@
         { word: "Evidence", def: "The available body of facts proving a proposition", example: "Police found clear evidence at the crime scene." },
         { word: "Examine", def: "To inspect someone or something thoroughly", example: "Doctors examine patients to diagnose illness." },
         { word: "Feature", def: "A distinctive characteristic or aspect of a product", example: "Autofocus is a great camera feature." },
-        { word: "Flexible", def: "Capable of adapting easily to changing situations", example: "Yoga helps keep your body flexible." }
+        { word: "Flexible", def: "Capable of adapting easily to changing situations", example: "Yoga helps keep your body flexible." },
+        { word: "Diverse", def: "Showing a great deal of variety or multi-ethnic features", example: "Our team has a diverse range of skills." },
+        { word: "Dynamic", def: "Characterized by constant change, activity, or progress", example: "The tech industry is very dynamic." },
+        { word: "Economy", def: "The state of a country or region in terms of wealth and trade", example: "Tourism boosts the local economy." },
+        { word: "Effect", def: "A change which is a result or consequence of an action", example: "Coffee has a strong stimulating effect on me." },
+        { word: "Emerge", def: "To move out of concealment and come into view", example: "The sun began to emerge from behind clouds." },
+        { word: "Emotion", def: "A strong feeling deriving from one's circumstances", example: "Joy and sadness are basic human emotions." },
+        { word: "Enable", def: "To give someone or something the authority or means", example: "Glasses enable people to see clearly." },
+        { word: "Enormous", def: "Very large in size, quantity, or scale", example: "They adopted an enormous dog." },
+        { word: "Ensure", def: "To make certain that something shall occur safely", example: "Double check your work to ensure accuracy." },
+        { word: "Entertain", def: "To provide amusement or enjoyment for guests", example: "Magicians love to entertain children." },
+        { word: "Environment", def: "The surroundings or conditions in which people live", example: "We must protect our natural environment." },
+        { word: "Estimate", def: "Roughly calculate or judge the value or number", example: "Can you estimate the total repair cost?" },
+        { word: "Exceed", def: "To be greater in number or size than a standard", example: "Speed limits must not be exceeded." },
+        { word: "Exchange", def: "To give something and receive something else back", example: "They like to exchange cultural stories." },
+        { word: "Expand", def: "To become or make larger or more extensive", example: "The business plans to expand overseas." },
+        { word: "Experience", def: "Practical contact with and observation of facts", example: "Job experience is vital for your resume." },
+        { word: "Express", def: "To convey a thought or feeling in words or art", example: "Art is a great way to express emotions." },
+        { word: "Extensive", def: "Covering a large area or comprehensive scope", example: "The library has an extensive collection of maps." },
+        { word: "Factor", def: "A circumstance or influence that contributes to a result", example: "Weather is a key factor in crop growth." },
+        { word: "Familiar", def: "Well known from close association or previous contact", example: "That voice sounds very familiar to me." },
+        { word: "Fierce", def: "Having or displaying an aggressive intensity", example: "There was fierce competition for the prize." },
+        { word: "Focus", def: "The center of interest or activity during a task", example: "Try to focus on your grammar exercises." }
       ],
       5: [
         { word: "Endure", def: "To patiently suffer through a difficult situation over time", example: "Pioneers had to endure harsh winters." },
@@ -556,19 +690,39 @@
         { word: "Guarantee", def: "A formal promise that certain conditions will be met", example: "The store offers a two-year guarantee." },
         { word: "Integrate", def: "To combine two or more things to form a unified whole", example: "They plan to integrate new tech into the system." },
         { word: "Persevere", def: "To continue a course of action despite difficulties", example: "If you persevere, you will overcome any obstacle." },
-        { word: "Prevalent", def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }
+        { word: "Prevalent", def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." },
+        { word: "Ambiguous", def: "Open to more than one interpretation; having a double meaning", example: "His ambiguous reply left us in doubt." },
+        { word: "Benevolent", def: "Well meaning and kindly; serving a charitable purpose", example: "She was a benevolent founder of the local shelter." },
+        { word: "Candid", def: "Truthful and straightforward; frank in expression", example: "He gave a candid interview about his past mistakes." },
+        { word: "Meticulous", def: "Showing great attention to detail; very careful and precise", example: "The artist did meticulous work on the portrait." },
+        { word: "Resilient", def: "Able to withstand or recover quickly from difficult conditions", example: "Children are often remarkably resilient after setbacks." },
+        { word: "Skeptical", def: "Not easily convinced; having reservations or doubts", example: "Experts remain skeptical about the new discovery." },
+        { word: "Superficial", def: "Existing or occurring at or on the surface; lacking depth", example: "They only had a superficial understanding of physics." },
+        { word: "Tenuous", def: "Very weak, slender, or slight in structure or connection", example: "The connection between the two clues was tenuous." },
+        { word: "Ubiquitous", def: "Present, appearing, or found everywhere simultaneously", example: "Smartphones have become ubiquitous in modern society." },
+        { word: "Vindicate", def: "Clear someone of blame or suspicion with fresh evidence", example: "The new DNA test helped to vindicate the innocent man." },
+        { word: "Pragmatic", def: "Dealing with things sensibly and realistically based on practicality", example: "We need a pragmatic approach to solve this budget crisis." },
+        { word: "Melancholy", def: "A deep, pensive, and often long-lasting sadness", example: "Autumn rain always brings a sense of melancholy." },
+        { word: "Spontaneous", def: "Performed or occurring as a result of a sudden inner impulse", example: "The crowd broke into spontaneous applause." },
+        { word: "Vulnerable", def: "Susceptible to physical or emotional attack or harm", example: "Baby birds are extremely vulnerable in the nest." },
+        { word: "Scrutinize", def: "Examine or inspect closely and thoroughly", example: "Customs officers scrutinize every passport carefully." },
+        { word: "Subtle", def: "So delicate or precise as to be difficult to analyze or notice", example: "There was a subtle change in his tone of voice." },
+        { word: "Pivotal", def: "Of crucial importance in relation to the development of something", example: "This discovery marked a pivotal moment in medicine." },
+        { word: "Integrity", def: "The quality of being honest and having strong moral principles", example: "She is a journalist of unquestionable integrity." },
+        { word: "Prudent", def: "Acting with or showing care and thought for the future", example: "It is prudent to save money for rainy days." }
       ]
     };
 
     const levelConfigs = [
       { level: 1, count: 9, title: "Freshman" },
-      { level: 2, count: 12, title: "Sophomore" },
-      { level: 3, count: 15, title: "Junior Scholar" },
-      { level: 4, count: 18, title: "Senior Expert" },
-      { level: 5, count: 21, title: "Doctor of Philosophy (Ph.D.)" }
+      { level: 2, count: 9, title: "Sophomore" },
+      { level: 3, count: 9, title: "Junior Scholar" },
+      { level: 4, count: 9, title: "Senior Expert" },
+      { level: 5, count: 9, title: "Doctor of Philosophy (Ph.D.)" }
     ];
 
     let currentLevelIdx = 0;
+    let maxUnlockedLevel = 1;
     let score = 0;
     let targetItem = null;
     let timerInterval = null;
@@ -589,6 +743,22 @@
     const modalTitle = document.getElementById("modal-title");
     const modalDesc = document.getElementById("modal-desc");
     const modalButtonsContainer = document.getElementById("modal-buttons-container");
+    const levelPillBtn = document.getElementById("level-pill-btn");
+
+    // Load saved progress from localStorage
+    function loadProgress() {
+      const saved = localStorage.getItem("angryTeacherMaxLevel");
+      if (saved) {
+        maxUnlockedLevel = parseInt(saved, 10) || 1;
+      }
+    }
+
+    function saveProgress() {
+      if (currentLevelIdx + 1 > maxUnlockedLevel) {
+        maxUnlockedLevel = currentLevelIdx + 1;
+        localStorage.setItem("angryTeacherMaxLevel", maxUnlockedLevel);
+      }
+    }
 
     function initAudio() {
       if (!audioCtx) {
@@ -677,9 +847,9 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    function startGame() {
+    function startGame(levelIdx = 0) {
       initAudio();
-      currentLevelIdx = 0;
+      currentLevelIdx = levelIdx;
       isGameOver = false;
       modalScreen.classList.add("hidden");
       initLevel();
@@ -693,9 +863,10 @@
       updateProgress();
 
       const levelWordsPool = vocabularyDBByLevel[config.level] || vocabularyDBByLevel[1];
+      // Pick 9 random words from the 40-word pool
       currentCardsPool = [...levelWordsPool]
         .sort(() => Math.random() - 0.5)
-        .slice(0, config.count);
+        .slice(0, 9);
 
       renderGrid(currentCardsPool);
       waitingForNext = false;
@@ -734,11 +905,12 @@
       if (remainingCards.length === 0) {
         clearInterval(timerInterval);
         playSuccessSound();
+        saveProgress();
         
         if (currentLevelIdx < levelConfigs.length - 1) {
           showLevelCompletedScreen();
         } else {
-          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", startGame);
+          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", () => startGame(0));
         }
         return;
       }
@@ -779,10 +951,11 @@
           if (remainingUnmatched.length === 0) {
             setTimeout(() => {
               clearInterval(timerInterval);
+              saveProgress();
               if (currentLevelIdx < levelConfigs.length - 1) {
                 showLevelCompletedScreen();
               } else {
-                showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", startGame);
+                showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", () => startGame(0));
               }
             }, 1200);
           }
@@ -792,12 +965,12 @@
         playErrorSound();
         clearInterval(timerInterval);
         isGameOver = true;
-        showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "TRY AGAIN", startGame);
+        showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
       }
     }
 
     function updateProgress() {
-      const total = levelConfigs[currentLevelIdx].count;
+      const total = 9; // Fixed 9 cards per level
       progressValEl.textContent = `${score}/${total}`;
     }
 
@@ -813,7 +986,7 @@
           clearInterval(timerInterval);
           playErrorSound();
           isGameOver = true;
-          showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "TRY AGAIN", startGame);
+          showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "RETRY LEVEL", () => startGame(currentLevelIdx));
         }
       }, 1000);
     }
@@ -828,40 +1001,103 @@
       
       modalButtonsContainer.innerHTML = `
         <button class="modal-btn" id="next-level-btn">NEXT LEVEL (${nextTitle})</button>
-        <button class="modal-btn secondary" id="restart-btn">RESTART GAME</button>
+        <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
       `;
 
       modalScreen.classList.remove("hidden");
 
       document.getElementById("next-level-btn").addEventListener("click", () => {
         modalScreen.classList.add("hidden");
-        currentLevelIdx = nextLevelIndex; // Корректно переходимо на наступний рівень
+        currentLevelIdx = nextLevelIndex;
         initLevel();
       });
 
-      document.getElementById("restart-btn").addEventListener("click", () => {
-        modalScreen.classList.add("hidden");
-        startGame();
+      document.getElementById("menu-btn").addEventListener("click", () => {
+        showLevelSelectMenu();
       });
     }
 
     function showGameOverScreen(title, desc, btnText, callback) {
       modalTitle.textContent = title;
       modalDesc.innerHTML = desc;
-      modalButtonsContainer.innerHTML = `<button class="modal-btn" id="modal-action-btn">${btnText}</button>`;
+      modalButtonsContainer.innerHTML = `
+        <button class="modal-btn" id="modal-action-btn">${btnText}</button>
+        <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
+      `;
       modalScreen.classList.remove("hidden");
 
       document.getElementById("modal-action-btn").addEventListener("click", () => {
         modalScreen.classList.add("hidden");
         callback();
       });
+
+      document.getElementById("menu-btn").addEventListener("click", () => {
+        showLevelSelectMenu();
+      });
     }
 
-    // Initial binding for start screen button
-    document.getElementById("modal-btn").addEventListener("click", () => {
-      modalButtonsContainer.innerHTML = `<button class="modal-btn" id="modal-action-btn">START GAME</button>`;
-      startGame();
+    function showLevelSelectMenu() {
+      loadProgress();
+      modalTitle.textContent = "SELECT LEVEL";
+      modalDesc.textContent = "Choose any unlocked level to play:";
+      
+      let gridHtml = '<div class="level-select-grid">';
+      levelConfigs.forEach((cfg, idx) => {
+        const isUnlocked = (idx + 1) <= maxUnlockedLevel;
+        gridHtml += `
+          <button class="level-sel-btn ${isUnlocked ? '' : 'locked'}" data-lvl="${idx}" ${isUnlocked ? '' : 'disabled'}>
+            <strong>Lvl ${cfg.level}</strong>
+            <span style="font-size:0.6rem; opacity:0.8;">${cfg.title}</span>
+          </button>
+        `;
+      });
+      gridHtml += '</div>';
+
+      modalButtonsContainer.innerHTML = gridHtml + `<button class="modal-btn secondary" id="back-start-btn" style="margin-top:6px;">BACK</button>`;
+
+      document.querySelectorAll(".level-sel-btn").forEach(btn => {
+        if (!btn.classList.contains("locked")) {
+          btn.addEventListener("click", (e) => {
+            const lvlIdx = parseInt(e.currentTarget.dataset.lvl, 10);
+            startGame(lvlIdx);
+          });
+        }
+      });
+
+      document.getElementById("back-start-btn").addEventListener("click", () => {
+        showStartScreen();
+      });
+    }
+
+    function showStartScreen() {
+      loadProgress();
+      modalTitle.textContent = "ANGRY TEACHER";
+      modalDesc.innerHTML = `Don't let the angry teacher explode — match the correct word!<br><br><strong>Each level features 9 cards with random words.</strong>`;
+      modalButtonsContainer.innerHTML = `
+        <button class="modal-btn" id="modal-start-btn">START GAME</button>
+        <button class="modal-btn secondary" id="modal-levels-btn">SELECT LEVEL</button>
+      `;
+
+      document.getElementById("modal-start-btn").addEventListener("click", () => {
+        // Start from current max unlocked or level 1
+        startGame(0);
+      });
+
+      document.getElementById("modal-levels-btn").addEventListener("click", () => {
+        showLevelSelectMenu();
+      });
+    }
+
+    // Click on Level Pill header opens Level Select Menu
+    levelPillBtn.addEventListener("click", () => {
+      clearInterval(timerInterval);
+      modalScreen.classList.remove("hidden");
+      showLevelSelectMenu();
     });
+
+    // Initial load
+    loadProgress();
+    showStartScreen();
 
     nextBtnEl.addEventListener("click", () => {
       if (waitingForNext && !isGameOver) {
