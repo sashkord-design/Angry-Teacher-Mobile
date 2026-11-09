@@ -286,7 +286,7 @@
       opacity: 0.8;
     }
 
-    /* OVERLAY SCREEN (START / BOOM) */
+    /* OVERLAY SCREEN (START / BOOM / CHECKPOINT) */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -352,6 +352,11 @@
       box-shadow: 0 1px 0 var(--border-dark);
     }
 
+    .modal-btn.secondary {
+      background: var(--primary-teal);
+      color: #ffffff;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -359,7 +364,7 @@
 </head>
 <body>
 
-  <!-- START & GAME OVER OVERLAY SCREEN -->
+  <!-- START & CHECKPOINT OVERLAY SCREEN -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
       <svg class="teacher-avatar-svg" viewBox="0 0 100 100" style="width:64px; height:64px;">
@@ -383,7 +388,9 @@
         <strong>You have 25 seconds for each word.</strong>
       </div>
       
-      <button class="modal-btn" id="modal-btn">START GAME</button>
+      <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+        <button class="modal-btn" id="modal-btn">START GAME</button>
+      </div>
     </div>
   </div>
 
@@ -437,7 +444,6 @@
   </div>
 
   <script>
-    // CEFR-GRADED VOCABULARY DATABASE (EASIER DEFINITIONS FOR L1 & L2)
     const vocabularyDBByLevel = {
       1: [
         { word: "Notice", def: "To see or hear someone or something", example: "Did you notice her new haircut today?" },
@@ -456,7 +462,6 @@
         { word: "Choose", def: "To pick one thing out of many options", example: "You can choose any dessert you like." },
         { word: "Improve", def: "To make something better than before", example: "Reading books helps improve your vocabulary." }
       ],
-
       2: [
         { word: "Challenge", def: "Something new and difficult to do", example: "He accepted the challenge with enthusiasm." },
         { word: "Imagine", def: "To picture something in your mind", example: "Can you imagine living on Mars?" },
@@ -474,7 +479,6 @@
         { word: "Desire", def: "A strong wish to have or do something", example: "He has a strong desire to travel." },
         { word: "Doubt", def: "A feeling when you are not sure about something", example: "I have no doubt that you will pass." }
       ],
-
       3: [
         { word: "Achieve", def: "To successfully reach a desired goal through skill or effort", example: "Hard work helps you achieve your goals." },
         { word: "Succeed", def: "To accomplish a purpose or expected favorable outcome", example: "If you practice daily, you will succeed." },
@@ -492,7 +496,6 @@
         { word: "Device", def: "A piece of electronic equipment designed for a specific task", example: "A smartphone is a pocket communication device." },
         { word: "Efficient", def: "Achieving maximum productivity with minimum wasted effort", example: "Electric cars are very energy efficient." }
       ],
-
       4: [
         { word: "Analyze", def: "To examine methodically and in detail to interpret it", example: "We need to analyze the test results." },
         { word: "Collaborate", def: "To work jointly with others on an activity or project", example: "Artists often collaborate on big murals." },
@@ -513,7 +516,6 @@
         { word: "Feature", def: "A distinctive characteristic or aspect of a product", example: "Autofocus is a great camera feature." },
         { word: "Flexible", def: "Capable of adapting easily to changing situations", example: "Yoga helps keep your body flexible." }
       ],
-
       5: [
         { word: "Endure", def: "To patiently suffer through a difficult situation over time", example: "Pioneers had to endure harsh winters." },
         { word: "Exceed", def: "To be greater than an established limit or quantity", example: "Speed limits must not be exceeded." },
@@ -540,11 +542,11 @@
     };
 
     const levelConfigs = [
-      { level: 1, count: 9 },
-      { level: 2, count: 12 },
-      { level: 3, count: 15 },
-      { level: 4, count: 18 },
-      { level: 5, count: 21 }
+      { level: 1, count: 9, title: "Freshman" },
+      { level: 2, count: 12, title: "Sophomore" },
+      { level: 3, count: 15, title: "Junior Scholar" },
+      { level: 4, count: 18, title: "Senior Expert" },
+      { level: 5, count: 21, title: "Doctor of Philosophy (Ph.D.)" }
     ];
 
     let currentLevelIdx = 0;
@@ -566,7 +568,7 @@
     const modalScreen = document.getElementById("modal-screen");
     const modalTitle = document.getElementById("modal-title");
     const modalDesc = document.getElementById("modal-desc");
-    const modalBtn = document.getElementById("modal-btn");
+    const modalButtonsContainer = document.getElementById("modal-buttons-container");
 
     function initAudio() {
       if (!audioCtx) {
@@ -577,22 +579,33 @@
       }
     }
 
-    // HIGH-PITCH BRIGHT SUCCESS SOUND
+    // PLEASANT HIGH BELL CHIME SOUND
     function playSuccessSound() {
       try {
         initAudio();
         const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(659.25, now); // E5
-        osc.frequency.exponentialRampToValueAtTime(987.77, now + 0.15); // B5 (Higher chime)
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc.connect(gain);
+
+        osc1.type = 'sine';
+        osc2.type = 'triangle';
+
+        // Bell frequencies (E6 and B6 notes for a bright magical chime)
+        osc1.frequency.setValueAtTime(1318.51, now); 
+        osc2.frequency.setValueAtTime(1975.54, now);
+
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
         gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.3);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.6);
+        osc2.stop(now + 0.6);
       } catch (e) {}
     }
 
@@ -656,7 +669,7 @@
 
     function initLevel() {
       const config = levelConfigs[currentLevelIdx];
-      levelNumEl.textContent = config.level;
+      levelNumEl.textContent = `${config.level} (${config.title})`;
       score = 0;
       updateProgress();
 
@@ -701,12 +714,12 @@
 
       if (remainingCards.length === 0) {
         clearInterval(timerInterval);
+        playSuccessSound();
+        
         if (currentLevelIdx < levelConfigs.length - 1) {
-          currentLevelIdx++;
-          initLevel();
+          showLevelCompletedScreen();
         } else {
-          playSuccessSound();
-          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
+          showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", startGame);
         }
         return;
       }
@@ -720,7 +733,6 @@
     }
 
     function handleCardClick(cardNode, item) {
-      // Allow manual flipping for already matched cards
       if (cardNode.classList.contains("matched")) {
         cardNode.classList.toggle("flipped");
         return;
@@ -733,7 +745,6 @@
         clearInterval(timerInterval);
         waitingForNext = true;
         
-        // Step 1: Highlight with warm golden color
         cardNode.classList.add("highlighted");
         score++;
         updateProgress();
@@ -741,7 +752,6 @@
 
         nextBtnEl.classList.remove("disabled");
 
-        // Step 2: After 1.5s delay, flip card and mark matched
         setTimeout(() => {
           cardNode.classList.remove("highlighted");
           cardNode.classList.add("flipped", "matched");
@@ -749,11 +759,11 @@
           const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
           if (remainingUnmatched.length === 0) {
             setTimeout(() => {
+              clearInterval(timerInterval);
               if (currentLevelIdx < levelConfigs.length - 1) {
-                currentLevelIdx++;
-                initLevel();
+                showLevelCompletedScreen();
               } else {
-                showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels without making the teacher explode!", "PLAY AGAIN");
+                showGameOverScreen("VICTORY!", "🎉 You beat all 5 levels and became a true Doctor of Philosophy!", "PLAY AGAIN", startGame);
               }
             }, 1200);
           }
@@ -763,7 +773,7 @@
         playErrorSound();
         clearInterval(timerInterval);
         isGameOver = true;
-        showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "TRY AGAIN");
+        showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "TRY AGAIN", startGame);
       }
     }
 
@@ -784,19 +794,54 @@
           clearInterval(timerInterval);
           playErrorSound();
           isGameOver = true;
-          showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "TRY AGAIN");
+          showGameOverScreen("BOOM!", "💥 Your teacher exploded! Time ran out.", "TRY AGAIN", startGame);
         }
       }, 1000);
     }
 
-    function showGameOverScreen(title, desc, btnText) {
-      modalTitle.textContent = title;
-      modalDesc.innerHTML = desc;
-      modalBtn.textContent = btnText;
+    function showLevelCompletedScreen() {
+      const currentTitle = levelConfigs[currentLevelIdx].title;
+      currentLevelIdx++;
+      const nextTitle = levelConfigs[currentLevelIdx].title;
+
+      modalTitle.textContent = "LEVEL PASSED!";
+      modalDesc.innerHTML = `🎉 Great job! You unlocked the rank of <strong>${currentTitle}</strong>.<br><br>Ready for the next challenge as a <strong>${nextTitle}</strong>?`;
+      
+      modalButtonsContainer.innerHTML = `
+        <button class="modal-btn" id="next-level-btn">NEXT LEVEL (${nextTitle})</button>
+        <button class="modal-btn secondary" id="restart-btn">RESTART GAME</button>
+      `;
+
       modalScreen.classList.remove("hidden");
+
+      document.getElementById("next-level-btn").addEventListener("click", () => {
+        modalScreen.classList.add("hidden");
+        initLevel();
+      });
+
+      document.getElementById("restart-btn").addEventListener("click", () => {
+        modalScreen.classList.add("hidden");
+        startGame();
+      });
     }
 
-    modalBtn.addEventListener("click", startGame);
+    function showGameOverScreen(title, desc, btnText, callback) {
+      modalTitle.textContent = title;
+      modalDesc.innerHTML = desc;
+      modalButtonsContainer.innerHTML = `<button class="modal-btn" id="modal-action-btn">${btnText}</button>`;
+      modalScreen.classList.remove("hidden");
+
+      document.getElementById("modal-action-btn").addEventListener("click", () => {
+        modalScreen.classList.add("hidden");
+        callback();
+      });
+    }
+
+    // Initial binding for start screen button
+    document.getElementById("modal-btn").addEventListener("click", () => {
+      modalButtonsContainer.innerHTML = `<button class="modal-btn" id="modal-action-btn">START GAME</button>`;
+      startGame();
+    });
 
     nextBtnEl.addEventListener("click", () => {
       if (waitingForNext && !isGameOver) {
