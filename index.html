@@ -658,7 +658,7 @@
         { word: "Guarantee", entries: [{ def: "A formal promise that certain conditions will be met", example: "The store offers a two-year product guarantee." }, { def: "To provide assurance against defects", example: "Manufacturers guarantee high quality standards." }] },
         { word: "Integrate", entries: [{ def: "To combine two or more things to form a unified whole", example: "They plan to integrate new tech into the system." }, { def: "To blend into a community seamlessly", example: "New immigrants integrate quickly through work." }] },
         { word: "Persevere", entries: [{ def: "To continue a course of action despite difficulties", example: "If you persevere, you will overcome any obstacle." }, { def: "To maintain steadfast effort in pursuits", example: "Researchers persevere despite failed tests." }] },
-        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }, { def: "Dominant in occurrence across society", example: "Remote work models are increasingly prevalent." }] },
+        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Smartphones are prevalent everywhere today." }, { def: "Dominant in occurrence across society", example: "Remote work models are increasingly prevalent." }] },
         { word: "Ambiguous", entries: [{ def: "Open to more than one interpretation; unclear", example: "His ambiguous reply left us in deep doubt." }, { def: "Lacking specific definition or clarity", example: "The contract clauses were legally ambiguous." }] },
         { word: "Benevolent", entries: [{ def: "Well meaning and kindly; charitable in nature", example: "She was a benevolent founder of the clinic." }, { def: "Marked by disposition to do good", example: "The billionaire established benevolent trusts." }] },
         { word: "Candid", entries: [{ def: "Truthful and straightforward; frank in expression", example: "He gave a candid interview about past mistakes." }, { def: "Unposed and natural in photography", example: "The photographer captured candid street smiles." }] },
@@ -687,9 +687,12 @@
     let levelSecondsElapsed = 0;
     let isGameOver = false;
     let waitingForNext = false;
-    let audioCtx = null;
     let preferredVoice = null;
     let currentCardsPool = [];
+
+    // Створюємо об'єкт аудіо для правильної відповіді (замініть 'success.mp3' на назву вашого файлу звуку)
+    const successSound = new Audio('success.mp3');
+    successSound.playbackRate = 1.2; // пришвидшення на 20%
 
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
@@ -736,40 +739,10 @@
       return false;
     }
 
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
-
     function playSuccessSound() {
       try {
-        initAudio();
-        const now = audioCtx.currentTime;
-        const osc1 = audioCtx.createOscillator();
-        const osc2 = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc1.type = 'sine';
-        osc2.type = 'triangle';
-
-        osc1.frequency.setValueAtTime(1318.51, now); 
-        osc2.frequency.setValueAtTime(1975.54, now);
-
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + 0.6);
-        osc2.stop(now + 0.6);
+        successSound.currentTime = 0;
+        successSound.play().catch(e => {});
       } catch (e) {}
     }
 
@@ -823,7 +796,6 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // Запускаємо відео вибуху БЕЗ передчасного відкриття модального вікна
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
       explosionVideo.muted = false;
@@ -831,7 +803,6 @@
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // Якщо браузер заблокував відео зі звуком, пробуємо без звуку
           explosionVideo.muted = true;
           explosionVideo.play().catch(() => {
             onExplosionEnded();
@@ -839,7 +810,6 @@
         });
       }
 
-      // Модалка BOOM показується РІВНО ТОДІ, коли відео закінчилось
       explosionVideo.onended = () => {
         onExplosionEnded();
       };
@@ -851,7 +821,6 @@
     }
 
     function startGame(levelIdx = 0) {
-      initAudio();
       currentLevelIdx = levelIdx;
       isGameOver = false;
       modalScreen.classList.add("hidden");
@@ -860,11 +829,9 @@
     }
 
     function initLevel() {
-      // Скинути стан анімації та блокувань перед новим рівнем
       isGameOver = false;
       waitingForNext = false;
       
-      // Скинути відео елемент до початкового стану
       explosionVideo.pause();
       explosionVideo.currentTime = 0;
       explosionVideo.onended = null;
@@ -992,7 +959,6 @@
         }, 1500);
 
       } else {
-        // Засвічуємо картку червоним на 0.3 секунди, а потім викликаємо вибух
         cardNode.classList.add("error-wrong");
         waitingForNext = true;
         clearInterval(timerInterval);
