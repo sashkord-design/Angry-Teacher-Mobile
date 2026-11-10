@@ -262,7 +262,7 @@
       align-items: center;
       justify-content: center;
       padding: 2px 4px;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     .card-front {
@@ -299,6 +299,23 @@
     .card.highlighted .card-front {
       background-color: #f9d98c;
       border-color: #e5a93c;
+    }
+
+    /* Червона заливка та трушення для помилкової відповіді */
+    .card.error-wrong .card-front {
+      background-color: var(--accent-red) !important;
+      color: #ffffff !important;
+      border-color: #a93226 !important;
+      animation: shakeWrong 0.3s ease-in-out;
+    }
+
+    @keyframes shakeWrong {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
     }
 
     .card.matched .card-front {
@@ -815,7 +832,7 @@
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // Якщо браузер заблокував відеозі звуком, пробуємо без звуку
+          // Якщо браузер заблокував відео зі звуком, пробуємо без звуку
           explosionVideo.muted = true;
           explosionVideo.play().catch(() => {
             onExplosionEnded();
@@ -967,7 +984,15 @@
         }, 1500);
 
       } else {
-        triggerGameOverSequence();
+        // Засвічуємо картку червоним на 0.3 секунди, а потім викликаємо вибух
+        cardNode.classList.add("error-wrong");
+        waitingForNext = true;
+        clearInterval(timerInterval);
+
+        setTimeout(() => {
+          cardNode.classList.remove("error-wrong");
+          triggerGameOverSequence();
+        }, 300);
       }
     }
 
