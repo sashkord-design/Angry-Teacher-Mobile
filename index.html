@@ -438,8 +438,8 @@
 </head>
 <body>
 
-  <!-- Модальне вікно (лежить у фоні під час вибуху, стає активним після його закінчення) -->
-  <div class="modal-overlay hidden" id="modal-screen">
+  <!-- Модальне вікно (стартове / меню / перемоги / поразки) -->
+  <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
       <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
       
@@ -457,7 +457,7 @@
     </div>
   </div>
 
-  <!-- Повноекранне відео вибуху з альфа-каналом (прозорістю) -->
+  <!-- Повноекранне відео вибуху з альфа-каналом -->
   <div id="explosion-overlay" class="hidden">
     <video id="explosion-video" playsinline preload="auto">
       <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
@@ -791,7 +791,7 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // 1. Показуємо вікно BOOM у фоні
+      // 1. Показуємо вікно BOOM у фоні під вибухом
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
       // 2. Запускаємо прозоре відео вибуху поверх вікна BOOM
@@ -1077,12 +1077,9 @@
       document.getElementById("modal-levels-btn").addEventListener("click", () => {
         showLevelSelectMenu();
       });
-    }
 
-    document.getElementById("modal-start-main-btn").addEventListener("click", () => {
-      const startLvl = Math.min(maxUnlockedLevel - 1, levelConfigs.length - 1);
-      startGame(startLvl >= 0 ? startLvl : 0);
-    });
+      modalScreen.classList.remove("hidden");
+    }
 
     levelPillBtn.addEventListener("click", () => {
       clearInterval(timerInterval);
@@ -1092,6 +1089,8 @@
     });
 
     loadProgress();
+    
+    // Обов'язковий виклик стартового екрана при завантаженні
     showStartScreen();
 
     nextBtnEl.addEventListener("click", () => {
