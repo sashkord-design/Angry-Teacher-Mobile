@@ -473,9 +473,12 @@
     </div>
   </div>
 
-  <!-- Відео вибуху з альфа-каналом -->
+  <!-- Відео вибуху з кросплатформененим автовибором формату (WebM / MOV) -->
   <div id="explosion-overlay" class="hidden">
     <video id="explosion-video" playsinline preload="auto">
+      <!-- Для Chrome, Android, Windows, Firefox -->
+      <source src="video_1.webm" type="video/webm">
+      <!-- Для Safari, iPhone/iPad (iOS) та macOS -->
       <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
     </video>
   </div>
@@ -808,10 +811,8 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // 1. Показуємо вікно BOOM у фоні із зумом (анімацією)
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
-      // 2. Запускаємо прозоре відео вибуху поверх вікна BOOM
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
       
@@ -1009,7 +1010,6 @@
         <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
       `;
 
-      // Перезапуск анімації збільшення
       modalBox.classList.remove("animate-pop");
       void modalBox.offsetWidth;
       modalBox.classList.add("animate-pop");
@@ -1034,7 +1034,6 @@
         <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
       `;
 
-      // Перезапуск анімації збільшення
       modalBox.classList.remove("animate-pop");
       void modalBox.offsetWidth;
       modalBox.classList.add("animate-pop");
