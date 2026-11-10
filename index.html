@@ -432,7 +432,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.85);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -807,20 +807,15 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // Показуємо модалку програшу
-      showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
-
-      // Запускаємо відео зі звуком (розраховано на те, що контекст вже активний після кліку)
+      // Запускаємо відео вибуху БЕЗ передчасного відкриття модального вікна
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
-      explosionVideo.muted = false; 
-      
+      explosionVideo.muted = false;
+
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
-        playPromise.then(() => {
-          // Відтворюється зі звуком
-        }).catch((e) => {
-          // Якщо браузер заблокував звук через політики безпеки — пробуємо примусово без звуку, щоб не втратити відеоряд
+        playPromise.catch(() => {
+          // Якщо браузер заблокував відеозі звуком, пробуємо без звуку
           explosionVideo.muted = true;
           explosionVideo.play().catch(() => {
             onExplosionEnded();
@@ -828,6 +823,7 @@
         });
       }
 
+      // Модалка BOOM показується РІВНО ТОДІ, коли відео закінчилось
       explosionVideo.onended = () => {
         onExplosionEnded();
       };
@@ -835,6 +831,7 @@
 
     function onExplosionEnded() {
       explosionOverlay.classList.add("hidden");
+      showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
     }
 
     function startGame(levelIdx = 0) {
