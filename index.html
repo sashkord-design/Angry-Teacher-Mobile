@@ -801,23 +801,36 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    function triggerGameOverSequence() {
+function triggerGameOverSequence() {
       if (isGameOver) return;
       isGameOver = true;
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
+      // Спочатку показуємо модальне вікно програшу
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
+      // Надійно запускаємо відео вибуху
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
-      
+      explosionVideo.muted = true; // Вимикаємо звук для гарантованого автоплею на мобільних
+      explosionVideo.load();
+
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
+        playPromise.then(() => {
+          // Відео успішно полетіло
+        }).catch((error) => {
+          // Якщо браузер жорстко заблокував — миттєво ховаємо оверлей, щоб гравець бачив модалку
+          console.log("Autoplay prevented:", error);
           onExplosionEnded();
         });
       }
+
+      explosionVideo.onended = () => {
+        onExplosionEnded();
+      };
+    }
 
       explosionVideo.onended = () => {
         onExplosionEnded();
