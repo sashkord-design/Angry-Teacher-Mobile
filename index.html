@@ -282,13 +282,14 @@
       color: #ffffff;
       transform: rotateY(180deg);
       border-color: var(--border-dark);
-      padding: 3px 5px;
+      padding: 3px 6px;
     }
 
+    /* Збільшений шрифт речення-прикладу на звороті карток */
     .card-back-text {
-      font-size: 0.52rem;
-      line-height: 1.15;
-      font-weight: 400;
+      font-size: 0.64rem;
+      line-height: 1.2;
+      font-weight: 500;
       display: -webkit-box;
       -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
@@ -320,7 +321,6 @@
       padding: 16px;
     }
 
-    /* Анімація збільшення вікна за 1 секунду */
     @keyframes popIn {
       0% {
         transform: scale(0);
@@ -350,7 +350,7 @@
     }
 
     .animate-pop {
-      animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     .modal-title {
@@ -426,7 +426,6 @@
       cursor: not-allowed;
     }
 
-    /* Прозорий шар вибуху поверх вікна BOOM */
     #explosion-overlay {
       position: fixed;
       top: 0;
@@ -454,7 +453,6 @@
 </head>
 <body>
 
-  <!-- Модальне вікно -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box animate-pop" id="modal-box">
       <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
@@ -473,12 +471,9 @@
     </div>
   </div>
 
-  <!-- Відео вибуху з кросплатформененим автовибором формату (WebM / MOV) -->
   <div id="explosion-overlay" class="hidden">
     <video id="explosion-video" playsinline preload="auto">
-      <!-- Для Chrome, Android, Windows, Firefox -->
       <source src="video_1.webm" type="video/webm">
-      <!-- Для Safari, iPhone/iPad (iOS) та macOS -->
       <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
     </video>
   </div>
@@ -930,12 +925,14 @@
     }
 
     function handleCardClick(cardNode, item) {
+      if (isGameOver) return;
+
       if (cardNode.classList.contains("matched")) {
         cardNode.classList.toggle("flipped");
         return;
       }
 
-      if (isGameOver || waitingForNext) return;
+      if (waitingForNext) return;
 
       if (item.word === targetItem.word) {
         playSuccessSound();
