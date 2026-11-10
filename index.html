@@ -410,18 +410,19 @@
       cursor: not-allowed;
     }
 
-    /* Відео вибуху поверх екрана під час програшу */
+    /* Прозорий шар вибуху поверх вікна BOOM */
     #explosion-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #000000;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1500;
+      pointer-events: none;
     }
 
     #explosion-video {
@@ -437,8 +438,8 @@
 </head>
 <body>
 
-  <!-- Модальне вікно (стартове / меню / перемоги / поразки) -->
-  <div class="modal-overlay" id="modal-screen">
+  <!-- Модальне вікно (лежить у фоні під час вибуху, стає активним після його закінчення) -->
+  <div class="modal-overlay hidden" id="modal-screen">
     <div class="modal-box">
       <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
       
@@ -456,9 +457,11 @@
     </div>
   </div>
 
-  <!-- Відео вибуху (відображається поверх вікна BOOM під час програшу) -->
+  <!-- Повноекранне відео вибуху з альфа-каналом (прозорістю) -->
   <div id="explosion-overlay" class="hidden">
-    <video id="explosion-video" src="video_1.mov" playsinline preload="auto"></video>
+    <video id="explosion-video" playsinline preload="auto">
+      <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
+    </video>
   </div>
 
   <div id="app-container">
@@ -788,10 +791,10 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // 1. Одразу показуємо вікно BOOM у фоні
+      // 1. Показуємо вікно BOOM у фоні
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
-      // 2. Вмикаємо повноекранне відео вибуху поверх вікна
+      // 2. Запускаємо прозоре відео вибуху поверх вікна BOOM
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
       
@@ -1089,8 +1092,6 @@
     });
 
     loadProgress();
-
-    // При старті сторінки відразу показуємо стартове вікно
     showStartScreen();
 
     nextBtnEl.addEventListener("click", () => {
