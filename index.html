@@ -469,7 +469,7 @@
   </div>
 
   <div id="explosion-overlay" class="hidden">
-    <video id="explosion-video" playsinline muted preload="auto">
+    <video id="explosion-video" playsinline preload="auto">
       <source src="video_1.webm" type="video/webm">
       <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
     </video>
@@ -807,20 +807,24 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // Завжди спочатку показуємо модалку програшу (гарантія екрана)
+      // Показуємо модалку програшу
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
-      // Надійна спроба відтворення відео з безпечним перехопленням
+      // Запускаємо відео зі звуком (розраховано на те, що контекст вже активний після кліку)
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
+      explosionVideo.muted = false; 
       
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
-          // Успішно пішло
+          // Відтворюється зі звуком
         }).catch((e) => {
-          // Якщо мобільний браузер заблокував автоплей відео — миттєво знімаємо оверлей вибуху
-          onExplosionEnded();
+          // Якщо браузер заблокував звук через політики безпеки — пробуємо примусово без звуку, щоб не втратити відеоряд
+          explosionVideo.muted = true;
+          explosionVideo.play().catch(() => {
+            onExplosionEnded();
+          });
         });
       }
 
