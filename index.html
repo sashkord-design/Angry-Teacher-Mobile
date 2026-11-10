@@ -54,29 +54,29 @@
       background: #f7f3e9;
       border: 2.5px solid var(--border-dark);
       border-radius: 12px;
-      padding: 4px 8px;
+      padding: 3px 6px;
       box-shadow: 0px 2.5px 0px var(--shadow-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 44px;
+      height: 42px;
     }
 
     .teacher-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
-    /* Аватарка в шапці гри без рамки */
+    /* Збільшена аватарка в шапці (заповнює квадрат висотою 36px) */
     .teacher-avatar-img {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       object-fit: contain;
       flex-shrink: 0;
     }
 
-    /* Збільшена аватарка у модальному вікні */
+    /* Збільшена аватарка у модальному вікні (+35%) */
     .modal-avatar-img {
       width: 115px;
       height: 115px;
@@ -92,11 +92,11 @@
 
     .game-title {
       font-family: var(--font-heading);
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       color: var(--border-dark);
       text-transform: uppercase;
       line-height: 1;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
 
     .stats-row {
@@ -108,9 +108,9 @@
       background: var(--accent-gold);
       border: 2px solid var(--border-dark);
       border-radius: 8px;
-      padding: 2px 6px;
+      padding: 2px 5px;
       text-align: center;
-      min-width: 75px;
+      min-width: 72px;
       box-shadow: 0 1.5px 0 var(--shadow-color);
       display: flex;
       flex-direction: column;
@@ -122,9 +122,9 @@
       color: #ffffff;
       border: 2px solid var(--border-dark);
       border-radius: 8px;
-      padding: 2px 6px;
+      padding: 2px 5px;
       text-align: center;
-      min-width: 55px;
+      min-width: 52px;
       box-shadow: 0 1.5px 0 var(--shadow-color);
       display: flex;
       flex-direction: column;
@@ -132,7 +132,7 @@
     }
 
     .stat-label {
-      font-size: 0.45rem;
+      font-size: 0.42rem;
       font-weight: 800;
       text-transform: uppercase;
       display: block;
@@ -142,13 +142,13 @@
 
     .stat-value {
       font-family: var(--font-heading);
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       line-height: 1.1;
       margin-top: 1px;
     }
 
     .level-title-sub {
-      font-size: 0.45rem;
+      font-size: 0.42rem;
       font-weight: 700;
       text-transform: uppercase;
       line-height: 1;
@@ -419,10 +419,10 @@
 </head>
 <body>
 
-  <!-- Стартове вікно із новим зображенням teacher-face_2.png -->
+  <!-- Стартове вікно -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box">
-      <img src="teacher-face_2.png" alt="Angry Teacher" class="modal-avatar-img" />
+      <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
       
       <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
       
@@ -440,7 +440,7 @@
   <div id="app-container">
     <div class="header-panel">
       <div class="teacher-badge">
-        <img src="teacher-face_2.png" alt="Teacher" class="teacher-avatar-img" />
+        <img src="teacher-face.png" alt="Teacher" class="teacher-avatar-img" />
 
         <div class="title-block">
           <div class="game-title">Angry Teacher</div>
