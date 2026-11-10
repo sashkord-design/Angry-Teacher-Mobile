@@ -320,6 +320,18 @@
       padding: 16px;
     }
 
+    /* Анімація збільшення вікна за 1 секунду */
+    @keyframes popIn {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
     .modal-box {
       background: var(--bg-color);
       border: 4px solid var(--border-dark);
@@ -335,6 +347,10 @@
       gap: 12px;
       max-height: 90vh;
       overflow-y: auto;
+    }
+
+    .animate-pop {
+      animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
     .modal-title {
@@ -438,9 +454,9 @@
 </head>
 <body>
 
-  <!-- Модальне вікно (стартове / меню / перемоги / поразки) -->
+  <!-- Модальне вікно -->
   <div class="modal-overlay" id="modal-screen">
-    <div class="modal-box">
+    <div class="modal-box animate-pop" id="modal-box">
       <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
       
       <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
@@ -457,7 +473,7 @@
     </div>
   </div>
 
-  <!-- Повноекранне відео вибуху з альфа-каналом -->
+  <!-- Відео вибуху з альфа-каналом -->
   <div id="explosion-overlay" class="hidden">
     <video id="explosion-video" playsinline preload="auto">
       <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
@@ -672,6 +688,7 @@
     const timerEl = document.getElementById("timer");
     const nextBtnEl = document.getElementById("next-btn");
     const modalScreen = document.getElementById("modal-screen");
+    const modalBox = document.getElementById("modal-box");
     const modalTitle = document.getElementById("modal-title");
     const modalDesc = document.getElementById("modal-desc");
     const modalButtonsContainer = document.getElementById("modal-buttons-container");
@@ -791,7 +808,7 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // 1. Показуємо вікно BOOM у фоні під вибухом
+      // 1. Показуємо вікно BOOM у фоні із зумом (анімацією)
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
       // 2. Запускаємо прозоре відео вибуху поверх вікна BOOM
@@ -992,6 +1009,10 @@
         <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
       `;
 
+      // Перезапуск анімації збільшення
+      modalBox.classList.remove("animate-pop");
+      void modalBox.offsetWidth;
+      modalBox.classList.add("animate-pop");
       modalScreen.classList.remove("hidden");
 
       document.getElementById("next-level-btn").addEventListener("click", () => {
@@ -1012,6 +1033,11 @@
         <button class="modal-btn" id="modal-action-btn">${btnText}</button>
         <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
       `;
+
+      // Перезапуск анімації збільшення
+      modalBox.classList.remove("animate-pop");
+      void modalBox.offsetWidth;
+      modalBox.classList.add("animate-pop");
       modalScreen.classList.remove("hidden");
 
       document.getElementById("modal-action-btn").addEventListener("click", () => {
@@ -1078,19 +1104,23 @@
         showLevelSelectMenu();
       });
 
+      modalBox.classList.remove("animate-pop");
+      void modalBox.offsetWidth;
+      modalBox.classList.add("animate-pop");
       modalScreen.classList.remove("hidden");
     }
 
     levelPillBtn.addEventListener("click", () => {
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
+      modalBox.classList.remove("animate-pop");
+      void modalBox.offsetWidth;
+      modalBox.classList.add("animate-pop");
       modalScreen.classList.remove("hidden");
       showLevelSelectMenu();
     });
 
     loadProgress();
-    
-    // Обов'язковий виклик стартового екрана при завантаженні
     showStartScreen();
 
     nextBtnEl.addEventListener("click", () => {
