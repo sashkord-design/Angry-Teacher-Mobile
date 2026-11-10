@@ -432,7 +432,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: transparent;
+      background: rgba(0,0,0,0.85);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -469,7 +469,7 @@
   </div>
 
   <div id="explosion-overlay" class="hidden">
-    <video id="explosion-video" playsinline preload="auto">
+    <video id="explosion-video" playsinline muted preload="auto">
       <source src="video_1.webm" type="video/webm">
       <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
     </video>
@@ -807,14 +807,19 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
+      // Завжди спочатку показуємо модалку програшу (гарантія екрана)
       showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
 
+      // Надійна спроба відтворення відео з безпечним перехопленням
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
       
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
+        playPromise.then(() => {
+          // Успішно пішло
+        }).catch((e) => {
+          // Якщо мобільний браузер заблокував автоплей відео — миттєво знімаємо оверлей вибуху
           onExplosionEnded();
         });
       }
@@ -903,7 +908,6 @@
 
       if (remainingCards.length === 0) return;
 
-      // Жорстко перевіряємо: якщо лишилося рівно 1 слово, беремо саме його
       if (remainingCards.length === 1) {
         targetItem = remainingCards[0];
       } else {
