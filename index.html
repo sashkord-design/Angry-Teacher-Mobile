@@ -453,18 +453,14 @@
 </head>
 <body>
 
-  <!-- Модальне вікно -->
   <div class="modal-overlay" id="modal-screen">
     <div class="modal-box animate-pop" id="modal-box">
       <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
-      
       <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
-      
       <div class="modal-desc" id="modal-desc">
         Don't let the angry teacher explode — match the correct word!<br><br>
         <strong>You have 25 seconds for each word.</strong>
       </div>
-      
       <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
         <button class="modal-btn" id="modal-start-main-btn">START GAME</button>
         <button class="modal-btn secondary" id="modal-levels-btn">SELECT LEVEL</button>
@@ -472,7 +468,6 @@
     </div>
   </div>
 
-  <!-- Відео вибуху -->
   <div id="explosion-overlay" class="hidden">
     <video id="explosion-video" playsinline preload="auto">
       <source src="video_1.webm" type="video/webm">
@@ -484,7 +479,6 @@
     <div class="header-panel">
       <div class="teacher-badge">
         <img src="teacher-face.png" alt="Teacher" class="teacher-avatar-img" />
-
         <div class="title-block">
           <div class="game-title">Angry Teacher</div>
         </div>
@@ -765,17 +759,31 @@
 
     function initVoices() {
       if (!('speechSynthesis' in window)) return;
-      const selectMaleVoice = () => {
+      const selectBestVoice = () => {
         const voices = window.speechSynthesis.getVoices();
-        const maleVoice = voices.find(v => 
-          v.lang.startsWith('en') && 
-          (v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('George') || v.name.includes('David') || v.name.includes('Alex') || v.name.includes('Oliver') || v.name.includes('Google UK English Male'))
-        );
-        preferredVoice = maleVoice || voices.find(v => v.lang.startsWith('en')) || voices[0];
+        
+        // Шукаємо найкращий чоловічий англійський голос за ключовими словами
+        preferredVoice = voices.find(v => 
+          v.lang.startsWith('en') && (
+            v.name.includes('Google UK English Male') ||
+            v.name.includes('Google US English') ||
+            v.name.includes('Daniel') ||
+            v.name.includes('Oliver') ||
+            v.name.includes('David') ||
+            v.name.includes('George') ||
+            v.name.includes('Ryan') ||
+            v.name.includes('Arthur') ||
+            v.name.includes('Alex') ||
+            v.name.toLowerCase().includes('male')
+          )
+        ) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female'))
+          || voices.find(v => v.lang.startsWith('en')) 
+          || voices[0];
       };
-      selectMaleVoice();
+      
+      selectBestVoice();
       if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = selectMaleVoice;
+        window.speechSynthesis.onvoiceschanged = selectBestVoice;
       }
     }
 
@@ -787,11 +795,14 @@
       
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
+      
       if (preferredVoice) {
         utterance.voice = preferredVoice;
       }
+      
+      // Знижуємо pitch (тон) та rate (швидкість) для більш глибокого і природного чоловічого звучання
       utterance.rate = 0.88;
-      utterance.pitch = 0.75;
+      utterance.pitch = 0.65;
       
       window.speechSynthesis.speak(utterance);
     }
