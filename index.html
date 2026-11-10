@@ -761,8 +761,6 @@
       if (!('speechSynthesis' in window)) return;
       const selectBestVoice = () => {
         const voices = window.speechSynthesis.getVoices();
-        
-        // Шукаємо найкращий чоловічий англійський голос за ключовими словами
         preferredVoice = voices.find(v => 
           v.lang.startsWith('en') && (
             v.name.includes('Google UK English Male') ||
@@ -780,7 +778,6 @@
           || voices.find(v => v.lang.startsWith('en')) 
           || voices[0];
       };
-      
       selectBestVoice();
       if (window.speechSynthesis.onvoiceschanged !== undefined) {
         window.speechSynthesis.onvoiceschanged = selectBestVoice;
@@ -795,12 +792,9 @@
       
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-US';
-      
       if (preferredVoice) {
         utterance.voice = preferredVoice;
       }
-      
-      // Знижуємо pitch (тон) та rate (швидкість) для більш глибокого і природного чоловічого звучання
       utterance.rate = 0.88;
       utterance.pitch = 0.65;
       
@@ -907,23 +901,15 @@
         .filter(c => !c.classList.contains("matched"))
         .map(c => currentCardsPool.find(v => v.word === c.dataset.word));
 
-      if (remainingCards.length === 0) {
-        clearInterval(timerInterval);
-        clearInterval(levelTimerInterval);
-        playSuccessSound();
-        saveProgress(currentLevelIdx);
+      if (remainingCards.length === 0) return;
 
-        const isNewRecord = saveBestTime(currentLevelIdx, levelSecondsElapsed);
-        
-        if (currentLevelIdx < levelConfigs.length - 1) {
-          showLevelCompletedScreen(isNewRecord, levelSecondsElapsed);
-        } else {
-          showGameOverScreen("VICTORY!", `🎉 You beat all 5 levels in ${levelSecondsElapsed}s!`, "PLAY AGAIN", () => startGame(0));
-        }
-        return;
+      // Жорстко перевіряємо: якщо лишилося рівно 1 слово, беремо саме його
+      if (remainingCards.length === 1) {
+        targetItem = remainingCards[0];
+      } else {
+        targetItem = remainingCards[Math.floor(Math.random() * remainingCards.length)];
       }
 
-      targetItem = remainingCards[Math.floor(Math.random() * remainingCards.length)];
       defTextEl.textContent = `"${targetItem.def}"`;
       waitingForNext = false;
       nextBtnEl.classList.add("disabled");
