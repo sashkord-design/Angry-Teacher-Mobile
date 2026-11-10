@@ -301,7 +301,6 @@
       border-color: #e5a93c;
     }
 
-    /* Червона заливка та трушення для помилкової відповіді */
     .card.error-wrong .card-front {
       background-color: var(--accent-red) !important;
       color: #ffffff !important;
@@ -861,6 +860,16 @@
     }
 
     function initLevel() {
+      // Скинути стан анімації та блокувань перед новим рівнем
+      isGameOver = false;
+      waitingForNext = false;
+      
+      // Скинути відео елемент до початкового стану
+      explosionVideo.pause();
+      explosionVideo.currentTime = 0;
+      explosionVideo.onended = null;
+      explosionOverlay.classList.add("hidden");
+
       const config = levelConfigs[currentLevelIdx];
       levelNumEl.textContent = `LEVEL ${config.level}`;
       levelTitleSubEl.textContent = config.title;
@@ -891,7 +900,6 @@
       });
 
       renderGrid(currentCardsPool);
-      waitingForNext = false;
       nextBtnEl.classList.add("disabled");
       pickNextTarget();
     }
