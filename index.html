@@ -68,7 +68,7 @@
       gap: 5px;
     }
 
-    /* Збільшена аватарка в шапці (заповнює квадрат висотою 36px) */
+    /* Аватарка в шапці гри */
     .teacher-avatar-img {
       width: 36px;
       height: 36px;
@@ -76,7 +76,7 @@
       flex-shrink: 0;
     }
 
-    /* Збільшена аватарка у модальному вікні (+35%) */
+    /* Аватарка у модальному вікні */
     .modal-avatar-img {
       width: 115px;
       height: 115px;
@@ -474,62 +474,62 @@
   <script>
     const vocabularyDBByLevel = {
       1: [
-        { word: "Notice", entries: [{ def: "To see or hear someone or something", example: "Did you notice her new haircut today?" }, { def: "To become aware of something through observation", example: "I did not notice any strange signs." }] },
-        { word: "Refuse", entries: [{ def: "To say no when someone asks you to do something", example: "They refuse to give up hope." }, { def: "To be unwilling to grant or accept something", example: "He refused to answer the difficult question." }] },
-        { word: "Decide", entries: [{ def: "To choose something after thinking about it", example: "It is hard to decide which laptop to buy." }, { def: "To reach a final conclusion or resolution", example: "We decided to start our project early." }] },
-        { word: "Avoid", entries: [{ def: "To try not to do something or stay away from it", example: "Try to avoid eating junk food late at night." }, { def: "To keep away from someone or something", example: "She tried to avoid traffic jams by leaving early." }] },
-        { word: "Accept", entries: [{ def: "To take something that someone offers you", example: "He decided to accept the job offer." }, { def: "To recognize a situation as valid or true", example: "It is hard to accept sudden changes." }] },
-        { word: "Future", entries: [{ def: "The time that will happen after now", example: "We must plan carefully for the future." }, { def: "Events that will happen in the time ahead", example: "Nobody can predict what the future holds." }] },
-        { word: "Forgive", entries: [{ def: "To stop feeling angry at someone who made a mistake", example: "She decided to forgive his mistake." }, { def: "To pardon someone for an offense or wrongdoing", example: "It takes strength to truly forgive." }] },
-        { word: "Believe", entries: [{ def: "To think that something is true or real", example: "Always believe in your own potential." }, { def: "To accept the word or statement of someone", example: "I believe every word she told me." }] },
-        { word: "Protect", entries: [{ def: "To keep someone or something safe from harm", example: "Wear a helmet to protect your head." }, { def: "To shield from danger or injury", example: "Animals protect their young fiercely." }] },
-        { word: "Provide", entries: [{ def: "To give someone something that they need", example: "Trees provide shade on sunny days." }, { def: "To supply or make available for use", example: "This guide provides useful tips." }] },
-        { word: "Create", entries: [{ def: "To make something new or original", example: "Artists create beauty out of chaos." }, { def: "To bring something into existence", example: "Code helps us create interactive apps." }] },
-        { word: "Expect", entries: [{ def: "To think that something will happen soon", example: "I expect to finish this report by Friday." }, { def: "To look forward to the arrival of someone", example: "We expect guests to arrive tonight." }] },
-        { word: "Explain", entries: [{ def: "To tell someone details so they understand clearly", example: "Can you explain this math rule to me?" }, { def: "To make an idea clear by describing it", example: "The teacher explained the grammar lesson." }] },
-        { word: "Choose", entries: [{ def: "To pick one thing out of many available options", example: "You can choose any dessert you like." }, { def: "To select a preferred option", example: "Choose your words carefully during talks." }] },
-        { word: "Improve", entries: [{ def: "To make something better than before", example: "Reading books helps improve your vocabulary." }, { def: "To achieve better standards or skills", example: "Practice daily to improve your piano skills." }] },
-        { word: "Allow", entries: [{ def: "To let someone do something or have something", example: "Dogs are not allowed in this shop." }, { def: "To permit an action or circumstance", example: "The rules allow extra time for exams." }] },
-        { word: "Happen", entries: [{ def: "To take place or occur without planned intent", example: "Accidents can happen when you rush." }, { def: "To come to pass in a situation", example: "Tell me what happened yesterday." }] },
-        { word: "Include", entries: [{ def: "To contain as part of a whole group or list", example: "Does the price include breakfast?" }, { def: "To comprise or put into a category", example: "Be sure to include all key details." }] },
-        { word: "Venture", entries: [{ def: "To dare to do something risky or dangerous", example: "They decided to venture into the forest." }, { def: "A risky or daring journey or project", example: "The new business venture proved successful." }] },
-        { word: "Breathe", entries: [{ def: "To take air into your lungs and let it out", example: "Relax, close your eyes, and breathe deeply." }, { def: "To inhale and exhale living air", example: "Fresh air helps you breathe much easier." }] },
-        { word: "Observe", entries: [{ def: "To watch carefully to gain information", example: "Scientists observe bird behavior in winter." }, { def: "To notice or perceive something closely", example: "He observed a sudden change in tone." }] },
-        { word: "Manage", entries: [{ def: "To be in charge of or control tasks and team", example: "She learned to manage her time well." }, { def: "To succeed in doing something difficult", example: "We managed to reach the summit in time." }] },
-        { word: "Wander", entries: [{ def: "To walk or move in a leisurely or aimless way", example: "They love to wander around the old streets." }, { def: "To stray away from a path or main idea", example: "Don't let your mind wander during exams." }] },
-        { word: "Gather", entries: [{ def: "To bring together from different places into one group", example: "People gather in the square every evening." }, { def: "To collect or harvest items", example: "We gathered fresh apples from the trees." }] },
-        { word: "Wish", entries: [{ def: "To feel or express a desire for something to happen", example: "I wish you the best of luck today." }, { def: "A strong hope or goal for the future", example: "Her biggest wish was to travel abroad." }] },
-        { word: "Prepare", entries: [{ def: "To make something ready for use or consideration", example: "Please prepare your presentations for Monday." }, { def: "To get ready for a future situation", example: "Athletes prepare hard for the Olympics." }] },
-        { word: "Worry", entries: [{ def: "To feel anxious or troubled about problems", example: "There is no need to worry about the results." }, { def: "A state of anxiety or concern", example: "Financial worry can cause unnecessary stress." }] }
+        { word: "Notice", entries: [{ def: "To see or hear something", example: "Did you notice her new haircut today?" }, { def: "To spot something around you", example: "I did not notice any strange signs." }] },
+        { word: "Refuse", entries: [{ def: "To say no to something", example: "They refuse to give up hope." }, { def: "To be unwilling to accept", example: "He refused to answer the difficult question." }] },
+        { word: "Decide", entries: [{ def: "To make a choice", example: "It is hard to decide which laptop to buy." }, { def: "To reach a final conclusion", example: "We decided to start our project early." }] },
+        { word: "Avoid", entries: [{ def: "To stay away from something", example: "Try to avoid eating junk food late at night." }, { def: "To keep away from trouble", example: "She tried to avoid traffic jams by leaving early." }] },
+        { word: "Accept", entries: [{ def: "To take what is offered", example: "He decided to accept the job offer." }, { def: "To agree to something", example: "It is hard to accept sudden changes." }] },
+        { word: "Future", entries: [{ def: "The time that is yet to come", example: "We must plan carefully for the future." }, { def: "Days and years ahead", example: "Nobody can predict what the future holds." }] },
+        { word: "Forgive", entries: [{ def: "To stop being angry at someone", example: "She decided to forgive his mistake." }, { def: "To pardon a mistake", example: "It takes strength to truly forgive." }] },
+        { word: "Believe", entries: [{ def: "To think something is true", example: "Always believe in your own potential." }, { def: "To trust someone's words", example: "I believe every word she told me." }] },
+        { word: "Protect", entries: [{ def: "To keep safe from harm", example: "Wear a helmet to protect your head." }, { def: "To shield from danger", example: "Animals protect their young fiercely." }] },
+        { word: "Provide", entries: [{ def: "To give what is needed", example: "Trees provide shade on sunny days." }, { def: "To supply items or help", example: "This guide provides useful tips." }] },
+        { word: "Create", entries: [{ def: "To make something new", example: "Artists create beauty out of chaos." }, { def: "To bring into being", example: "Code helps us create interactive apps." }] },
+        { word: "Expect", entries: [{ def: "To think something will happen", example: "I expect to finish this report by Friday." }, { def: "To look forward to an arrival", example: "We expect guests to arrive tonight." }] },
+        { word: "Explain", entries: [{ def: "To make something clear", example: "Can you explain this math rule to me?" }, { def: "To give details so others understand", example: "The teacher explained the grammar lesson." }] },
+        { word: "Choose", entries: [{ def: "To pick one option", example: "You can choose any dessert you like." }, { def: "To select a preferred thing", example: "Choose your words carefully during talks." }] },
+        { word: "Improve", entries: [{ def: "To make something better", example: "Reading books helps improve your vocabulary." }, { def: "To get better at skills", example: "Practice daily to improve your piano skills." }] },
+        { word: "Allow", entries: [{ def: "To let someone do something", example: "Dogs are not allowed in this shop." }, { def: "To permit an action", example: "The rules allow extra time for exams." }] },
+        { word: "Happen", entries: [{ def: "To take place or occur", example: "Accidents can happen when you rush." }, { def: "To come to pass", example: "Tell me what happened yesterday." }] },
+        { word: "Include", entries: [{ def: "To have as part of a group", example: "Does the price include breakfast?" }, { def: "To contain inside a list", example: "Be sure to include all key details." }] },
+        { word: "Venture", entries: [{ def: "To go on a risky trip", example: "They decided to venture into the forest." }, { def: "A bold new project", example: "The new business venture proved successful." }] },
+        { word: "Breathe", entries: [{ def: "To take air in and out", example: "Relax, close your eyes, and breathe deeply." }, { def: "To inhale and exhale", example: "Fresh air helps you breathe much easier." }] },
+        { word: "Observe", entries: [{ def: "To watch carefully", example: "Scientists observe bird behavior in winter." }, { def: "To notice something", example: "He observed a sudden change in tone." }] },
+        { word: "Manage", entries: [{ def: "To handle tasks or time well", example: "She learned to manage her time well." }, { def: "To succeed in doing a task", example: "We managed to reach the summit in time." }] },
+        { word: "Wander", entries: [{ def: "To walk around with no clear goal", example: "They love to wander around the old streets." }, { def: "To stray from the path", example: "Don't let your mind wander during exams." }] },
+        { word: "Gather", entries: [{ def: "To bring people or things together", example: "People gather in the square every evening." }, { def: "To collect items", example: "We gathered fresh apples from the trees." }] },
+        { word: "Wish", entries: [{ def: "To want something to happen", example: "I wish you the best of luck today." }, { def: "A strong hope", example: "Her biggest wish was to travel abroad." }] },
+        { word: "Prepare", entries: [{ def: "To get ready for something", example: "Please prepare your presentations for Monday." }, { def: "To make things ready in advance", example: "Athletes prepare hard for the Olympics." }] },
+        { word: "Worry", entries: [{ def: "To feel nervous or anxious", example: "There is no need to worry about the results." }, { def: "To have troubled thoughts", example: "Financial worry can cause unnecessary stress." }] }
       ],
       2: [
-        { word: "Challenge", entries: [{ def: "Something new and difficult to do", example: "He accepted the challenge with enthusiasm." }, { def: "A task that tests someone's abilities", example: "Learning a new language is a fun challenge." }] },
-        { word: "Imagine", entries: [{ def: "To picture something in your mind", example: "Can you imagine living on Mars?" }, { def: "To form a mental image or concept", example: "Imagine a world without any wars." }] },
-        { word: "Discover", entries: [{ def: "To find something for the first time", example: "Scientists discover new species every year." }, { def: "To uncover hidden facts or locations", example: "They discovered an old secret passage." }] },
-        { word: "Reduce", entries: [{ def: "To make something smaller or less", example: "We should reduce plastic consumption." }, { def: "To diminish in size, amount, or degree", example: "Special discounts reduce shopping costs." }] },
-        { word: "Solve", entries: [{ def: "To find the correct answer to a problem", example: "Can you solve this complex math puzzle?" }, { def: "To find a solution to difficulties", example: "Detectives worked hard to solve the mystery." }] },
-        { word: "Support", entries: [{ def: "To help someone when they are in trouble", example: "Friends always support each other in tough times." }, { def: "To bear the weight or maintain stability", example: "Strong pillars support the heavy roof." }] },
-        { word: "Organize", entries: [{ def: "To put things in good order", example: "Help me organize these files alphabetically." }, { def: "To arrange an event or structure efficiently", example: "She organized a surprise birthday party." }] },
-        { word: "Explore", entries: [{ def: "To look around a new place to learn about it", example: "Let's explore the old town streets." }, { def: "To investigate unfamiliar subjects thoroughly", example: "Scientists explore deep oceanic trenches." }] },
-        { word: "Advantage", entries: [{ def: "Something good that helps you succeed", example: "Speaking two languages is a big advantage." }, { def: "A condition giving a greater chance of success", example: "Tall players have an advantage in basketball." }] },
-        { word: "Attitude", entries: [{ def: "The way you think or feel about things", example: "A positive attitude helps you overcome stress." }, { def: "A settled way of thinking reflected in behavior", example: "His optimistic attitude inspires everyone." }] },
-        { word: "Journey", entries: [{ def: "An act of traveling from one place to another", example: "Their journey across Europe took three weeks." }, { def: "A long and personal process of development", example: "Learning code is a rewarding personal journey." }] },
-        { word: "Method", entries: [{ def: "A particular procedure for accomplishing something", example: "This study method speeds up learning." }, { def: "Systematic order or arrangement of steps", example: "Scientists use the empirical method for research." }] },
-        { word: "Knowledge", entries: [{ def: "Facts, information, and skills acquired through experience", example: "Books are a boundless source of human knowledge." }, { def: "Theoretical or practical understanding of a subject", example: "She has deep technical knowledge in engineering." }] },
-        { word: "Desire", entries: [{ def: "A strong wish to have or do something", example: "He has a strong desire to travel." }, { def: "An eager longing for a person or outcome", example: "She achieved her deep desire of becoming a doctor." }] },
-        { word: "Doubt", entries: [{ def: "A feeling when you are not sure about something", example: "I have no doubt that you will pass." }, { def: "A lack of conviction or certainty", example: "His promises raised doubts in our minds." }] },
-        { word: "Ancient", entries: [{ def: "Belonging to the very distant past in history", example: "They explored ancient ruins in Rome." }, { def: "Very old or aged from centuries ago", example: "Archaeologists found ancient Egyptian coins." }] },
-        { word: "Value", entries: [{ def: "The regard that something is held to deserve; worth", example: "Education holds immense long-term value." }, { def: "To consider something to be important or beneficial", example: "I value your honest opinion deeply." }] },
-        { word: "Target", entries: [{ def: "A result that a person or group aims to achieve", example: "Our sales team hit its monthly target." }, { def: "An object aimed at in shooting or games", example: "Arrows struck the center of the target." }] },
-        { word: "Solution", entries: [{ def: "A means of solving a problem or difficult situation", example: "We need an immediate solution to this bug." }, { def: "A liquid mixture in chemistry", example: "Dissolve salt in warm water to form a solution." }] },
-        { word: "Opinion", entries: [{ def: "A view or judgment formed about something", example: "Everyone has a right to express their opinion." }, { def: "A belief held without absolute legal proof", example: "Expert opinions differ on market trends." }] },
-        { word: "Benefit", entries: [{ def: "An advantage or profit gained from something", example: "Regular exercise has great health benefits." }, { def: "To be useful or profitable to someone", example: "Fresh air benefits everyone's well-being." }] },
-        { word: "Brilliant", entries: [{ def: "Exceptionally clever, bright, or talented", example: "She had a brilliant idea for the project." }, { def: "Vividly bright in color or lighting", example: "The diamond shone with brilliant light." }] },
-        { word: "Practice", entries: [{ def: "Perform an activity repeatedly to improve skill", example: "Practice daily to become fluent in English." }, { def: "The actual application or use of an idea", example: "Put your theoretical knowledge into practice." }] },
-        { word: "Quality", entries: [{ def: "The standard of something as measured against others", example: "We focus on high quality rather than quantity." }, { def: "A distinctive attribute or characteristic", example: "Patience is an admirable leadership quality." }] },
-        { word: "Success", entries: [{ def: "The accomplishment of an aim or purpose", example: "Hard work is the key to genuine success." }, { def: "A person or thing that achieves prosperity", example: "The app became an instant global success." }] },
-        { word: "Theory", entries: [{ def: "A system of ideas intended to explain something", example: "Einstein formulated the general theory of relativity." }, { def: "An idea used to account for a situation", example: "In theory, this solution should work fast." }] },
-        { word: "Unit", entries: [{ def: "A single undivided entity forming part of a whole", example: "Each vocabulary unit has nine new words." }, { def: "A standard quantity used in measurement", example: "The meter is a standard unit of length." }] }
+        { word: "Challenge", entries: [{ def: "A difficult task to test skills", example: "He accepted the challenge with enthusiasm." }, { def: "Something hard but fun to do", example: "Learning a new language is a fun challenge." }] },
+        { word: "Imagine", entries: [{ def: "To picture in your head", example: "Can you imagine living on Mars?" }, { def: "To think up a scene", example: "Imagine a world without any wars." }] },
+        { word: "Discover", entries: [{ def: "To find something new", example: "Scientists discover new species every year." }, { def: "To uncover a hidden place", example: "They discovered an old secret passage." }] },
+        { word: "Reduce", entries: [{ def: "To make smaller or less", example: "We should reduce plastic consumption." }, { def: "To lower amount or size", example: "Special discounts reduce shopping costs." }] },
+        { word: "Solve", entries: [{ def: "To find the right answer", example: "Can you solve this complex math puzzle?" }, { def: "To fix a tricky problem", example: "Detectives worked hard to solve the mystery." }] },
+        { word: "Support", entries: [{ def: "To help someone in need", example: "Friends always support each other in tough times." }, { def: "To hold up weight", example: "Strong pillars support the heavy roof." }] },
+        { word: "Organize", entries: [{ def: "To put things in good order", example: "Help me organize these files alphabetically." }, { def: "To plan an event neatly", example: "She organized a surprise birthday party." }] },
+        { word: "Explore", entries: [{ def: "To look around a new place", example: "Let's explore the old town streets." }, { def: "To check out unknown areas", example: "Scientists explore deep oceanic trenches." }] },
+        { word: "Advantage", entries: [{ def: "A helpful condition or edge", example: "Speaking two languages is a big advantage." }, { def: "Something that helps you win", example: "Tall players have an advantage in basketball." }] },
+        { word: "Attitude", entries: [{ def: "Your mindset or mood", example: "A positive attitude helps you overcome stress." }, { def: "How you think and act", example: "His optimistic attitude inspires everyone." }] },
+        { word: "Journey", entries: [{ def: "A long trip somewhere", example: "Their journey across Europe took three weeks." }, { def: "A personal path of growth", example: "Learning code is a rewarding personal journey." }] },
+        { word: "Method", entries: [{ def: "A way of doing something", example: "This study method speeds up learning." }, { def: "A step-by-step process", example: "Scientists use the empirical method for research." }] },
+        { word: "Knowledge", entries: [{ def: "Things you know and learned", example: "Books are a boundless source of human knowledge." }, { def: "Understanding of a subject", example: "She has deep technical knowledge in engineering." }] },
+        { word: "Desire", entries: [{ def: "A strong wish for something", example: "He has a strong desire to travel." }, { def: "A deep longing", example: "She achieved her deep desire of becoming a doctor." }] },
+        { word: "Doubt", entries: [{ def: "A feeling of not being sure", example: "I have no doubt that you will pass." }, { def: "Uncertainty in your mind", example: "His promises raised doubts in our minds." }] },
+        { word: "Ancient", entries: [{ def: "Very old from long ago", example: "They explored ancient ruins in Rome." }, { def: "From history's early days", example: "Archaeologists found ancient Egyptian coins." }] },
+        { word: "Value", entries: [{ def: "How much something is worth", example: "Education holds immense long-term value." }, { def: "To care about an opinion", example: "I value your honest opinion deeply." }] },
+        { word: "Target", entries: [{ def: "A goal you aim to hit", example: "Our sales team hit its monthly target." }, { def: "A mark to aim at", example: "Arrows struck the center of the target." }] },
+        { word: "Solution", entries: [{ def: "An answer to a problem", example: "We need an immediate solution to this bug." }, { def: "A mixed liquid", example: "Dissolve salt in warm water to form a solution." }] },
+        { word: "Opinion", entries: [{ def: "What you think about a topic", example: "Everyone has a right to express their opinion." }, { def: "Your personal view", example: "Expert opinions differ on market trends." }] },
+        { word: "Benefit", entries: [{ def: "A helpful advantage", example: "Regular exercise has great health benefits." }, { def: "Something good gained", example: "Fresh air benefits everyone's well-being." }] },
+        { word: "Brilliant", entries: [{ def: "Very smart or bright", example: "She had a brilliant idea for the project." }, { def: "Shining brightly", example: "The diamond shone with brilliant light." }] },
+        { word: "Practice", entries: [{ def: "Doing something to get better", example: "Practice daily to become fluent in English." }, { def: "Putting ideas into action", example: "Put your theoretical knowledge into practice." }] },
+        { word: "Quality", entries: [{ def: "How good something is", example: "We focus on high quality rather than quantity." }, { def: "A personal trait", example: "Patience is an admirable leadership quality." }] },
+        { word: "Success", entries: [{ def: "Achieving what you wanted", example: "Hard work is the key to genuine success." }, { def: "A winning result", example: "The app became an instant global success." }] },
+        { word: "Theory", entries: [{ def: "An idea explaining facts", example: "Einstein formulated the general theory of relativity." }, { def: "A concept to test out", example: "In theory, this solution should work fast." }] },
+        { word: "Unit", entries: [{ def: "A single part of a whole", example: "Each vocabulary unit has nine new words." }, { def: "A standard of measure", example: "The meter is a standard unit of length." }] }
       ],
       3: [
         { word: "Achieve", entries: [{ def: "To successfully reach a desired goal through skill or effort", example: "Hard work helps you achieve your goals." }, { def: "To accomplish objectives through perseverance", example: "She achieved remarkable success in science." }] },
