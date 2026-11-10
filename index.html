@@ -1,1129 +1,1154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Angry Teacher - Mobile Edition</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color: #f7f3e9;
-      --card-bg: #fffdf7;
-      --card-back-bg: #1e3a40;
-      --primary-teal: #2b6777;
-      --accent-gold: #e5a93c;
-      --accent-red: #d9534f;
-      --dark-text: #222222;
-      --border-dark: #1f1f1f;
-      --shadow-color: rgba(31, 31, 31, 0.85);
-      --font-heading: 'Fredoka', sans-serif;
-      --font-body: 'Outfit', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angry Teacher - Analog Console Edition</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk & Space Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #e8e2d0;
+            color: #2b2b28;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(43, 43, 40, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(43, 43, 40, 0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
+        .font-mono-retro {
+            font-family: 'Space Mono', monospace;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      font-family: var(--font-body);
-      color: var(--dark-text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 5px 6px;
-      position: relative;
-    }
+        /* Enable text selection */
+        .selectable-text {
+            user-select: text;
+            -webkit-user-select: text;
+        }
 
-    #app-container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+        /* Vintage Console Stripe */
+        .console-stripe {
+            background: linear-gradient(90deg, 
+                #3b7080 0%, #3b7080 25%, 
+                #d49e35 25%, #d49e35 50%, 
+                #547b4b 50%, #547b4b 75%, 
+                #c04838 75%, #c04838 100%);
+            height: 6px;
+        }
 
-    .header-panel {
-      background: #f7f3e9;
-      border: 2.5px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 3px 6px;
-      box-shadow: 0px 2.5px 0px var(--shadow-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 42px;
-    }
+        /* Card Styling - Synthesizer / Mixer Knob Key Style */
+        .card-item {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            background: #f4efdf;
+            border: 2.5px solid #2b2b28;
+            box-shadow: 4px 4px 0 0 #2b2b28;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    .teacher-badge {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
+        .card-wrapper:hover .card-item {
+            background: #d49e35;
+            color: #f4efdf;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 0 #2b2b28;
+        }
 
-    .teacher-avatar-img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
+        .card-wrapper:hover .card-item span {
+            color: #2b2b28;
+        }
 
-    .modal-avatar-img {
-      width: 115px;
-      height: 115px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
+        .card-wrapper:active .card-item {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 0 #2b2b28;
+        }
 
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+        .card-item.correct {
+            background: #547b4b;
+            border: 2.5px solid #2b2b28;
+            box-shadow: 4px 4px 0 0 #2b2b28;
+        }
 
-    .game-title {
-      font-family: var(--font-heading);
-      font-size: 0.88rem;
-      color: var(--border-dark);
-      text-transform: uppercase;
-      line-height: 1;
-      letter-spacing: 0.3px;
-    }
+        .card-item.correct span {
+            color: #f4efdf !important;
+        }
 
-    .stats-row {
-      display: flex;
-      gap: 4px;
-    }
+        /* Explosion scatter animation effect */
+        .card-wrapper.exploded {
+            animation: explode 0.8s ease-out forwards;
+            pointer-events: none;
+        }
 
-    .stat-pill.level-pill {
-      background: var(--accent-gold);
-      border: 2px solid var(--border-dark);
-      border-radius: 8px;
-      padding: 2px 5px;
-      text-align: center;
-      min-width: 72px;
-      box-shadow: 0 1.5px 0 var(--shadow-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) scale(0);
+                opacity: 0;
+            }
+        }
 
-    .stat-pill.teal {
-      background: var(--primary-teal);
-      color: #ffffff;
-      border: 2px solid var(--border-dark);
-      border-radius: 8px;
-      padding: 2px 5px;
-      text-align: center;
-      min-width: 52px;
-      box-shadow: 0 1.5px 0 var(--shadow-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9e9786;
+            border-radius: 4px;
+        }
 
-    .stat-label {
-      font-size: 0.42rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      display: block;
-      opacity: 0.9;
-      line-height: 1;
-    }
-
-    .stat-value {
-      font-family: var(--font-heading);
-      font-size: 0.65rem;
-      line-height: 1.1;
-      margin-top: 1px;
-    }
-
-    .level-title-sub {
-      font-size: 0.42rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      line-height: 1;
-      opacity: 0.85;
-      margin-top: 1px;
-    }
-
-    .definition-card {
-      background: var(--primary-teal);
-      border: 3px solid var(--border-dark);
-      border-radius: 14px;
-      padding: 10px 10px;
-      color: #ffffff;
-      box-shadow: 0px 3px 0px var(--shadow-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      min-height: 68px;
-    }
-
-    .definition-text {
-      font-size: 0.85rem;
-      font-weight: 600;
-      line-height: 1.3;
-      text-align: center;
-      flex-grow: 1;
-      font-style: italic;
-    }
-
-    .timer-badge, .next-btn {
-      background: var(--accent-gold);
-      color: var(--border-dark);
-      border: 2px solid var(--border-dark);
-      border-radius: 9px;
-      padding: 2px 6px;
-      font-family: var(--font-heading);
-      font-size: 0.8rem;
-      white-space: nowrap;
-      box-shadow: 0 2px 0 var(--border-dark);
-      min-width: 44px;
-      height: 36px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .next-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 0px 0 var(--border-dark);
-    }
-
-    .next-btn.disabled {
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    .next-arrow {
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
-      line-height: 1;
-    }
-
-    .next-label {
-      font-size: 0.4rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      line-height: 1;
-      margin-top: 1px;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 6px;
-      width: 100%;
-    }
-
-    .card {
-      perspective: 1000px;
-      height: 82px;
-      cursor: pointer;
-    }
-
-    .card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      transition: transform 0.4s ease;
-      transform-style: preserve-3d;
-    }
-
-    .card.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .card-front, .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      border: 2.5px solid var(--border-dark);
-      border-radius: 11px;
-      box-shadow: 0px 3px 0px var(--shadow-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px 4px;
-      transition: background-color 0.3s ease;
-    }
-
-    .card-front {
-      background-color: var(--card-bg);
-      color: var(--border-dark);
-    }
-
-    .card-word {
-      font-family: var(--font-heading);
-      font-size: clamp(0.7rem, 3.2vw, 0.88rem);
-      text-align: center;
-      line-height: 1.1;
-      width: 100%;
-    }
-
-    .card-back {
-      background-color: var(--card-back-bg);
-      color: #ffffff;
-      transform: rotateY(180deg);
-      border-color: var(--border-dark);
-      padding: 3px 6px;
-    }
-
-    /* Збільшений шрифт речення-прикладу на звороті карток */
-    .card-back-text {
-      font-size: 0.64rem;
-      line-height: 1.2;
-      font-weight: 500;
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .card.highlighted .card-front {
-      background-color: #f9d98c;
-      border-color: #e5a93c;
-    }
-
-    .card.matched .card-front {
-      background-color: #a8dadc;
-      opacity: 0.8;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(31, 31, 31, 0.85);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 16px;
-    }
-
-    @keyframes popIn {
-      0% {
-        transform: scale(0);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .modal-box {
-      background: var(--bg-color);
-      border: 4px solid var(--border-dark);
-      border-radius: 20px;
-      padding: 20px 18px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
-      box-shadow: 0 6px 0 var(--border-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .animate-pop {
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    .modal-title {
-      font-family: var(--font-heading);
-      font-size: 1.3rem;
-      color: var(--accent-red);
-      text-transform: uppercase;
-      line-height: 1.1;
-    }
-
-    .modal-desc {
-      font-size: 0.85rem;
-      font-weight: 600;
-      line-height: 1.4;
-      color: var(--dark-text);
-    }
-
-    .modal-btn {
-      background: var(--accent-gold);
-      color: var(--border-dark);
-      border: 3px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 9px 16px;
-      font-family: var(--font-heading);
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: 0 3px 0 var(--border-dark);
-      width: 100%;
-    }
-
-    .modal-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 var(--border-dark);
-    }
-
-    .modal-btn.secondary {
-      background: var(--primary-teal);
-      color: #ffffff;
-    }
-
-    .level-select-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      width: 100%;
-      margin-top: 4px;
-    }
-
-    .level-sel-btn {
-      background: var(--card-bg);
-      border: 2px solid var(--border-dark);
-      border-radius: 10px;
-      padding: 8px 6px;
-      font-family: var(--font-heading);
-      font-size: 0.75rem;
-      cursor: pointer;
-      box-shadow: 0 2px 0 var(--border-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .level-sel-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 0px 0 var(--border-dark);
-    }
-
-    .level-sel-btn.locked {
-      background: #e0dcd0;
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    #explosion-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1500;
-      pointer-events: none;
-    }
-
-    #explosion-video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-  </style>
+        /* Responsive grid adjustments */
+        .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        .grid-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+        .grid-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+        .grid-8 { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between p-2 md:p-6">
 
-  <div class="modal-overlay" id="modal-screen">
-    <div class="modal-box animate-pop" id="modal-box">
-      <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
-      
-      <div class="modal-title" id="modal-title">ANGRY TEACHER</div>
-      
-      <div class="modal-desc" id="modal-desc">
-        Don't let the angry teacher explode — match the correct word!<br><br>
-        <strong>You have 25 seconds for each word.</strong>
-      </div>
-      
-      <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
-        <button class="modal-btn" id="modal-start-main-btn">START GAME</button>
-        <button class="modal-btn secondary" id="modal-levels-btn">SELECT LEVEL</button>
-      </div>
-    </div>
-  </div>
+    <!-- Top Navigation Header -->
+    <header class="max-w-7xl w-full mx-auto bg-[#f4efdf] border-3 border-[#2b2b28] rounded-2xl mb-4 shadow-[6px_6px_0_0_#2b2b28] overflow-hidden">
+        <div class="console-stripe w-full"></div>
+        <div class="p-3 md:p-4 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3 md:space-x-4">
+                <!-- Larger Pure Logo Image without background or borders -->
+                <div class="w-14 h-16 md:w-16 md:h-20 flex items-center justify-center shrink-0">
+                    <img src="teacher-logo.png" alt="Angry Teacher Logo" class="w-full h-full object-contain filter drop-shadow-[2px_2px_0_#2b2b28]" />
+                </div>
+                <div>
+                    <h1 class="font-black text-2xl md:text-3xl tracking-tight text-[#2b2b28] flex items-center gap-2 uppercase leading-none">
+                        Angry Teacher
+                    </h1>
+                    <p class="text-xs font-mono-retro font-bold text-[#c04838] uppercase mt-1 tracking-wider">
+                        You mess up — he explodes!
+                    </p>
+                </div>
+            </div>
 
-  <div id="explosion-overlay" class="hidden">
-    <video id="explosion-video" playsinline preload="auto">
-      <source src="video_1.webm" type="video/webm">
-      <source src="video_1.mov" type='video/mp4; codecs="hvc1"'>
-    </video>
-  </div>
+            <!-- Level Indicator, Music Toggle & Score -->
+            <div class="flex items-center space-x-3 mt-2 sm:mt-0">
+                <!-- Background Music Toggle Button -->
+                <button id="btn-toggle-bgm" class="bg-[#f4efdf] hover:bg-[#e8e2d0] text-[#2b2b28] border-2 border-[#2b2b28] p-2.5 rounded-xl text-center shadow-[2px_2px_0_0_#2b2b28] transition active:scale-95 flex items-center justify-center gap-1.5 font-mono-retro font-bold text-xs" title="Toggle Background Music">
+                    <i id="bgm-icon" class="fa-solid fa-volume-xmark text-sm text-[#c04838]"></i>
+                    <span id="bgm-text" class="hidden sm:inline">BGM OFF</span>
+                </button>
 
-  <div id="app-container">
-    <div class="header-panel">
-      <div class="teacher-badge">
-        <img src="teacher-face.png" alt="Teacher" class="teacher-avatar-img" />
-
-        <div class="title-block">
-          <div class="game-title">Angry Teacher</div>
+                <div class="bg-[#d49e35] text-[#2b2b28] border-2 border-[#2b2b28] px-4 py-1.5 rounded-xl text-center shadow-[2px_2px_0_0_#2b2b28]">
+                    <span class="text-[10px] font-mono-retro font-bold block uppercase opacity-80">LEVEL</span>
+                    <span id="level-badge" class="text-lg font-black font-mono-retro">1 (4x4)</span>
+                </div>
+                <div class="bg-[#3b7080] text-[#f4efdf] border-2 border-[#2b2b28] px-4 py-1.5 rounded-xl text-center shadow-[2px_2px_0_0_#2b2b28]">
+                    <span class="text-[10px] font-mono-retro font-bold block uppercase opacity-80">PROGRESS</span>
+                    <span id="progress-badge" class="text-lg font-black font-mono-retro">0 / 16</span>
+                </div>
+                <button id="btn-toggle-sidebar" class="lg:hidden bg-[#2b2b28] text-[#f4efdf] p-3 rounded-xl shadow-[2px_2px_0_0_#2b2b28] transition active:scale-95 border-2 border-[#2b2b28]">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
         </div>
-      </div>
+    </header>
 
-      <div class="stats-row">
-        <div class="stat-pill level-pill" id="level-pill-btn" style="cursor: pointer;" title="Select Level">
-          <span class="stat-value" id="level-num">LEVEL 1</span>
-          <span class="level-title-sub" id="level-title-sub">Freshman</span>
+    <!-- Main Container -->
+    <main class="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-7 gap-6 flex-1 items-stretch">
+        
+        <!-- Game Section (Takes 5 Columns on Large Screens) -->
+        <section class="lg:col-span-5 flex flex-col justify-start items-center space-y-4">
+            
+            <!-- Current Clue Banner with absolute centered text perfectly spaced from edges -->
+            <div class="w-full bg-[#3b7080] text-[#f4efdf] border-3 border-[#2b2b28] rounded-2xl p-4 md:p-5 text-center shadow-[6px_6px_0_0_#2b2b28] relative overflow-hidden flex items-center justify-between min-h-[120px]">
+                
+                <!-- Absolute Centered Definition Text Container -->
+                <div class="absolute inset-0 flex items-center justify-center px-24 md:px-28 pointer-events-none">
+                    <p id="target-definition" class="selectable-text text-lg md:text-xl font-bold italic transition-all duration-300 leading-relaxed text-center pointer-events-auto">
+                        Press the right arrow [ -> ] to start definition and timer!
+                    </p>
+                </div>
+
+                <!-- Left Side: Retro Timer Badge -->
+                <div id="timer-badge" class="z-10 px-3.5 py-1.5 bg-[#d49e35] text-[#2b2b28] font-mono-retro font-black text-base md:text-lg tracking-widest rounded-xl uppercase border-2 border-[#2b2b28] shadow-[2px_2px_0_0_#2b2b28] flex items-center justify-center shrink-0">
+                    <span id="timer-text">25s</span>
+                </div>
+
+                <!-- Right Side: Speaker and Next Arrow Buttons -->
+                <div class="z-10 flex items-center gap-2 shrink-0">
+                    <button id="btn-speak-target" class="text-[#f4efdf] hover:text-[#d49e35] bg-[#2b2b28]/30 hover:bg-[#2b2b28]/60 p-2.5 rounded-xl transition border border-[#f4efdf]/30 flex items-center justify-center w-10 h-10" title="Listen to Definition">
+                        <i id="target-speaker-icon" class="fa-solid fa-volume-high text-sm"></i>
+                    </button>
+                    <button id="btn-next-target" class="text-[#2b2b28] bg-[#d49e35] hover:bg-[#e2af46] p-2.5 rounded-xl transition border border-[#2b2b28] shadow-[2px_2px_0_0_#2b2b28] flex items-center justify-center w-10 h-10 active:scale-95" title="Next Word">
+                        <i class="fa-solid fa-arrow-right text-sm font-black"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card Grid Container -->
+            <div id="grid-wrapper" class="w-full flex-1 flex items-center justify-center py-2">
+                <div id="game-grid" class="grid gap-2 md:gap-3 w-full max-w-4xl transition-all duration-300">
+                    <!-- Cards will be dynamically inserted here -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Sidebar / Examples Panel & Controls (Takes 2 Columns out of 7) -->
+        <aside id="sidebar" class="lg:col-span-2 bg-[#f4efdf] border-3 border-[#2b2b28] rounded-2xl p-5 shadow-[6px_6px_0_0_#2b2b28] flex flex-col justify-between hidden lg:flex space-y-4 h-full">
+            
+            <!-- Wider Examples Panel with larger font size -->
+            <div id="examples-panel" class="bg-[#e8e2d0] rounded-2xl p-5 border-2 border-[#2b2b28] shadow-inner flex-1 flex flex-col justify-between overflow-hidden">
+                <div class="flex flex-col h-full overflow-y-auto pr-1">
+                    <div class="flex items-center justify-between border-b-2 border-[#2b2b28] pb-3 mb-4">
+                        <h3 class="font-black text-[#2b2b28] text-base md:text-lg flex items-center gap-2">
+                            <i class="fa-solid fa-book-open text-[#3b7080]"></i> EXAMPLES
+                        </h3>
+                    </div>
+
+                    <div id="examples-content" class="selectable-text text-[#2b2b28] space-y-3.5 italic flex-1 flex flex-col justify-center font-medium leading-relaxed">
+                        <p class="text-[#7c7668] text-center not-italic font-mono-retro text-xs md:text-sm">Select a correctly guessed card on the grid to view example sentences here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Restart Game Button -->
+            <button id="btn-reset-game" class="w-full bg-[#2b2b28] hover:bg-[#3d3d39] text-[#f4efdf] font-bold py-3.5 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 active:scale-95 border-2 border-[#2b2b28] shadow-[3px_3px_0_0_#9e9786] font-mono-retro">
+                <i class="fa-solid fa-rotate-right"></i> RESTART SYSTEM
+            </button>
+        </aside>
+
+    </main>
+
+    <!-- Modal Notification Overlay for Explosion / Game Over / Victory -->
+    <div id="modal-overlay" class="fixed inset-0 bg-[#2b2b28]/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div id="modal-content" class="bg-[#f4efdf] border-4 border-[#2b2b28] rounded-3xl p-6 md:p-8 max-w-md w-full text-center shadow-[10px_10px_0_0_#2b2b28] transform scale-90 transition-transform duration-300">
+            <div id="modal-icon" class="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl mb-4 shadow-[4px_4px_0_0_#2b2b28] border-3 border-[#2b2b28] bg-[#c04838] text-[#f4efdf]">
+                <i class="fa-solid fa-bomb"></i>
+            </div>
+            <h2 id="modal-title" class="text-3xl font-black text-[#2b2b28] mb-2 tracking-wide uppercase">BOOM!!!</h2>
+            <p id="modal-message" class="text-sm font-mono-retro text-[#5c584e] mb-6 font-bold">One mistake—and you’re a flaming steak.</p>
+            <button id="modal-action-btn" class="w-full bg-[#c04838] hover:bg-[#a53b2d] text-[#f4efdf] font-black py-3 px-6 rounded-xl transition transform active:scale-95 shadow-[4px_4px_0_0_#2b2b28] border-3 border-[#2b2b28] uppercase">
+                TRY AGAIN
+            </button>
         </div>
-        <div class="stat-pill teal">
-          <span class="stat-label">Progress</span>
-          <span class="stat-value" id="progress-val">0/9</span>
-        </div>
-      </div>
     </div>
 
-    <div class="definition-card">
-      <div class="timer-badge" id="timer">25s</div>
-      <div class="definition-text" id="def-text">Ready to play?</div>
-      <button class="next-btn disabled" id="next-btn" title="Next Word">
-        <span class="next-arrow">→</span>
-        <span class="next-label">next</span>
-      </button>
-    </div>
-
-    <div class="cards-grid" id="cards-grid"></div>
-  </div>
-
-  <script>
-    const vocabularyDBByLevel = {
-      1: [
-        { word: "Notice", entries: [{ def: "To see or hear something", example: "Did you notice her new haircut today?" }, { def: "To spot something around you", example: "I did not notice any strange signs." }] },
-        { word: "Refuse", entries: [{ def: "To say no to something", example: "They refuse to give up hope." }, { def: "To be unwilling to accept", example: "He refused to answer the difficult question." }] },
-        { word: "Decide", entries: [{ def: "To make a choice", example: "It is hard to decide which laptop to buy." }, { def: "To reach a final conclusion", example: "We decided to start our project early." }] },
-        { word: "Avoid", entries: [{ def: "To stay away from something", example: "Try to avoid eating junk food late at night." }, { def: "To keep away from trouble", example: "She tried to avoid traffic jams by leaving early." }] },
-        { word: "Accept", entries: [{ def: "To take what is offered", example: "He decided to accept the job offer." }, { def: "To agree to something", example: "It is hard to accept sudden changes." }] },
-        { word: "Future", entries: [{ def: "The time that is yet to come", example: "We must plan carefully for the future." }, { def: "Days and years ahead", example: "Nobody can predict what the future holds." }] },
-        { word: "Forgive", entries: [{ def: "To stop being angry at someone", example: "She decided to forgive his mistake." }, { def: "To pardon a mistake", example: "It takes strength to truly forgive." }] },
-        { word: "Believe", entries: [{ def: "To think something is true", example: "Always believe in your own potential." }, { def: "To trust someone's words", example: "I believe every word she told me." }] },
-        { word: "Protect", entries: [{ def: "To keep safe from harm", example: "Wear a helmet to protect your head." }, { def: "To shield from danger", example: "Animals protect their young fiercely." }] },
-        { word: "Provide", entries: [{ def: "To give what is needed", example: "Trees provide shade on sunny days." }, { def: "To supply items or help", example: "This guide provides useful tips." }] },
-        { word: "Create", entries: [{ def: "To make something new", example: "Artists create beauty out of chaos." }, { def: "To bring into being", example: "Code helps us create interactive apps." }] },
-        { word: "Expect", entries: [{ def: "To think something will happen", example: "I expect to finish this report by Friday." }, { def: "To look forward to an arrival", example: "We expect guests to arrive tonight." }] },
-        { word: "Explain", entries: [{ def: "To make something clear", example: "Can you explain this math rule to me?" }, { def: "To give details so others understand", example: "The teacher explained the grammar lesson." }] },
-        { word: "Choose", entries: [{ def: "To pick one option", example: "You can choose any dessert you like." }, { def: "To select a preferred thing", example: "Choose your words carefully during talks." }] },
-        { word: "Improve", entries: [{ def: "To make something better", example: "Reading books helps improve your vocabulary." }, { def: "To get better at skills", example: "Practice daily to improve your piano skills." }] },
-        { word: "Allow", entries: [{ def: "To let someone do something", example: "Dogs are not allowed in this shop." }, { def: "To permit an action", example: "The rules allow extra time for exams." }] },
-        { word: "Happen", entries: [{ def: "To take place or occur", example: "Accidents can happen when you rush." }, { def: "To come to pass", example: "Tell me what happened yesterday." }] },
-        { word: "Include", entries: [{ def: "To have as part of a group", example: "Does the price include breakfast?" }, { def: "To contain inside a list", example: "Be sure to include all key details." }] },
-        { word: "Venture", entries: [{ def: "To go on a risky trip", example: "They decided to venture into the forest." }, { def: "A bold new project", example: "The new business venture proved successful." }] },
-        { word: "Breathe", entries: [{ def: "To take air in and out", example: "Relax, close your eyes, and breathe deeply." }, { def: "To inhale and exhale", example: "Fresh air helps you breathe much easier." }] },
-        { word: "Observe", entries: [{ def: "To watch carefully", example: "Scientists observe bird behavior in winter." }, { def: "To notice something", example: "He observed a sudden change in tone." }] },
-        { word: "Manage", entries: [{ def: "To handle tasks or time well", example: "She learned to manage her time well." }, { def: "To succeed in doing a task", example: "We managed to reach the summit in time." }] },
-        { word: "Wander", entries: [{ def: "To walk around with no clear goal", example: "They love to wander around the old streets." }, { def: "To stray from the path", example: "Don't let your mind wander during exams." }] },
-        { word: "Gather", entries: [{ def: "To bring people or things together", example: "People gather in the square every evening." }, { def: "To collect items", example: "We gathered fresh apples from the trees." }] },
-        { word: "Wish", entries: [{ def: "To want something to happen", example: "I wish you the best of luck today." }, { def: "A strong hope", example: "Her biggest wish was to travel abroad." }] },
-        { word: "Prepare", entries: [{ def: "To get ready for something", example: "Please prepare your presentations for Monday." }, { def: "To make things ready in advance", example: "Athletes prepare hard for the Olympics." }] },
-        { word: "Worry", entries: [{ def: "To feel nervous or anxious", example: "There is no need to worry about the results." }, { def: "To have troubled thoughts", example: "Financial worry can cause unnecessary stress." }] }
-      ],
-      2: [
-        { word: "Challenge", entries: [{ def: "A difficult task to test skills", example: "He accepted the challenge with enthusiasm." }, { def: "Something hard but fun to do", example: "Learning a new language is a fun challenge." }] },
-        { word: "Imagine", entries: [{ def: "To picture in your head", example: "Can you imagine living on Mars?" }, { def: "To think up a scene", example: "Imagine a world without any wars." }] },
-        { word: "Discover", entries: [{ def: "To find something new", example: "Scientists discover new species every year." }, { def: "To uncover a hidden place", example: "They discovered an old secret passage." }] },
-        { word: "Reduce", entries: [{ def: "To make smaller or less", example: "We should reduce plastic consumption." }, { def: "To lower amount or size", example: "Special discounts reduce shopping costs." }] },
-        { word: "Solve", entries: [{ def: "To find the right answer", example: "Can you solve this complex math puzzle?" }, { def: "To fix a tricky problem", example: "Detectives worked hard to solve the mystery." }] },
-        { word: "Support", entries: [{ def: "To help someone in need", example: "Friends always support each other in tough times." }, { def: "To hold up weight", example: "Strong pillars support the heavy roof." }] },
-        { word: "Organize", entries: [{ def: "To put things in good order", example: "Help me organize these files alphabetically." }, { def: "To plan an event neatly", example: "She organized a surprise birthday party." }] },
-        { word: "Explore", entries: [{ def: "To look around a new place", example: "Let's explore the old town streets." }, { def: "To check out unknown areas", example: "Scientists explore deep oceanic trenches." }] },
-        { word: "Advantage", entries: [{ def: "A helpful condition or edge", example: "Speaking two languages is a big advantage." }, { def: "Something that helps you win", example: "Tall players have an advantage in basketball." }] },
-        { word: "Attitude", entries: [{ def: "Your mindset or mood", example: "A positive attitude helps you overcome stress." }, { def: "How you think and act", example: "His optimistic attitude inspires everyone." }] },
-        { word: "Journey", entries: [{ def: "A long trip somewhere", example: "Their journey across Europe took three weeks." }, { def: "A personal path of growth", example: "Learning code is a rewarding personal journey." }] },
-        { word: "Method", entries: [{ def: "A way of doing something", example: "This study method speeds up learning." }, { def: "A step-by-step process", example: "Scientists use the empirical method for research." }] },
-        { word: "Knowledge", entries: [{ def: "Things you know and learned", example: "Books are a boundless source of human knowledge." }, { def: "Understanding of a subject", example: "She has deep technical knowledge in engineering." }] },
-        { word: "Desire", entries: [{ def: "A strong wish for something", example: "He has a strong desire to travel." }, { def: "A deep longing", example: "She achieved her deep desire of becoming a doctor." }] },
-        { word: "Doubt", entries: [{ def: "A feeling of not being sure", example: "I have no doubt that you will pass." }, { def: "Uncertainty in your mind", example: "His promises raised doubts in our minds." }] },
-        { word: "Ancient", entries: [{ def: "Very old from long ago", example: "They explored ancient ruins in Rome." }, { def: "From history's early days", example: "Archaeologists found ancient Egyptian coins." }] },
-        { word: "Value", entries: [{ def: "How much something is worth", example: "Education holds immense long-term value." }, { def: "To care about an opinion", example: "I value your honest opinion deeply." }] },
-        { word: "Target", entries: [{ def: "A goal you aim to hit", example: "Our sales team hit its monthly target." }, { def: "A mark to aim at", example: "Arrows struck the center of the target." }] },
-        { word: "Solution", entries: [{ def: "An answer to a problem", example: "We need an immediate solution to this bug." }, { def: "A mixed liquid", example: "Dissolve salt in warm water to form a solution." }] },
-        { word: "Opinion", entries: [{ def: "What you think about a topic", example: "Everyone has a right to express their opinion." }, { def: "Your personal view", example: "Expert opinions differ on market trends." }] },
-        { word: "Benefit", entries: [{ def: "A helpful advantage", example: "Regular exercise has great health benefits." }, { def: "Something good gained", example: "Fresh air benefits everyone's well-being." }] },
-        { word: "Brilliant", entries: [{ def: "Very smart or bright", example: "She had a brilliant idea for the project." }, { def: "Shining brightly", example: "The diamond shone with brilliant light." }] },
-        { word: "Practice", entries: [{ def: "Doing something to get better", example: "Practice daily to become fluent in English." }, { def: "Putting ideas into action", example: "Put your theoretical knowledge into practice." }] },
-        { word: "Quality", entries: [{ def: "How good something is", example: "We focus on high quality rather than quantity." }, { def: "A personal trait", example: "Patience is an admirable leadership quality." }] },
-        { word: "Success", entries: [{ def: "Achieving what you wanted", example: "Hard work is the key to genuine success." }, { def: "A winning result", example: "The app became an instant global success." }] },
-        { word: "Theory", entries: [{ def: "An idea explaining facts", example: "Einstein formulated the general theory of relativity." }, { def: "A concept to test out", example: "In theory, this solution should work fast." }] },
-        { word: "Unit", entries: [{ def: "A single part of a whole", example: "Each vocabulary unit has nine new words." }, { def: "A standard of measure", example: "The meter is a standard unit of length." }] }
-      ],
-      3: [
-        { word: "Achieve", entries: [{ def: "To successfully reach a desired goal through skill or effort", example: "Hard work helps you achieve your goals." }, { def: "To accomplish objectives through perseverance", example: "She achieved remarkable success in science." }] },
-        { word: "Succeed", entries: [{ def: "To accomplish a purpose or expected favorable outcome", example: "If you practice daily, you will succeed." }, { def: "To attain prosperity, fame, or desired results", example: "Dedicated entrepreneurs usually succeed." }] },
-        { word: "Convince", entries: [{ def: "To persuade someone firmly to believe or do something", example: "She tried to convince him to join the trip." }, { def: "To prove something beyond doubt to someone", example: "His arguments convinced the whole jury." }] },
-        { word: "Encourage", entries: [{ def: "To inspire with confidence or hope to take action", example: "Parents should encourage children to read." }, { def: "To foster or stimulate growth and progress", example: "Teachers encourage creative writing habits." }] },
-        { word: "Distribute", entries: [{ def: "To hand out or share something among a group of people", example: "Volunteers distribute food to the homeless." }, { def: "To supply goods to retailers or users", example: "The warehouse distributes books nationwide." }] },
-        { word: "Outcome", entries: [{ def: "The way a thing turns out; a consequence or result", example: "We are waiting eagerly for the test outcome." }, { def: "A final result produced by an action", example: "Positive attitudes lead to better life outcomes." }] },
-        { word: "Factor", entries: [{ def: "A circumstance that contributes to a result or outcome", example: "Cost is a major factor in our decision." }, { def: "A number that divides another number evenly", example: "Two and three are factors of six." }] },
-        { word: "Confirm", entries: [{ def: "To verify or establish the truth and accuracy of facts", example: "Please confirm your flight reservation details." }, { def: "To make certain through official assurance", example: "The office confirmed our meeting schedule." }] },
-        { word: "Consider", entries: [{ def: "To think deeply and carefully about a decision or option", example: "Consider all career options before deciding." }, { def: "To regard someone or something as specified", example: "I consider her a dear, trusted friend." }] },
-        { word: "Demonstrate", entries: [{ def: "To clearly show, explain, or prove how something works", example: "Let me demonstrate how this machine works." }, { def: "To exhibit feelings or skills openly", example: "Athletes demonstrate incredible endurance." }] },
-        { word: "Develop", entries: [{ def: "To grow, expand, or cause something to become advanced", example: "Software engineers develop mobile apps." }, { def: "To elaborate or build upon an initial idea", example: "Writers develop complex plot twists." }] },
-        { word: "Device", entries: [{ def: "A piece of electronic equipment designed for specific tasks", example: "A smartphone is a pocket communication device." }, { def: "A clever mechanical or digital apparatus", example: "Engineers tested the new safety tracking device." }] },
-        { word: "Efficient", entries: [{ def: "Achieving maximum productivity with minimum wasted effort", example: "Electric cars are very energy efficient." }, { def: "Operating in a well-organized and competent way", example: "New software makes office tasks more efficient." }] },
-        { word: "Network", entries: [{ def: "A group of interconnected people or things", example: "Professional networks help in career development." }, { def: "A system of interconnected computers", example: "Connect your phone to the Wi-Fi network." }] },
-        { word: "Process", entries: [{ def: "A series of actions taken to achieve a particular end", example: "Building a app is a step-by-step process." }, { def: "To perform operations on data or items", example: "Computers process data at high speeds." }] },
-        { word: "Resource", entries: [{ def: "A stock or supply of money, materials, or staff", example: "Time is our most valuable personal resource." }, { def: "A useful feature or item available for help", example: "Libraries are rich educational resources." }] },
-        { word: "Structure", entries: [{ def: "The arrangement of parts in a complex entity", example: "Engineers analyzed the bridge structure." }, { def: "To construct or arrange systematically", example: "Structure your essay with clear arguments." }] },
-        { word: "Tradition", entries: [{ def: "The transmission of customs across generations", example: "Family dinners are a cherished tradition." }, { def: "A long-established custom or belief", example: "Festivals preserve local cultural tradition." }] },
-        { word: "Obtain", entries: [{ def: "To get or acquire something through effort", example: "She worked hard to obtain her degree." }, { def: "To gain possession or formal permission", example: "You must obtain a permit before building." }] },
-        { word: "Contribute", entries: [{ def: "To give something in order to help achieve a common aim", example: "Everyone can contribute to a cleaner city." }, { def: "To supply an article or funds for a project", example: "She contributed an insightful essay to the journal." }] },
-        { word: "Control", entries: [{ def: "The power to influence or direct behavior and systems", example: "You must learn to control your emotions." }, { def: "The restriction of activity or variables", example: "Experiments require strict quality control." }] },
-        { word: "Establish", entries: [{ def: "To set up or create on a firm basis", example: "The company was established in 2010." }, { def: "To prove or set beyond doubt", example: "Forensics established the suspect's alibi." }] },
-        { word: "Function", entries: [{ def: "An activity or purpose natural to a person or thing", example: "The main function of heart is pumping blood." }, { def: "To work or operate in a proper way", example: "The new system functions very smoothly." }] },
-        { word: "Impact", entries: [{ def: "The action of one object coming forcibly into contact", example: "Meteor impacts shaped the moon's surface." }, { def: "A marked effect or influence on something", example: "Technology has a huge impact on education." }] },
-        { word: "Release", entries: [{ def: "To allow to move, act, or set free from confinement", example: "They decided to release the healed bird." }, { def: "To make a product or film available to public", example: "Developers release new updates monthly." }] },
-        { word: "Global", entries: [{ def: "Relating to the whole world; worldwide", example: "Climate change is a global challenge." }, { def: "Embracing or comprehending the whole of something", example: "Take a global view of the entire problem." }] },
-        { word: "Visual", entries: [{ def: "Relating to seeing or sight", example: "Diagrams provide great visual explanations." }, { def: "A picture or display used to illustrate", example: "Designers created stunning visual art." }] }
-      ],
-      4: [
-        { word: "Analyze", entries: [{ def: "To examine methodically and in detail to interpret it", example: "We need to analyze the test results carefully." }, { def: "To break down complex data for insights", example: "Analysts study charts to analyze market trends." }] },
-        { word: "Collaborate", entries: [{ def: "To work jointly with others on an activity or project", example: "Artists often collaborate on big urban murals." }, { def: "To cooperate on intellectual or creative works", example: "Scientists collaborate across international borders." }] },
-        { word: "Evaluate", entries: [{ def: "To assess and judge the quality or significance of something", example: "Teachers evaluate students at term ends." }, { def: "To calculate or appraise value accurately", example: "Engineers evaluated structural bridge safety." }] },
-        { word: "Generate", entries: [{ def: "To produce, create, or bring into existence through processes", example: "Wind turbines generate clean electricity." }, { def: "To spark interest or economic revenue", example: "New ads generate massive customer traffic." }] },
-        { word: "Appreciate", entries: [{ def: "To fully recognize the value or quality of something", example: "I really appreciate your kind help today." }, { def: "To increase in monetary value over time", example: "Rare vintage guitars appreciate in price." }] },
-        { word: "Approach", entries: [{ def: "To come near in distance, time, or quality", example: "The bullet train began to approach the station." }, { def: "A method or way of dealing with problems", example: "We need a fresh approach to marketing." }] },
-        { word: "Complex", entries: [{ def: "Consisting of many interconnected or complicated parts", example: "The human brain is a complex biological network." }, { def: "Involving multiple intertwined difficulties", example: "Solving climate change is a complex task." }] },
-        { word: "Concept", entries: [{ def: "An abstract idea, principle, or general notion", example: "The concept of spacetime fascinates physicists." }, { def: "A theoretical framework for inventions", example: "Designers tested the new vehicle concept." }] },
-        { word: "Obvious", entries: [{ def: "Easily perceived or understood; clear and self-evident", example: "The solution became obvious after testing." }, { def: "Predictable and lacking subtlety", example: "It was an obvious attempt to gain time." }] },
-        { word: "Maintain", entries: [{ def: "To cause or enable a state or condition to continue", example: "Eat healthy food to maintain high energy." }, { def: "To keep in good condition by regular care", example: "Mechanics maintain the engines weekly." }] },
-        { word: "Significant", entries: [{ def: "Sufficiently great or important to be worthy of attention", example: "There was a significant improvement in scores." }, { def: "Having a particular meaning; indicative", example: "Data showed a significant trend shift." }] },
-        { word: "Diverse", entries: [{ def: "Showing a wide variety of distinct and different elements", example: "Our team has a diverse range of software skills." }, { def: "Ranging across multiple cultural backgrounds", example: "London is a culturally diverse metropolis." }] },
-        { word: "Emphasize", entries: [{ def: "To give special importance or prominence to a point", example: "The teacher emphasized spelling rules clearly." }, { def: "To stress syllables in vocal pronunciation", example: "Speakers emphasize key words for impact." }] },
-        { word: "Allocate", entries: [{ def: "To distribute resources for a specific purpose", example: "The board decided to allocate extra funds." }, { def: "To assign duties or shares to team members", example: "Allocate tasks according to individual skills." }] },
-        { word: "Indicate", entries: [{ def: "To point out, show, or make clear", example: "Studies indicate a strong link to health." }, { def: "To be a sign or symptom of something", example: "Dark clouds indicate incoming rain." }] },
-        { word: "Perceive", entries: [{ def: "To become aware or conscious of through senses", example: "Cats can perceive subtle movements in dark." }, { def: "To interpret or regard in a particular way", example: "People perceive challenges differently." }] },
-        { word: "Modify", entries: [{ def: "To make partial or minor changes to something", example: "Engineers modify code to boost speed." }, { def: "To qualify the meaning of a word in grammar", example: "Adjectives modify nouns in sentences." }] },
-        { word: "Flexible", entries: [{ def: "Capable of adapting easily to changing situations", example: "Yoga helps keep your spine and body flexible." }, { def: "Able to be bent easily without breaking", example: "Plastic tubing is remarkably flexible." }] },
-        { word: "Dynamic", entries: [{ def: "Characterized by constant change, activity, or progress", example: "The modern tech industry is highly dynamic." }, { def: "Having forceful energy and enthusiasm", example: "She gave a dynamic keynote speech." }] },
-        { word: "Economy", entries: [{ def: "The state of a country in terms of wealth and trade", example: "Tourism greatly boosts the local economy." }, { def: "Careful management of available resources", example: "Practicing energy economy lowers utility bills." }] },
-        { word: "Transform", entries: [{ def: "To make a thorough or dramatic change in form", example: "Digital tools transform traditional teaching." }, { def: "To convert electrical voltage or energy", example: "Transformers modify electric current levels." }] },
-        { word: "Enable", entries: [{ def: "To give someone or something the authority or means", example: "Prescription glasses enable people to see clearly." }, { def: "To turn on software features", example: "Settings allow users to enable dark mode." }] },
-        { word: "Enormous", entries: [{ def: "Very large in size, quantity, or scale", example: "They adopted an enormous stray dog." }, { def: "Extremely massive or vast in proportion", example: "Whales possess enormous body weight." }] },
-        { word: "Ensure", entries: [{ def: "To make certain that something shall occur safely", example: "Double check your code to ensure accuracy." }, { def: "To secure against risks or failure", example: "Safety gear ensures worker protection." }] },
-        { word: "Distinguish", entries: [{ def: "To recognize or point out a difference", example: "It is easy to distinguish red from green." }, { def: "To make oneself prominent or worthy of respect", example: "She distinguished herself through research." }] }
-      ],
-      5: [
-        { word: "Endure", entries: [{ def: "To patiently suffer through a difficult situation", example: "Pioneers had to endure harsh winter storms." }, { def: "To remain firm, strong, and operational", example: "Classic art pieces endure through centuries." }] },
-        { word: "Exceed", entries: [{ def: "To be greater than an established limit or quantity", example: "Speed limits must never be exceeded on roads." }, { def: "To surpass expectations or performance quotas", example: "Her team exceeded all sales targets." }] },
-        { word: "Substantial", entries: [{ def: "Of considerable importance, size, value, or worth", example: "They made a substantial financial donation to charity." }, { def: "Solidly built and robust in structure", example: "The old fortress has substantial stone walls." }] },
-        { word: "Tremendous", entries: [{ def: "Extremely great in scale, amount, or intensity", example: "This new technology holds tremendous potential." }, { def: "Remarkably wonderful or impressive", example: "We had a tremendous time at the concert." }] },
-        { word: "Inevitable", entries: [{ def: "Certain to happen and impossible to prevent", example: "Change is an inevitable part of human life." }, { def: "Bound to occur regardless of efforts", example: "Winter's arrival after autumn is inevitable." }] },
-        { word: "Competent", entries: [{ def: "Having the necessary skill or capacity to do tasks well", example: "She is a highly competent department manager." }, { def: "Meeting acceptable standards of proficiency", example: "He proved competent in troubleshooting." }] },
-        { word: "Consistent", entries: [{ def: "Acting or done in the same way over time", example: "Consistent practice yields great results." }, { def: "Compatible or in agreement with facts", example: "The evidence is consistent with theories." }] },
-        { word: "Decline", entries: [{ def: "To gradually become smaller, fewer, or weaker", example: "Retail sales began to decline in late autumn." }, { def: "A downward slope of terrain or numbers", example: "Hikers walked down a steep mountain decline." }] },
-        { word: "Determine", entries: [{ def: "To firmly establish an outcome as a direct result", example: "Hard work will determine your professional success." }, { def: "To calculate or decide officially", example: "Judges determine penalties in court trials." }] },
-        { word: "Extensive", entries: [{ def: "Covering a broad area or comprehensive range", example: "The city library has an extensive map archive." }, { def: "Deep and thorough in scope", example: "Engineers performed extensive system tests." }] },
-        { word: "Fierce", entries: [{ def: "Having or showing intense or powerful determination", example: "There was fierce competition for the award." }, { def: "Savage and aggressive in behavior", example: "Arctic explorers faced fierce blizzard conditions." }] },
-        { word: "Fortunate", entries: [{ def: "Favored by good luck or advantageous circumstances", example: "We were fortunate to catch the last express train." }, { def: "Bringing blessings or favorable outcomes", example: "It was a fortunate coincidence meeting you." }] },
-        { word: "Genuine", entries: [{ def: "Truly authentic, real, and free from imitation", example: "This antique ring is made of genuine gold." }, { def: "Sincere and honest in emotional expression", example: "She offered a genuine apology for her mistake." }] },
-        { word: "Gradual", entries: [{ def: "Developing by small, steady degrees over time", example: "There was a gradual change in seasonal weather." }, { def: "Sloping gently without sharp drop-offs", example: "The hiking trail has a gradual incline." }] },
-        { word: "Guarantee", entries: [{ def: "A formal promise that certain conditions will be met", example: "The store offers a two-year product guarantee." }, { def: "To provide assurance against defects", example: "Manufacturers guarantee high quality standards." }] },
-        { word: "Integrate", entries: [{ def: "To combine two or more things to form a unified whole", example: "They plan to integrate new tech into the system." }, { def: "To blend into a community seamlessly", example: "New immigrants integrate quickly through work." }] },
-        { word: "Persevere", entries: [{ def: "To continue a course of action despite difficulties", example: "If you persevere, you will overcome any obstacle." }, { def: "To maintain steadfast effort in pursuits", example: "Researchers persevere despite failed tests." }] },
-        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }, { def: "Dominant in occurrence across society", example: "Remote work models are increasingly prevalent." }] },
-        { word: "Ambiguous", entries: [{ def: "Open to more than one interpretation; unclear", example: "His ambiguous reply left us in deep doubt." }, { def: "Lacking specific definition or clarity", example: "The contract clauses were legally ambiguous." }] },
-        { word: "Benevolent", entries: [{ def: "Well meaning and kindly; charitable in nature", example: "She was a benevolent founder of the clinic." }, { def: "Marked by disposition to do good", example: "The billionaire established benevolent trusts." }] },
-        { word: "Candid", entries: [{ def: "Truthful and straightforward; frank in expression", example: "He gave a candid interview about past mistakes." }, { def: "Unposed and natural in photography", example: "The photographer captured candid street smiles." }] },
-        { word: "Meticulous", entries: [{ def: "Showing great attention to detail; precise execution", example: "The artist did meticulous work on the portrait." }, { def: "Extremely careful in execution", example: "Surgeons require meticulous precision." }] },
-        { word: "Resilient", entries: [{ def: "Able to withstand or recover quickly from hardships", example: "Children are often remarkably resilient after setbacks." }, { def: "Springing back to original shape after stretch", example: "Rubber bands are highly resilient materials." }] },
-        { word: "Skeptical", entries: [{ def: "Not easily convinced; having reservations or doubts", example: "Experts remain skeptical about the new discovery." }, { def: "Inclined to question unproven claims", example: "Scientists are naturally skeptical of anomalies." }] },
-        { word: "Ubiquitous", entries: [{ def: "Present, appearing, or found everywhere", example: "Smartphones have become ubiquitous in modern life." }, { def: "Omipresent in daily human activities", example: "Digital algorithms play a ubiquitous role today." }] }
-      ]
-    };
-
-    const levelConfigs = [
-      { level: 1, count: 9, title: "Freshman" },
-      { level: 2, count: 9, title: "Sophomore" },
-      { level: 3, count: 9, title: "Junior Scholar" },
-      { level: 4, count: 9, title: "Senior Expert" },
-      { level: 5, count: 9, title: "Doctor of Philosophy (Ph.D.)" }
-    ];
-
-    let currentLevelIdx = 0;
-    let maxUnlockedLevel = 1;
-    let score = 0;
-    let targetItem = null;
-    let timerInterval = null;
-    let levelTimerInterval = null;
-    let timeLeft = 25;
-    let levelSecondsElapsed = 0;
-    let isGameOver = false;
-    let waitingForNext = false;
-    let audioCtx = null;
-    let currentCardsPool = [];
-
-    const gridEl = document.getElementById("cards-grid");
-    const defTextEl = document.getElementById("def-text");
-    const levelNumEl = document.getElementById("level-num");
-    const levelTitleSubEl = document.getElementById("level-title-sub");
-    const progressValEl = document.getElementById("progress-val");
-    const timerEl = document.getElementById("timer");
-    const nextBtnEl = document.getElementById("next-btn");
-    const modalScreen = document.getElementById("modal-screen");
-    const modalBox = document.getElementById("modal-box");
-    const modalTitle = document.getElementById("modal-title");
-    const modalDesc = document.getElementById("modal-desc");
-    const modalButtonsContainer = document.getElementById("modal-buttons-container");
-    const levelPillBtn = document.getElementById("level-pill-btn");
-    const explosionOverlay = document.getElementById("explosion-overlay");
-    const explosionVideo = document.getElementById("explosion-video");
-
-    function loadProgress() {
-      const saved = localStorage.getItem("angryTeacherMaxLevel");
-      if (saved) {
-        maxUnlockedLevel = parseInt(saved, 10) || 1;
-      }
-    }
-
-    function saveProgress(completedLevelIdx) {
-      const nextLvlNum = completedLevelIdx + 2;
-      if (nextLvlNum > maxUnlockedLevel && nextLvlNum <= levelConfigs.length) {
-        maxUnlockedLevel = nextLvlNum;
-        localStorage.setItem("angryTeacherMaxLevel", maxUnlockedLevel);
-      }
-    }
-
-    function getBestTime(lvlIdx) {
-      const best = localStorage.getItem(`angryTeacherBestTime_lvl_${lvlIdx + 1}`);
-      return best ? parseInt(best, 10) : null;
-    }
-
-    function saveBestTime(lvlIdx, seconds) {
-      const currentBest = getBestTime(lvlIdx);
-      if (currentBest === null || seconds < currentBest) {
-        localStorage.setItem(`angryTeacherBestTime_lvl_${lvlIdx + 1}`, seconds);
-        return true;
-      }
-      return false;
-    }
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
-
-    function playSuccessSound() {
-      try {
-        initAudio();
-        const now = audioCtx.currentTime;
-        const osc1 = audioCtx.createOscillator();
-        const osc2 = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc1.type = 'sine';
-        osc2.type = 'triangle';
-
-        osc1.frequency.setValueAtTime(1318.51, now); 
-        osc2.frequency.setValueAtTime(1975.54, now);
-
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + 0.6);
-        osc2.stop(now + 0.6);
-      } catch (e) {}
-    }
-
-    function getBestMaleVoice() {
-      if (!('speechSynthesis' in window)) return null;
-      const voices = window.speechSynthesis.getVoices();
-      return voices.find(v => v.lang.startsWith('en') && (
-        v.name.includes('Google UK English Male') || 
-        v.name.includes('Google US English') ||
-        v.name.includes('Daniel') || 
-        v.name.includes('Oliver') || 
-        v.name.includes('David') || 
-        v.name.includes('George') || 
-        v.name.includes('Ryan') ||
-        v.name.includes('Arthur') ||
-        v.name.includes('Alex') ||
-        v.name.toLowerCase().includes('male')
-      )) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) 
-         || voices.find(v => v.lang.startsWith('en')) || voices[0];
-    }
-
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = getBestMaleVoice;
-    }
-
-    function speakWord(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      
-      const voice = getBestMaleVoice();
-      if (voice) {
-        utterance.voice = voice;
-      }
-      
-      utterance.rate = 0.85;
-      utterance.pitch = 0.75;
-      
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function triggerGameOverSequence() {
-      if (isGameOver) return;
-      isGameOver = true;
-      clearInterval(timerInterval);
-      clearInterval(levelTimerInterval);
-
-      showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
-
-      explosionOverlay.classList.remove("hidden");
-      explosionVideo.currentTime = 0;
-      
-      const playPromise = explosionVideo.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          onExplosionEnded();
-        });
-      }
-
-      explosionVideo.onended = () => {
-        onExplosionEnded();
-      };
-    }
-
-    function onExplosionEnded() {
-      explosionOverlay.classList.add("hidden");
-    }
-
-    function startGame(levelIdx = 0) {
-      initAudio();
-      currentLevelIdx = levelIdx;
-      isGameOver = false;
-      modalScreen.classList.add("hidden");
-      explosionOverlay.classList.add("hidden");
-      initLevel();
-    }
-
-    function initLevel() {
-      const config = levelConfigs[currentLevelIdx];
-      levelNumEl.textContent = `LEVEL ${config.level}`;
-      levelTitleSubEl.textContent = config.title;
-      score = 0;
-      updateProgress();
-
-      levelSecondsElapsed = 0;
-      clearInterval(levelTimerInterval);
-      levelTimerInterval = setInterval(() => {
-        if (!isGameOver && !waitingForNext) {
-          levelSecondsElapsed++;
-        }
-      }, 1000);
-
-      const levelWordsPool = vocabularyDBByLevel[config.level] || vocabularyDBByLevel[1];
-      
-      const selectedWords = [...levelWordsPool]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 9);
-
-      currentCardsPool = selectedWords.map(item => {
-        const randomEntry = item.entries[Math.floor(Math.random() * item.entries.length)];
-        return {
-          word: item.word,
-          def: randomEntry.def,
-          example: randomEntry.example
+    <script>
+        /* ==========================================================================
+           1. EXPANDED VOCABULARY DATABASE (200 Words Categorized by Difficulty B1->C2)
+           ========================================================================== */
+        const VOCAB_DATABASE = {
+            b1: [
+                { word: "Achieve", definition: "Successfully bring about or reach a desired objective or result by effort.", sentences: ["With dedication, you can achieve your career goals.", "She worked hard to achieve financial independence.", "They managed to achieve great results in a short time."] },
+                { word: "Believe", definition: "Accept something as true, real, or valid without immediate proof.", sentences: ["Always believe in your own hidden capabilities.", "I believe that honesty is the foundation of friendship.", "Many people believe that practice makes perfect."] },
+                { word: "Create", definition: "Bring something new into existence using skill or imagination.", sentences: ["Artists create beauty out of ordinary raw materials.", "The developer planned to create a new mobile game.", "Her main goal was to create a cozy atmosphere."] },
+                { word: "Decide", definition: "Make a final choice or judgment about something after consideration.", sentences: ["Take your time before you decide on your major.", "She couldn't decide which book to read first.", "We must decide on our next strategy today."] },
+                { word: "Explore", definition: "Travel through an unfamiliar area in order to learn about it.", sentences: ["They decided to explore the ancient mountain trail.", "Scientists continue to explore the mysteries of space.", "You should explore different hobbies to find your passion."] },
+                { word: "Future", definition: "A period of time that will come after the present moment.", sentences: ["The future holds endless possibilities for young minds.", "Investing in education ensures a brighter future.", "Nobody can predict the future with absolute certainty."] },
+                { word: "Honest", definition: "Free of deceit, truthful, sincere, and morally upright.", sentences: ["An honest friend will always give you genuine advice.", "He gave an honest answer despite the consequences.", "Her honest nature earned her universal respect."] },
+                { word: "Improve", definition: "Make or become better in quality, condition, or skill.", sentences: ["Daily reading helps improve your English vocabulary.", "He took lessons to improve his public speaking.", "Proper sleep will improve your overall performance."] },
+                { word: "Journey", definition: "An act of traveling from one place to another over a distance.", sentences: ["Life is a long journey full of unexpected turns.", "Their journey across the ocean took two weeks.", "The journey towards wisdom requires patience."] },
+                { word: "Notice", definition: "Become aware of or pay attention to someone or something.", sentences: ["Did you notice the subtle changes in her expression?", "I didn't notice how late it had gotten.", "He was the first to notice the smoke rising."] },
+                { word: "Prepare", definition: "Make something or someone ready for a future event or task.", sentences: ["You must prepare thoroughly for the upcoming exam.", "She spent hours to prepare a delicious dinner.", "Good planning helps you prepare for unexpected challenges."] },
+                { word: "Protect", definition: "Keep safe from harm, injury, damage, or loss.", sentences: ["Parents always strive to protect their children.", "Wearing a helmet helps protect your head while cycling.", "Laws exist to protect individual human rights."] },
+                { word: "Reduce", definition: "Make smaller or less in amount, degree, or size.", sentences: ["Meditation can significantly reduce daily stress.", "We should reduce our consumption of single-use plastic.", "Regular exercise helps reduce the risk of illness."] },
+                { word: "Succeed", definition: "Achieve the desired aim or result in a venture.", sentences: ["Persistence is essential if you want to succeed.", "She worked tirelessly to succeed in business.", "Those who try repeatedly are bound to succeed."] },
+                { word: "Support", definition: "Give assistance, encouragement, or approval to someone.", sentences: ["True friends always support each other in tough times.", "The local community rallied to support the charity.", "My family supported my decision to study abroad."] },
+                { word: "Value", definition: "Consider someone or something to be important, beneficial, or useful.", sentences: ["We should value time more than material wealth.", "She came to value his insightful advice.", "They value creativity and innovation in this company."] },
+                { word: "Advise", definition: "Offer suggestions about the best course of action to someone.", sentences: ["Doctors advise drinking plenty of water daily.", "I advise you to review the contract carefully.", "He advised his friend against making rash choices."] },
+                { word: "Brave", definition: "Ready to face and endure danger, pain, or difficulty with courage.", sentences: ["The brave firefighter rescued the family from the blaze.", "It takes a brave person to stand up for justice.", "She made a brave decision to start over in a new city."] },
+                { word: "Challenge", definition: "A demanding task or situation that tests someone's ability.", sentences: ["Overcoming this obstacle was a tough challenge.", "He accepted the challenge with enthusiasm.", "Every challenge offers a valuable learning experience."] },
+                { word: "Discover", definition: "Find unexpectedly or gain knowledge of something for the first time.", sentences: ["Researchers hope to discover a new cure.", "She was thrilled to discover a hidden vintage shop.", "Traveling allows you to discover new cultures."] },
+                { word: "Encourage", definition: "Give support, confidence, or hope to someone to do something.", sentences: ["Teachers should encourage students to ask questions.", "Her success served to encourage others in the team.", "My parents always encourage my creative pursuits."] },
+                { word: "Forgive", definition: "Stop feeling angry or resentful toward someone for an offense.", sentences: ["Learning to forgive others brings inner peace.", "She chose to forgive his mistake and move on.", "It takes strength to apologize and forgive."] },
+                { word: "Gather", definition: "Bring together or collect people or things from various sources.", sentences: ["The family will gather for the holiday dinner.", "Scientists gather data to support their hypothesis.", "She went outside to gather fresh wild flowers."] },
+                { word: "Imagine", definition: "Form a mental image or concept of something not present to the senses.", sentences: ["Can you imagine living on another planet?", "Artists imagine worlds that do not yet exist.", "Imagine the satisfaction of achieving your dream."] },
+                { word: "Manage", definition: "Be in charge of, run, or handle a situation successfully.", sentences: ["She knows how to manage complex projects.", "He managed to finish the report before the deadline.", "Learning to manage your time effectively is vital."] },
+                { word: "Organize", definition: "Arrange systematic order or structure to elements or activities.", sentences: ["She helped organize the annual school festival.", "Clear files help organize your digital workspace.", "He likes to organize his day starting early morning."] },
+                { word: "Promise", definition: "A declaration that one will definitely do or not do something.", sentences: ["He made a promise to return the borrowed book.", "Always keep a promise once you have given your word.", "Her talent holds great promise for the future."] },
+                { word: "Refuse", definition: "Indicate that one is unwilling to accept, grant, or do something.", sentences: ["I must politely refuse your generous offer.", "He refused to give up despite the hardships.", "She refused to compromise on her core values."] },
+                { word: "Solve", definition: "Find an answer to, explanation for, or means of dealing with a problem.", sentences: ["Puzzles help train your brain to solve problems.", "Together we can solve any complex issue.", "He worked through the night to solve the glitch."] },
+                { word: "Wonder", definition: "A feeling of amazement and admiration, or a desire to know something.", sentences: ["I wonder what the weather will be like tomorrow.", "The child looked at the starry sky with wonder.", "It is no wonder she won the first prize."] }
+            ],
+            advanced: [
+                { word: "Ambition", definition: "A strong desire to do or to achieve something, typically requiring determination and hard work.", sentences: ["Her ambition was to become a leading scientist.", "He worked hard to fulfill his career ambitions.", "Without ambition, talent alone rarely leads to success."] },
+                { word: "Resilience", definition: "The capacity to withstand or recover quickly from difficult conditions or toughness.", sentences: ["The team showed great resilience after their initial defeat.", "Children often demonstrate remarkable emotional resilience.", "Building psychological resilience helps people cope with stress."] },
+                { word: "Curiosity", definition: "A strong desire to know or learn something new or unusual.", sentences: ["Her curiosity led her to explore the ancient library.", "Intellectual curiosity is key to personal growth.", "Driven by curiosity, the scientists conducted further experiments."] },
+                { word: "Gratitude", definition: "The quality of being thankful; readiness to show appreciation and return kindness.", sentences: ["He expressed deep gratitude for all their help.", "Practicing daily gratitude improves overall happiness.", "She sent a handwritten letter to show her gratitude."] },
+                { word: "Empathy", definition: "The ability to understand and share the feelings and emotions of another person.", sentences: ["A good leader shows empathy towards team members.", "Empathy helps build stronger human relationships.", "Listening actively is a fundamental component of empathy."] },
+                { word: "Harmony", definition: "The combination of simultaneously sounded musical notes or a state of peaceful agreement.", sentences: ["They lived together in complete peace and harmony.", "The vocal harmonies in this song are beautiful.", "Nature operates in delicate ecological harmony."] },
+                { word: "Integrity", definition: "The quality of being honest and having strong moral principles that you refuse to change.", sentences: ["He is known throughout the company for his integrity.", "Always act with integrity, even when no one is watching.", "Her professional integrity remains unquestioned."] },
+                { word: "Optimism", definition: "Hopefulness and confidence about the future or the success of something.", sentences: ["Her optimism inspired everyone during tough times.", "There is growing optimism about economic recovery.", "He approached the challenging task with boundless optimism."] },
+                { word: "Wisdom", definition: "The quality of having experience, knowledge, and good judgment.", sentences: ["With age often comes true wisdom.", "He shared words of wisdom with his students.", "Seeking wisdom is a lifelong journey."] },
+                { word: "Compassion", definition: "Sympathetic pity and concern for the sufferings or misfortunes of others.", sentences: ["She felt deep compassion for the homeless animals.", "Treating patients with compassion is essential.", "Acts of compassion can transform entire communities."] },
+                { word: "Patience", definition: "The capacity to accept or tolerate delay, trouble, or suffering without getting angry.", sentences: ["Teaching young children requires a lot of patience.", "Good things come to those who wait with patience.", "He lost his patience after waiting in line for two hours."] },
+                { word: "Perseverance", definition: "Persistence in doing something despite difficulty or delay in achieving success.", sentences: ["Success requires hard work and perseverance.", "Through sheer perseverance, she finished the marathon.", "His perseverance was finally rewarded with a promotion."] },
+                { word: "Authentic", definition: "Not false or copied; genuine, real, and true to its own personality.", sentences: ["The restaurant serves authentic Italian pizza.", "It is important to remain authentic to yourself.", "We discovered an authentic vintage painting at the market."] },
+                { word: "Sovereign", definition: "Possessing supreme or ultimate power and authority over a nation or territory.", sentences: ["The monarch is the official sovereign of the realm.", "The nation declared itself a sovereign state.", "Every individual has sovereign control over their own mind."] },
+                { word: "Eloquent", definition: "Fluent or persuasive in speaking or writing clearly and expressively.", sentences: ["She gave an eloquent speech at the graduation.", "His letters were poetic and highly eloquent.", "An eloquent silence settled over the room."] },
+                { word: "Nostalgia", definition: "A sentimental longing or wistful affection for the past or happy memories.", sentences: ["Old photographs always fill me with nostalgia.", "The music evoked a sense of 90s nostalgia.", "A wave of nostalgia hit him when he visited his childhood home."] },
+                { word: "Benevolent", definition: "Well-meaning, kindly, and serving a charitable rather than a profit-making purpose.", sentences: ["A benevolent neighbor helped clean the garden.", "The foundation was created by a benevolent donor.", "His benevolent smile put the nervous child at ease."] },
+                { word: "Candidate", definition: "A person who applies for a job or is nominated for election.", sentences: ["She is the top candidate for the manager position.", "Each candidate was interviewed by the panel.", "The political candidate delivered a persuasive speech."] },
+                { word: "Diligence", definition: "Careful and persistent work or effort applied to a task.", sentences: ["His diligence paid off when he passed the exam.", "The detective investigated the case with diligence.", "Diligence is a key ingredient in achieving long-term success."] },
+                { word: "Enthusiasm", definition: "Intense and eager enjoyment, interest, or approval.", sentences: ["The kids showed great enthusiasm for the trip.", "Her enthusiasm for art was truly contagious.", "He greeted the new proposal with immense enthusiasm."] },
+                { word: "Fascinate", definition: "Attract strong attention and interest of someone immensely.", sentences: ["Space exploration has always fascinated him.", "Ancient history continues to fascinate researchers.", "The intricate patterns of nature never fail to fascinate."] },
+                { word: "Generosity", definition: "The quality of being kind, plentiful, and giving to others.", sentences: ["We were touched by the generosity of our hosts.", "Her generosity helped fund the community shelter.", "True generosity requires giving without expecting anything back."] },
+                { word: "Heritage", definition: "Property, traditions, or culture that are passed down through generations.", sentences: ["The castle is an important part of national heritage.", "They take pride in preserving their cultural heritage.", "Architectural heritage must be protected from modern demolition."] },
+                { word: "Illuminate", definition: "Make something visible or bright by shining light upon it or clarifying it.", sentences: ["Streetlights illuminate the boulevard at night.", "The professor helped illuminate complex concepts.", "The fireworks illuminated the night sky."] },
+                { word: "Jubilant", definition: "Feeling or expressing great happiness, triumph, and success.", sentences: ["The crowd was jubilant after the victory.", "They broke into jubilant cheers when news arrived.", "The team celebrated their jubilant championship win."] },
+                { word: "Kindle", definition: "Light or set on fire, or inspire an emotion or idea in someone.", sentences: ["He used dry wood to kindle the campfire.", "The book kindled her passion for architecture.", "Her words kindled hope in the hearts of the listeners."] },
+                { word: "Luminous", definition: "Full of or shedding light; bright or shining, especially in the dark.", sentences: ["The watch has luminous hands visible at night.", "Her face looked luminous under the moonlight.", "Deep-sea creatures often produce luminous signals."] },
+                { word: "Magnificent", definition: "Impressively beautiful, elaborate, or extravagant; striking.", sentences: ["The palace offered a magnificent view of mountains.", "They put on a magnificent theatrical performance.", "The cathedral features magnificent stained-glass windows."] },
+                { word: "Nuance", definition: "A subtle difference in or shade of meaning, expression, or sound.", sentences: ["There are subtle nuances in her translation.", "He appreciated the nuance of the actor's performance.", "A diplomat must understand the nuances of international relations."] },
+                { word: "Obscure", definition: "Not discovered or known about; uncertain or difficult to understand.", sentences: ["The origins of the ancient artifact remain obscure.", "An obscure poet wrote these beautiful lines.", "Heavy fog made the road signs completely obscure."] },
+                { word: "Pragmatic", definition: "Dealing with things sensibly and realistically based on practical considerations.", sentences: ["We need a pragmatic solution to this dilemma.", "She took a pragmatic approach to budget planning.", "His pragmatic thinking helped avoid costly mistakes."] },
+                { word: "Quenching", definition: "Satisfying one's thirst by drinking, or extinguishing a flame.", sentences: ["A cold lemonade is perfect for quenching thirst.", "Firefighters succeeded in quenching the flames.", "Water is essential for quenching thermal energy."] },
+                { word: "Radiant", definition: "Sending out light or glowing brightly with health and happiness.", sentences: ["The bride looked radiant on her wedding day.", "The sun sent radiant beams through the trees.", "Her radiant smile warmed the whole room."] },
+                { word: "Serendipity", definition: "The occurrence and development of events by chance in a happy or beneficial way.", sentences: ["Finding this cozy cafe was pure serendipity.", "Scientific discoveries often happen by serendipity.", "They met through a stroke of unexpected serendipity."] },
+                { word: "Tranquil", definition: "Free from disturbance, calm, quiet, and peaceful.", sentences: ["The mountain lake was perfectly tranquil at dawn.", "She spent a tranquil afternoon reading by the pool.", "A tranquil atmosphere helps clear the mind."] },
+                { word: "Ubiquitous", definition: "Present, appearing, or found everywhere at the same time.", sentences: ["Smartphones have become ubiquitous in modern life.", "Coffee shops are ubiquitous in this city.", "Digital cameras were once ubiquitous before smartphones."] },
+                { word: "Venerable", definition: "Accorded a great deal of respect, especially because of age, wisdom, or character.", sentences: ["The venerable professor retired after forty years.", "They entered the venerable hall of the cathedral.", "The company was founded by a venerable pioneer."] },
+                { word: "Whimsical", definition: "Playfully quaint or fanciful, especially in an appealing and amusing way.", sentences: ["The story had a whimsical tone with talking animals.", "She loves wearing whimsical, colorful hats.", "The illustrator created a whimsical world of magic."] },
+                { word: "Yield", definition: "Produce or provide a natural, agricultural, or industrial product.", sentences: ["The fertile soil yields high quality crops.", "This investment strategy yields steady returns.", "The negotiation finally yielded a positive compromise."] },
+                { word: "Zealous", definition: "Having or showing great energy, enthusiasm, and devotion to a cause.", sentences: ["He was a zealous supporter of environmental protection.", "The team launched a zealous campaign for reform.", "Her zealous dedication inspired everyone on the project."] },
+                { word: "Meticulous", definition: "Showing great attention to detail; very careful and precise.", sentences: ["He kept meticulous records of all expenses.", "Her meticulous work ensured the project succeeded.", "Restoring the old painting required meticulous care."] },
+                { word: "Ephemeral", definition: "Lasting for a very short time; fleeting or temporary.", sentences: ["Fame in digital culture can be ephemeral.", "Spring cherry blossoms offer ephemeral beauty.", "Human life is often compared to an ephemeral shadow."] },
+                { word: "Tenacious", definition: "Tending to keep a firm hold of something; persistent and stubborn.", sentences: ["The tenacious defense stopped the opponent.", "She is tenacious when pursuing her goals.", "Despite difficulties, his tenacious spirit kept him going."] },
+                { word: "Pinnacle", definition: "The most successful point or culmination of something.", sentences: ["Reaching the pinnacle of his medical career took decades.", "Winning the gold medal was the pinnacle of her achievement.", "The mountain peak represented the physical pinnacle of their expedition."] },
+                { word: "Voracious", definition: "Wanting or devouring great quantities of food or engaging enthusiastically in an activity.", sentences: ["He is a voracious reader who finishes three books a week.", "The kids had a voracious appetite after swimming.", "Her voracious curiosity pushed her to explore new topics."] },
+                { word: "Synergy", definition: "The interaction of two or more agents to produce a combined effect greater than the sum.", sentences: ["The synergy between design and engineering created a great product.", "Team synergy boosted overall productivity.", "Combining our talents created an incredible synergy."] },
+                { word: "Aesthetic", definition: "Concerned with beauty or the appreciation of beauty.", sentences: ["The building has a clean, minimalist aesthetic.", "Art appreciation develops aesthetic judgment.", "The interior design combines functional and aesthetic qualities."] },
+                { word: "Bolster", definition: "Support, strengthen, or build up.", sentences: ["The news helped bolster confidence in the market.", "Pillow used to bolster his injured back.", "Additional evidence served to bolster their argument."] },
+                { word: "Candor", definition: "The quality of being open, sincere, and honest in expression.", sentences: ["I appreciate your candor regarding this issue.", "Her frank candor refreshed everyone in the meeting.", "He spoke with utmost candor about his past mistakes."] },
+                { word: "Decipher", definition: "Convert a text written in code, or difficult handwriting, into normal language.", sentences: ["Scholars worked to decipher the ancient inscription.", "I cannot decipher your handwriting on this note.", "Codebreakers managed to decipher the secret signal."] },
+                { word: "Exuberant", definition: "Filled with or characterized by a lively energy and excitement.", sentences: ["The puppy greeted us with exuberant energy.", "Her exuberant laughter filled the room.", "The crowd delivered an exuberant round of applause."] },
+                { word: "Flourish", definition: "Grow or develop in a healthy or vigorous way.", sentences: ["Plants flourish in warm, humid climates.", "Her art business began to flourish online.", "Culture tends to flourish in peaceful societies."] },
+                { word: "Gregarious", definition: "Fond of company; sociable and outgoing.", sentences: ["She is a gregarious person who loves parties.", "Dolphins are gregarious creatures living in pods.", "His gregarious nature makes him popular everywhere."] },
+                { word: "Hypothetical", definition: "Supposed but not necessarily real or true; based on a hypothesis.", sentences: ["Let us consider a hypothetical situation.", "His argument was purely hypothetical.", "The scientist tested several hypothetical scenarios."] },
+                { word: "Impeccable", definition: "In accordance with the highest standards; faultless.", sentences: ["Her manners were always impeccable.", "The chef delivered an impeccable five-course meal.", "His English pronunciation is impeccable."] },
+                { word: "Juxtapose", definition: "Place or deal with close together for contrasting effect.", sentences: ["The exhibition juxtaposes modern and traditional art.", "Black and white photos juxtapose light and shade.", "The author juxtaposes poverty and wealth in the novel."] },
+                { word: "Kinetic", definition: "Relating to or resulting from motion.", sentences: ["Wind turbines convert kinetic energy into electricity.", "The sculpture is a piece of kinetic art that moves.", "The movie is packed with kinetic action sequences."] },
+                { word: "Lucid", definition: "Expressed clearly; easy to understand, or thinking clearly.", sentences: ["She gave a lucid explanation of quantum physics.", "He was lucid and coherent despite his high fever.", "Clear thinking leads to lucid decision-making."] },
+                { word: "Melancholy", definition: "A feeling of pensive sadness, typically with no obvious cause.", sentences: ["The rainy afternoon put him in a melancholy mood.", "Soft piano music evoked a gentle melancholy.", "A sense of melancholy pervades the film."] },
+                { word: "Nurture", definition: "Care for and encourage the growth or development of someone or something.", sentences: ["Parents nurture their children with love and guidance.", "The incubator helps nurture startup businesses.", "We must nurture talent wherever we find it."] },
+                { word: "Ominous", definition: "Giving the impression that something bad or unpleasant is going to happen.", sentences: ["Dark ominous clouds gathered over the horizon.", "There was an ominous silence in the abandoned house.", "The thunder sounded like an ominous warning."] },
+                { word: "Placid", definition: "Not easily upset or excited; calm and peaceful.", sentences: ["The horse had a gentle and placid temperament.", "They sailed across the placid waters of the bay.", "She maintained a placid expression despite the noise."] },
+                { word: "Quandary", definition: "A state of perplexity or uncertainty over what to do in a difficult situation.", sentences: ["She was in a quandary about whether to accept the job offer.", "The unexpected dilemma created a political quandary.", "He found himself in a financial quandary."] },
+                { word: "Rejuvenate", definition: "Make someone or something look or feel younger, fresher, or more lively.", sentences: ["A weekend at the spa will rejuvenate your body.", "The fresh coat of paint rejuvenated the old house.", "Exercise can rejuvenate both mind and body."] },
+                { word: "Scrupulous", definition: "Extremely attentive to details, thorough, and careful to do things correctly.", sentences: ["The accountant kept scrupulous records of all transactions.", "She was scrupulous about hygiene in the kitchen.", "He showed scrupulous honesty in business."] },
+                { word: "Trepidation", definition: "A feeling of fear or agitation about something that may happen.", sentences: ["He stepped onto the stage with some trepidation.", "She opened the test results with great trepidation.", "Entering the dark cave filled them with trepidation."] },
+                { word: "Uncanny", definition: "Strange or mysterious, especially in an unsettling way.", sentences: ["She has an uncanny ability to predict the future.", "There was an uncanny resemblance between the cousins.", "An uncanny quiet fell over the woods."] },
+                { word: "Vibrant", definition: "Full of energy and enthusiasm, or bright and striking in color.", sentences: ["The city has a vibrant nightlife and culture.", "She wore a vibrant red dress to the ceremony.", "The painting features vibrant shades of blue."] },
+                { word: "Wanderlust", definition: "A strong desire to travel and explore the world.", sentences: ["His wanderlust took him to over fifty countries.", "Reading travel magazines fueled her wanderlust.", "Unstoppable wanderlust kept her moving from city to city."] },
+                { word: "Yielding", definition: "Complying with requests; flexible or soft.", sentences: ["The soft mattress was comfortable and yielding.", "She gave a yielding smile after the long argument.", "The soil was soft and yielding underfoot."] },
+                { word: "Zenith", definition: "The time at which something is most powerful or successful.", sentences: ["At the zenith of her career, she won the Nobel Prize.", "The sun reached its zenith in the clear midday sky.", "The empire reached its zenith in the second century."] }
+            ]
         };
-      });
 
-      renderGrid(currentCardsPool);
-      waitingForNext = false;
-      nextBtnEl.classList.add("disabled");
-      pickNextTarget();
-    }
+        /* ==========================================================================
+           2. ADVANCED MULTI-TRACK 8-BIT AUDIO ENGINE & SPEECH SYNTHESIS
+           ========================================================================== */
+        class AudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.preferredVoice = null;
+                this.isBgmPlaying = false;
+                this.bgmTimer = null;
+                this.bgmStep = 0;
+                this.activeSentenceSpeechBtn = null;
+                this.currentSpeakingText = null;
+                this.initVoices();
+            }
 
-    function renderGrid(cards) {
-      gridEl.innerHTML = "";
-      cards.forEach(item => {
-        const cardNode = document.createElement("div");
-        cardNode.className = "card";
-        cardNode.dataset.word = item.word;
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
 
-        cardNode.innerHTML = `
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="card-word">${item.word}</div>
-            </div>
-            <div class="card-back">
-              <div class="card-back-text">"${item.example}"</div>
-            </div>
-          </div>
-        `;
+            initVoices() {
+                if (!('speechSynthesis' in window)) return;
+                
+                const selectMaleVoice = () => {
+                    const voices = window.speechSynthesis.getVoices();
+                    const maleVoice = voices.find(v => 
+                        v.lang.startsWith('en') && 
+                        (v.name.includes('Male') || v.name.includes('Daniel') || v.name.includes('George') || v.name.includes('David') || v.name.includes('Alex') || v.name.includes('Oliver') || v.name.includes('Google UK English Male'))
+                    );
 
-        cardNode.addEventListener("click", () => handleCardClick(cardNode, item));
-        gridEl.appendChild(cardNode);
-      });
-    }
+                    if (maleVoice) {
+                        this.preferredVoice = maleVoice;
+                    } else {
+                        const anyEnglish = voices.find(v => v.lang.startsWith('en'));
+                        this.preferredVoice = anyEnglish || null;
+                    }
+                };
 
-    function pickNextTarget() {
-      const remainingCards = Array.from(gridEl.children)
-        .filter(c => !c.classList.contains("matched"))
-        .map(c => currentCardsPool.find(v => v.word === c.dataset.word));
+                selectMaleVoice();
+                if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                    window.speechSynthesis.onvoiceschanged = selectMaleVoice;
+                }
+            }
 
-      if (remainingCards.length === 0) {
-        clearInterval(timerInterval);
-        clearInterval(levelTimerInterval);
-        playSuccessSound();
-        saveProgress(currentLevelIdx);
+            toggleBGM() {
+                this.init();
+                this.isBgmPlaying = !this.isBgmPlaying;
 
-        const isNewRecord = saveBestTime(currentLevelIdx, levelSecondsElapsed);
-        
-        if (currentLevelIdx < levelConfigs.length - 1) {
-          showLevelCompletedScreen(isNewRecord, levelSecondsElapsed);
-        } else {
-          showGameOverScreen("VICTORY!", `🎉 You beat all 5 levels in ${levelSecondsElapsed}s!`, "PLAY AGAIN", () => startGame(0));
+                if (this.isBgmPlaying) {
+                    this.startBGM();
+                } else {
+                    this.stopBGM();
+                }
+
+                return this.isBgmPlaying;
+            }
+
+            startBGM() {
+                if (this.bgmTimer) clearInterval(this.bgmTimer);
+                
+                const bassline = [
+                    110, 110, 164.8, 110, 130.8, 130.8, 196, 130.8,
+                    146.8, 146.8, 220, 146.8, 123.5, 123.5, 146.8, 123.5,
+                    87.3, 87.3, 130.8, 87.3, 98, 98, 146.8, 98,
+                    110, 110, 164.8, 110, 164.8, 196, 220, 246.9,
+                    110, 0, 220, 110, 130.8, 0, 261.6, 130.8,
+                    146.8, 0, 293.6, 146.8, 164.8, 196, 220, 246.9,
+                    55, 55, 110, 55, 65.4, 65.4, 130.8, 65.4,
+                    73.4, 73.4, 146.8, 73.4, 82.4, 98, 110, 123.5
+                ];
+
+                const leadMelody = [
+                    440, 523.2, 659.2, 523.2, 587.3, 659.2, 783.9, 659.2,
+                    698.4, 783.9, 880, 783.9, 587.3, 523.2, 440, 349.2,
+                    880, 659.2, 523.2, 440, 783.9, 587.3, 493.8, 392,
+                    659.2, 523.2, 440, 329.6, 587.3, 493.8, 392, 293.6,
+                    880, 1046.5, 880, 659.2, 783.9, 880, 783.9, 523.2,
+                    698.4, 880, 698.4, 587.3, 659.2, 783.9, 880, 987.7,
+                    440, 0, 523.2, 0, 392, 0, 440, 0,
+                    349.2, 0, 440, 0, 329.6, 0, 392, 0
+                ];
+
+                const arpNotes = [
+                    880, 1046.5, 1318.5, 1046.5, 698.4, 880, 1046.5, 880,
+                    783.9, 987.7, 1174.7, 987.7, 659.2, 783.9, 987.7, 783.9,
+                    698.4, 880, 1046.5, 880, 587.3, 698.4, 880, 698.4,
+                    523.2, 659.2, 783.9, 659.2, 440, 523.2, 659.2, 523.2,
+                    880, 1318.5, 1046.5, 1318.5, 783.9, 1174.7, 987.7, 1174.7,
+                    698.4, 1046.5, 880, 1046.5, 659.2, 987.7, 783.9, 987.7,
+                    440, 659.2, 523.2, 659.2, 392, 587.3, 493.8, 587.3,
+                    349.2, 523.2, 440, 523.2, 329.6, 493.8, 392, 493.8
+                ];
+
+                const bpm = 150;
+                const intervalMs = (60 / bpm) * 1000 / 2;
+
+                this.bgmTimer = setInterval(() => {
+                    if (!this.isBgmPlaying || !this.ctx) return;
+                    const now = this.ctx.currentTime;
+                    const totalSteps = bassline.length;
+                    const step = this.bgmStep % totalSteps;
+
+                    const bFreq = bassline[step];
+                    if (bFreq > 0) {
+                        const oscB = this.ctx.createOscillator();
+                        const gainB = this.ctx.createGain();
+                        oscB.type = 'sawtooth';
+                        oscB.frequency.setValueAtTime(bFreq, now);
+
+                        const filter = this.ctx.createBiquadFilter();
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(450, now);
+
+                        gainB.gain.setValueAtTime(0.04, now);
+                        gainB.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+
+                        oscB.connect(filter);
+                        filter.connect(gainB);
+                        gainB.connect(this.ctx.destination);
+
+                        oscB.start(now);
+                        oscB.stop(now + 0.14);
+                    }
+
+                    const lFreq = leadMelody[step];
+                    if (lFreq > 0) {
+                        const oscL = this.ctx.createOscillator();
+                        const gainL = this.ctx.createGain();
+                        oscL.type = 'square';
+                        oscL.frequency.setValueAtTime(lFreq, now);
+
+                        gainL.gain.setValueAtTime(0.018, now);
+                        gainL.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+                        oscL.connect(gainL);
+                        gainL.connect(this.ctx.destination);
+
+                        oscL.start(now);
+                        oscL.stop(now + 0.12);
+                    }
+
+                    const aFreq = arpNotes[step];
+                    if (aFreq > 0) {
+                        const oscA = this.ctx.createOscillator();
+                        const gainA = this.ctx.createGain();
+                        oscA.type = 'triangle';
+                        oscA.frequency.setValueAtTime(aFreq, now);
+
+                        gainA.gain.setValueAtTime(0.012, now);
+                        gainA.gain.exponentialRampToValueAtTime(0.0005, now + 0.08);
+
+                        oscA.connect(gainA);
+                        gainA.connect(this.ctx.destination);
+
+                        oscA.start(now);
+                        oscA.stop(now + 0.08);
+                    }
+
+                    if (step % 2 === 0) {
+                        const noiseBuf = this.ctx.createBuffer(1, this.ctx.sampleRate * 0.025, this.ctx.sampleRate);
+                        const output = noiseBuf.getChannelData(0);
+                        for (let i = 0; i < noiseBuf.length; i++) {
+                            output[i] = Math.random() * 2 - 1;
+                        }
+
+                        const noiseSrc = this.ctx.createBufferSource();
+                        noiseSrc.buffer = noiseBuf;
+
+                        const hf = this.ctx.createBiquadFilter();
+                        hf.type = 'highpass';
+                        hf.frequency.setValueAtTime(5000, now);
+
+                        const ng = this.ctx.createGain();
+                        ng.gain.setValueAtTime(step % 4 === 0 ? 0.012 : 0.005, now);
+                        ng.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+
+                        noiseSrc.connect(hf);
+                        hf.connect(ng);
+                        ng.connect(this.ctx.destination);
+
+                        noiseSrc.start(now);
+                    }
+
+                    this.bgmStep++;
+                }, intervalMs);
+            }
+
+            stopBGM() {
+                if (this.bgmTimer) {
+                    clearInterval(this.bgmTimer);
+                    this.bgmTimer = null;
+                }
+            }
+
+            playCorrectCard() {
+                this.init();
+                const now = this.ctx.currentTime;
+                
+                const osc1 = this.ctx.createOscillator();
+                const gain1 = this.ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(523.25, now);
+                osc1.frequency.exponentialRampToValueAtTime(783.99, now + 0.08);
+                gain1.gain.setValueAtTime(0.3, now);
+                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                osc1.connect(gain1);
+                gain1.connect(this.ctx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.15);
+
+                const osc2 = this.ctx.createOscillator();
+                const gain2 = this.ctx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(1046.50, now + 0.05);
+                gain2.gain.setValueAtTime(0.2, now + 0.05);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                osc2.connect(gain2);
+                gain2.connect(this.ctx.destination);
+                osc2.start(now + 0.05);
+                osc2.stop(now + 0.2);
+            }
+
+            playExplosion() {
+                this.init();
+                const now = this.ctx.currentTime;
+
+                const subOsc = this.ctx.createOscillator();
+                const subGain = this.ctx.createGain();
+                subOsc.type = 'triangle';
+                subOsc.frequency.setValueAtTime(160, now);
+                subOsc.frequency.exponentialRampToValueAtTime(25, now + 0.9);
+
+                subGain.gain.setValueAtTime(1.0, now);
+                subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+                subOsc.connect(subGain);
+                subGain.connect(this.ctx.destination);
+                subOsc.start(now);
+                subOsc.stop(now + 0.9);
+
+                const bufferSize = this.ctx.sampleRate * 1.0;
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(1200, now);
+                filter.frequency.exponentialRampToValueAtTime(20, now + 1.0);
+
+                const noiseGain = this.ctx.createGain();
+                noiseGain.gain.setValueAtTime(1.0, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+
+                noise.connect(filter);
+                filter.connect(noiseGain);
+                noiseGain.connect(this.ctx.destination);
+
+                noise.start(now);
+                noise.stop(now + 1.0);
+            }
+
+            playSuccess() {
+                this.init();
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.06);
+
+                    gain.gain.setValueAtTime(0.2, this.ctx.currentTime + idx * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.06 + 0.3);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(this.ctx.currentTime + idx * 0.06);
+                    osc.stop(this.ctx.currentTime + idx * 0.06 + 0.3);
+                });
+            }
+
+            toggleSpeech(text, onEndCallback) {
+                if (!('speechSynthesis' in window)) return false;
+
+                if (window.speechSynthesis.speaking) {
+                    window.speechSynthesis.cancel();
+                    if (this.currentSpeakingText === text) {
+                        this.currentSpeakingText = null;
+                        if (onEndCallback) onEndCallback(false);
+                        return false;
+                    }
+                }
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.88;
+                utterance.pitch = 0.75;
+
+                if (this.preferredVoice) {
+                    utterance.voice = this.preferredVoice;
+                }
+                
+                utterance.onend = () => {
+                    this.currentSpeakingText = null;
+                    if (onEndCallback) onEndCallback(false);
+                };
+
+                utterance.onerror = () => {
+                    this.currentSpeakingText = null;
+                    if (onEndCallback) onEndCallback(false);
+                };
+
+                this.currentSpeakingText = text;
+                window.speechSynthesis.speak(utterance);
+                if (onEndCallback) onEndCallback(true);
+                return true;
+            }
+
+            stopSpeech() {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
+                this.currentSpeakingText = null;
+            }
         }
-        return;
-      }
 
-      targetItem = remainingCards[Math.floor(Math.random() * remainingCards.length)];
-      defTextEl.textContent = `"${targetItem.def}"`;
-      waitingForNext = false;
-      nextBtnEl.classList.add("disabled");
+        const soundEngine = new AudioEngine();
 
-      resetTimer();
-    }
+        /* ==========================================================================
+           3. GAME CONTROLLER LOGIC
+           ========================================================================== */
+        class VocabSweeperGame {
+            constructor() {
+                this.levels = [
+                    { level: 1, size: 4, count: 16 },
+                    { level: 2, size: 5, count: 25 },
+                    { level: 3, size: 6, count: 36 },
+                    { level: 4, size: 7, count: 49 },
+                    { level: 5, size: 8, count: 64 }
+                ];
+                this.currentLevelIdx = 0;
 
-    function handleCardClick(cardNode, item) {
-      if (isGameOver) return;
+                this.gridWords = [];
+                this.unrevealedWords = [];
+                this.targetWord = null;
+                this.revealedCount = 0;
+                this.isGameOver = false;
+                this.isRoundActive = false;
+                this.selectedCardData = null;
 
-      if (cardNode.classList.contains("matched")) {
-        cardNode.classList.toggle("flipped");
-        return;
-      }
+                // Timer parameters
+                this.timeLeft = 25;
+                this.timerInterval = null;
 
-      if (waitingForNext) return;
+                // Elements
+                this.gridEl = document.getElementById('game-grid');
+                this.targetDefEl = document.getElementById('target-definition');
+                this.levelBadge = document.getElementById('level-badge');
+                this.progressBadge = document.getElementById('progress-badge');
+                this.modalOverlay = document.getElementById('modal-overlay');
+                this.examplesContentEl = document.getElementById('examples-content');
+                this.btnSpeakTarget = document.getElementById('btn-speak-target');
+                this.btnNextTarget = document.getElementById('btn-next-target');
+                this.timerTextEl = document.getElementById('timer-text');
+                this.timerBadgeEl = document.getElementById('timer-badge');
 
-      if (item.word === targetItem.word) {
-        playSuccessSound();
-        clearInterval(timerInterval);
-        waitingForNext = true;
-        
-        cardNode.classList.add("highlighted");
-        score++;
-        updateProgress();
-        
-        speakWord(item.word);
+                this.initEvents();
+            }
 
-        nextBtnEl.classList.remove("disabled");
+            shuffle(array) {
+                const arr = [...array];
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
 
-        setTimeout(() => {
-          cardNode.classList.remove("highlighted");
-          cardNode.classList.add("flipped", "matched");
+            getPoolForLevel(levelIdx) {
+                if (levelIdx === 0) {
+                    return [...VOCAB_DATABASE.b1];
+                } else if (levelIdx === 1) {
+                    return [...VOCAB_DATABASE.b1, ...VOCAB_DATABASE.advanced];
+                } else {
+                    return [...VOCAB_DATABASE.advanced];
+                }
+            }
 
-          const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
-          if (remainingUnmatched.length === 0) {
-            setTimeout(() => {
-              clearInterval(timerInterval);
-              clearInterval(levelTimerInterval);
-              saveProgress(currentLevelIdx);
-              const isNewRecord = saveBestTime(currentLevelIdx, levelSecondsElapsed);
+            startLevel(levelIdx = 0) {
+                this.currentLevelIdx = levelIdx;
+                this.isGameOver = false;
+                this.stopTimer();
+                soundEngine.stopSpeech();
+                this.selectedCardData = null;
+                this.resetExamplesPanel();
 
-              if (currentLevelIdx < levelConfigs.length - 1) {
-                showLevelCompletedScreen(isNewRecord, levelSecondsElapsed);
-              } else {
-                showGameOverScreen("VICTORY!", `🎉 You beat all 5 levels in ${levelSecondsElapsed}s!`, "PLAY AGAIN", () => startGame(0));
-              }
-            }, 1200);
-          }
-        }, 1500);
+                const levelConfig = this.levels[this.currentLevelIdx];
 
-      } else {
-        triggerGameOverSequence();
-      }
-    }
+                this.levelBadge.textContent = `${levelConfig.level} (${levelConfig.size}x${levelConfig.size})`;
+                this.revealedCount = 0;
+                this.updateProgressBadge();
 
-    function updateProgress() {
-      progressValEl.textContent = `${score}/9`;
-    }
+                let currentPool = this.getPoolForLevel(this.currentLevelIdx);
+                while (currentPool.length < levelConfig.count) {
+                    currentPool = currentPool.concat(this.getPoolForLevel(this.currentLevelIdx));
+                }
 
-    function resetTimer() {
-      clearInterval(timerInterval);
-      timeLeft = 25;
-      timerEl.textContent = `${timeLeft}s`;
-      timerInterval = setInterval(() => {
-        if (waitingForNext || isGameOver) return;
-        timeLeft--;
-        timerEl.textContent = `${timeLeft}s`;
-        if (timeLeft <= 0) {
-          triggerGameOverSequence();
+                const shuffledPool = this.shuffle(currentPool);
+                this.gridWords = shuffledPool.slice(0, levelConfig.count);
+                this.unrevealedWords = [...this.gridWords];
+
+                this.renderGrid(levelConfig.size);
+
+                // Show instruction only at start of level
+                this.targetWord = null;
+                this.isRoundActive = false;
+                this.targetDefEl.textContent = "Click the right arrow [ -> ] to start definition and timer!";
+                this.timerTextEl.textContent = "25s";
+            }
+
+            renderGrid(gridSize) {
+                this.gridEl.innerHTML = '';
+                this.gridEl.className = `grid gap-2 md:gap-3 w-full max-w-4xl transition-all duration-300 grid-${gridSize}`;
+
+                this.gridWords.forEach((wordObj, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'card-wrapper h-24 sm:h-28 md:h-32 cursor-pointer';
+                    wrapper.dataset.index = index;
+                    wrapper.dataset.word = wordObj.word;
+
+                    wrapper.innerHTML = `
+                        <div class="card-item w-full h-full relative">
+                            <span class="text-sm sm:text-base md:text-lg font-black text-[#2b2b28] tracking-wide break-all text-center">${wordObj.word}</span>
+                            <button class="btn-card-speak hidden absolute top-2 right-2 text-[#f4efdf] bg-[#3b7080] hover:bg-[#2e5967] w-7 h-7 rounded-full items-center justify-center transition shadow border border-[#2b2b28]" title="Pronounce word">
+                                <i class="fa-solid fa-volume-high text-xs"></i>
+                            </button>
+                        </div>
+                    `;
+
+                    wrapper.addEventListener('click', (e) => {
+                        const speakBtn = e.target.closest('.btn-card-speak');
+                        if (speakBtn) {
+                            e.stopPropagation();
+                            const textToSpeak = `${wordObj.word}. Definition: ${wordObj.definition}`;
+                            soundEngine.toggleSpeech(textToSpeak, (isPlaying) => {
+                                const icon = speakBtn.querySelector('i');
+                                if (isPlaying) {
+                                    icon.className = "fa-solid fa-stop text-xs";
+                                    speakBtn.classList.add('bg-[#c04838]', 'text-white');
+                                } else {
+                                    icon.className = "fa-solid fa-volume-high text-xs";
+                                    speakBtn.classList.remove('bg-[#c04838]', 'text-white');
+                                }
+                            });
+                            return;
+                        }
+
+                        this.handleCardClick(wrapper, wordObj);
+                    });
+
+                    this.gridEl.appendChild(wrapper);
+                });
+            }
+
+            resetExamplesPanel() {
+                this.examplesContentEl.innerHTML = `<p class="text-[#7c7668] text-center not-italic font-mono-retro text-xs md:text-sm">Select a correctly guessed card on the grid to view example sentences here.</p>`;
+            }
+
+            updateExamplesPanel(wordObj) {
+                this.selectedCardData = wordObj;
+                
+                const s1 = wordObj.sentences[0] || '';
+                const s2 = wordObj.sentences[1] || '';
+                const s3 = wordObj.sentences[2] || '';
+
+                this.examplesContentEl.innerHTML = `
+                    <div class="p-3.5 bg-[#f4efdf] rounded-xl border-2 border-[#2b2b28] shadow-[2px_2px_0_0_#2b2b28] relative group">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="font-bold text-[#c04838] not-italic block text-xs md:text-sm font-mono-retro">1. EXAMPLE</span>
+                            <button class="btn-speak-sentence hover:scale-110 text-[#2b2b28] hover:text-[#c04838] p-1 transition" data-sentence="${encodeURIComponent(s1)}" title="Listen to Sentence">
+                                <i class="fa-solid fa-volume-high text-base"></i>
+                            </button>
+                        </div>
+                        <p class="leading-relaxed text-sm md:text-base font-medium">"${s1}"</p>
+                    </div>
+
+                    <div class="p-3.5 bg-[#f4efdf] rounded-xl border-2 border-[#2b2b28] shadow-[2px_2px_0_0_#2b2b28] relative group">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="font-bold text-[#3b7080] not-italic block text-xs md:text-sm font-mono-retro">2. EXAMPLE</span>
+                            <button class="btn-speak-sentence hover:scale-110 text-[#2b2b28] hover:text-[#3b7080] p-1 transition" data-sentence="${encodeURIComponent(s2)}" title="Listen to Sentence">
+                                <i class="fa-solid fa-volume-high text-base"></i>
+                            </button>
+                        </div>
+                        <p class="leading-relaxed text-sm md:text-base font-medium">"${s2}"</p>
+                    </div>
+
+                    <div class="p-3.5 bg-[#f4efdf] rounded-xl border-2 border-[#2b2b28] shadow-[2px_2px_0_0_#2b2b28] relative group">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="font-bold text-[#547b4b] not-italic block text-xs md:text-sm font-mono-retro">3. EXAMPLE</span>
+                            <button class="btn-speak-sentence hover:scale-110 text-[#2b2b28] hover:text-[#547b4b] p-1 transition" data-sentence="${encodeURIComponent(s3)}" title="Listen to Sentence">
+                                <i class="fa-solid fa-volume-high text-base"></i>
+                            </button>
+                        </div>
+                        <p class="leading-relaxed text-sm md:text-base font-medium">"${s3}"</p>
+                    </div>
+                `;
+
+                const btns = this.examplesContentEl.querySelectorAll('.btn-speak-sentence');
+                btns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const rawSentence = decodeURIComponent(btn.dataset.sentence);
+                        const icon = btn.querySelector('i');
+
+                        if (soundEngine.activeSentenceSpeechBtn && soundEngine.activeSentenceSpeechBtn !== btn) {
+                            const oldIcon = soundEngine.activeSentenceSpeechBtn.querySelector('i');
+                            if (oldIcon) oldIcon.className = "fa-solid fa-volume-high text-base";
+                        }
+
+                        soundEngine.toggleSpeech(rawSentence, (isPlaying) => {
+                            if (isPlaying) {
+                                soundEngine.activeSentenceSpeechBtn = btn;
+                                icon.className = "fa-solid fa-stop text-base text-[#c04838]";
+                            } else {
+                                soundEngine.activeSentenceSpeechBtn = null;
+                                icon.className = "fa-solid fa-volume-high text-base";
+                            }
+                        });
+                    });
+                });
+            }
+
+            loadNextTarget() {
+                if (this.isGameOver) return;
+
+                if (this.unrevealedWords.length === 0) {
+                    this.handleLevelCompleted();
+                    return;
+                }
+
+                const randIdx = Math.floor(Math.random() * this.unrevealedWords.length);
+                this.targetWord = this.unrevealedWords[randIdx];
+
+                this.targetDefEl.classList.add('opacity-0');
+                setTimeout(() => {
+                    this.targetDefEl.textContent = this.targetWord.definition;
+                    this.targetDefEl.classList.remove('opacity-0');
+                }, 150);
+
+                this.startTimer();
+            }
+
+            startTimer() {
+                this.stopTimer();
+                this.timeLeft = 25;
+                this.isRoundActive = true;
+                this.timerTextEl.textContent = `${this.timeLeft}s`;
+                this.timerBadgeEl.classList.remove('bg-[#c04838]', 'text-[#f4efdf]');
+                this.timerBadgeEl.classList.add('bg-[#d49e35]', 'text-[#2b2b28]');
+
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    this.timerTextEl.textContent = `${this.timeLeft}s`;
+
+                    if (this.timeLeft <= 5) {
+                        this.timerBadgeEl.classList.remove('bg-[#d49e35]', 'text-[#2b2b28]');
+                        this.timerBadgeEl.classList.add('bg-[#c04838]', 'text-[#f4efdf]');
+                    }
+
+                    if (this.timeLeft <= 0) {
+                        this.stopTimer();
+                        this.handleExplosion();
+                    }
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+                this.isRoundActive = false;
+            }
+
+            handleCardClick(cardWrapperEl, clickedWordObj) {
+                if (this.isGameOver) return;
+
+                if (!this.isRoundActive || !this.targetWord) {
+                    return;
+                }
+
+                const cardItem = cardWrapperEl.querySelector('.card-item');
+
+                if (cardItem.classList.contains('correct')) {
+                    this.updateExamplesPanel(clickedWordObj);
+                    return;
+                }
+
+                if (clickedWordObj.word === this.targetWord.word) {
+                    this.stopTimer();
+                    soundEngine.playCorrectCard();
+
+                    cardItem.classList.add('correct');
+                    const speakBtn = cardItem.querySelector('.btn-card-speak');
+                    if (speakBtn) {
+                        speakBtn.classList.remove('hidden');
+                        speakBtn.classList.add('flex');
+                    }
+
+                    this.updateExamplesPanel(clickedWordObj);
+
+                    this.unrevealedWords = this.unrevealedWords.filter(w => w.word !== clickedWordObj.word);
+                    this.revealedCount++;
+                    this.updateProgressBadge();
+
+                    // Keep current definition visible until player clicks arrow
+                    this.targetWord = null;
+                    this.timerTextEl.textContent = "25s";
+
+                    if (this.unrevealedWords.length === 0) {
+                        setTimeout(() => {
+                            this.handleLevelCompleted();
+                        }, 400);
+                    }
+
+                } else {
+                    this.stopTimer();
+                    this.handleExplosion();
+                }
+            }
+
+            handleExplosion() {
+                this.isGameOver = true;
+                this.stopTimer();
+                soundEngine.stopSpeech();
+                soundEngine.playExplosion();
+
+                const wrappers = this.gridEl.querySelectorAll('.card-wrapper');
+                wrappers.forEach(wrap => {
+                    const x = (Math.random() - 0.5) * 800;
+                    const y = (Math.random() - 0.5) * 800;
+                    const rot = (Math.random() - 0.5) * 720;
+
+                    wrap.style.setProperty('--tw-translate-x', `${x}px`);
+                    wrap.style.setProperty('--tw-translate-y', `${y}px`);
+                    wrap.style.setProperty('--tw-rotate', `${rot}deg`);
+
+                    wrap.classList.add('exploded');
+                });
+
+                setTimeout(() => {
+                    this.showModal(
+                        'bg-[#c04838] text-[#f4efdf] border-[#2b2b28]',
+                        '<i class="fa-solid fa-bomb"></i>',
+                        'BOOM!!!',
+                        'One mistake—and you’re a flaming steak.',
+                        'TRY AGAIN',
+                        () => this.startLevel(0)
+                    );
+                }, 800);
+            }
+
+            handleLevelCompleted() {
+                this.stopTimer();
+                soundEngine.playSuccess();
+                const isLastLevel = this.currentLevelIdx >= this.levels.length - 1;
+
+                if (isLastLevel) {
+                    this.showModal(
+                        'bg-[#547b4b] text-[#f4efdf] border-[#2b2b28]',
+                        '<i class="fa-solid fa-trophy"></i>',
+                        'GRAND VICTORY!',
+                        'Congratulations! You successfully completed all 5 difficulty levels of Angry Teacher!',
+                        'PLAY AGAIN',
+                        () => this.startLevel(0)
+                    );
+                } else {
+                    const nextLvl = this.currentLevelIdx + 2;
+                    this.showModal(
+                        'bg-[#3b7080] text-[#f4efdf] border-[#2b2b28]',
+                        '<i class="fa-solid fa-circle-check"></i>',
+                        `LEVEL ${this.currentLevelIdx + 1} CLEARED!`,
+                        `Great job! Ready for level ${nextLvl} with a larger word grid?`,
+                        `PROCEED TO LEVEL ${nextLvl}`,
+                        () => this.startLevel(this.currentLevelIdx + 1)
+                    );
+                }
+            }
+
+            updateProgressBadge() {
+                const total = this.levels[this.currentLevelIdx].count;
+                this.progressBadge.textContent = `${this.revealedCount} / ${total}`;
+            }
+
+            showModal(iconStyle, iconHtml, title, message, btnText, onAction) {
+                const iconEl = document.getElementById('modal-icon');
+                const titleEl = document.getElementById('modal-title');
+                const msgEl = document.getElementById('modal-message');
+                const btnEl = document.getElementById('modal-action-btn');
+
+                iconEl.className = `w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl mb-4 shadow-[4px_4px_0_0_#2b2b28] border-3 ${iconStyle}`;
+                iconEl.innerHTML = iconHtml;
+                titleEl.textContent = title;
+                msgEl.textContent = message;
+                btnEl.textContent = btnText;
+
+                btnEl.onclick = () => {
+                    this.hideModal();
+                    onAction();
+                };
+
+                this.modalOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    this.modalOverlay.classList.remove('opacity-0');
+                    document.getElementById('modal-content').classList.remove('scale-90');
+                }, 10);
+            }
+
+            hideModal() {
+                this.modalOverlay.classList.add('opacity-0');
+                document.getElementById('modal-content').classList.add('scale-90');
+                setTimeout(() => {
+                    this.modalOverlay.classList.add('hidden');
+                }, 300);
+            }
+
+            initEvents() {
+                document.getElementById('btn-toggle-sidebar').addEventListener('click', () => {
+                    const sidebar = document.getElementById('sidebar');
+                    sidebar.classList.toggle('hidden');
+                });
+
+                document.getElementById('btn-reset-game').addEventListener('click', () => {
+                    this.startLevel(0);
+                });
+
+                const btnToggleBgm = document.getElementById('btn-toggle-bgm');
+                const bgmIcon = document.getElementById('bgm-icon');
+                const bgmText = document.getElementById('bgm-text');
+
+                btnToggleBgm.addEventListener('click', () => {
+                    const isPlaying = soundEngine.toggleBGM();
+                    if (isPlaying) {
+                        bgmIcon.className = "fa-solid fa-volume-high text-sm text-[#3b7080]";
+                        bgmText.textContent = "BGM ON";
+                        btnToggleBgm.classList.add('bg-[#3b7080]/10');
+                    } else {
+                        bgmIcon.className = "fa-solid fa-volume-xmark text-sm text-[#c04838]";
+                        bgmText.textContent = "BGM OFF";
+                        btnToggleBgm.classList.remove('bg-[#3b7080]/10');
+                    }
+                });
+
+                this.btnSpeakTarget.addEventListener('click', () => {
+                    if (!this.targetWord) return;
+                    const textToSpeak = `Definition: ${this.targetWord.definition}`;
+                    const iconEl = document.getElementById('target-speaker-icon');
+
+                    soundEngine.toggleSpeech(textToSpeak, (isPlaying) => {
+                        if (isPlaying) {
+                            iconEl.className = "fa-solid fa-stop text-sm";
+                            this.btnSpeakTarget.classList.add('bg-[#c04838]', 'text-white');
+                        } else {
+                            iconEl.className = "fa-solid fa-volume-high text-sm";
+                            this.btnSpeakTarget.classList.remove('bg-[#c04838]', 'text-white');
+                        }
+                    });
+                });
+
+                this.btnNextTarget.addEventListener('click', () => {
+                    this.loadNextTarget();
+                });
+            }
         }
-      }, 1000);
-    }
 
-    function showLevelCompletedScreen(isNewRecord, totalSeconds) {
-      const currentTitle = levelConfigs[currentLevelIdx].title;
-      const nextLevelIndex = currentLevelIdx + 1;
-      const nextTitle = levelConfigs[nextLevelIndex].title;
-      const best = getBestTime(currentLevelIdx);
-
-      modalTitle.textContent = "LEVEL PASSED!";
-      modalDesc.innerHTML = `🎉 Great job! Unlocked <strong>${currentTitle}</strong>.<br>` +
-        `⏱ Time: <strong>${totalSeconds}s</strong> ${isNewRecord ? '🔥 (NEW RECORD!)' : `(Best: ${best}s)`}<br><br>` +
-        `Next: <strong>${nextTitle}</strong>`;
-      
-      modalButtonsContainer.innerHTML = `
-        <button class="modal-btn" id="next-level-btn">NEXT LEVEL</button>
-        <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
-      `;
-
-      modalBox.classList.remove("animate-pop");
-      void modalBox.offsetWidth;
-      modalBox.classList.add("animate-pop");
-      modalScreen.classList.remove("hidden");
-
-      document.getElementById("next-level-btn").addEventListener("click", () => {
-        modalScreen.classList.add("hidden");
-        currentLevelIdx = nextLevelIndex;
-        initLevel();
-      });
-
-      document.getElementById("menu-btn").addEventListener("click", () => {
-        showLevelSelectMenu();
-      });
-    }
-
-    function showGameOverScreen(title, desc, btnText, callback) {
-      modalTitle.textContent = title;
-      modalDesc.innerHTML = desc;
-      modalButtonsContainer.innerHTML = `
-        <button class="modal-btn" id="modal-action-btn">${btnText}</button>
-        <button class="modal-btn secondary" id="menu-btn">LEVEL SELECT</button>
-      `;
-
-      modalBox.classList.remove("animate-pop");
-      void modalBox.offsetWidth;
-      modalBox.classList.add("animate-pop");
-      modalScreen.classList.remove("hidden");
-
-      document.getElementById("modal-action-btn").addEventListener("click", () => {
-        modalScreen.classList.add("hidden");
-        callback();
-      });
-
-      document.getElementById("menu-btn").addEventListener("click", () => {
-        showLevelSelectMenu();
-      });
-    }
-
-    function showLevelSelectMenu() {
-      loadProgress();
-      modalTitle.textContent = "SELECT LEVEL";
-      modalDesc.textContent = "Choose unlocked level:";
-      
-      let gridHtml = '<div class="level-select-grid">';
-      levelConfigs.forEach((cfg, idx) => {
-        const isUnlocked = (idx + 1) <= maxUnlockedLevel;
-        const bestTime = getBestTime(idx);
-        const timeStr = bestTime !== null ? `<br><span style="font-size:0.55rem; color:#2b6777;">Best: ${bestTime}s</span>` : '';
-        gridHtml += `
-          <button class="level-sel-btn ${isUnlocked ? '' : 'locked'}" data-lvl="${idx}" ${isUnlocked ? '' : 'disabled'}>
-            <strong>Lvl ${cfg.level}</strong>
-            <span style="font-size:0.6rem; opacity:0.8;">${cfg.title}</span>
-            ${timeStr}
-          </button>
-        `;
-      });
-      gridHtml += '</div>';
-
-      modalButtonsContainer.innerHTML = gridHtml + `<button class="modal-btn secondary" id="back-start-btn" style="margin-top:6px;">BACK</button>`;
-
-      document.querySelectorAll(".level-sel-btn").forEach(btn => {
-        if (!btn.classList.contains("locked")) {
-          btn.addEventListener("click", (e) => {
-            const lvlIdx = parseInt(e.currentTarget.dataset.lvl, 10);
-            startGame(lvlIdx);
-          });
-        }
-      });
-
-      document.getElementById("back-start-btn").addEventListener("click", () => {
-        showStartScreen();
-      });
-    }
-
-    function showStartScreen() {
-      loadProgress();
-      modalTitle.textContent = "ANGRY TEACHER";
-      modalDesc.innerHTML = `Don't let the angry teacher explode — match the correct word!<br><br><strong>You have 25 seconds for each word.</strong>`;
-      modalButtonsContainer.innerHTML = `
-        <button class="modal-btn" id="modal-start-main-btn">START GAME</button>
-        <button class="modal-btn secondary" id="modal-levels-btn">SELECT LEVEL</button>
-      `;
-
-      document.getElementById("modal-start-main-btn").addEventListener("click", () => {
-        const startLvl = Math.min(maxUnlockedLevel - 1, levelConfigs.length - 1);
-        startGame(startLvl >= 0 ? startLvl : 0);
-      });
-
-      document.getElementById("modal-levels-btn").addEventListener("click", () => {
-        showLevelSelectMenu();
-      });
-
-      modalBox.classList.remove("animate-pop");
-      void modalBox.offsetWidth;
-      modalBox.classList.add("animate-pop");
-      modalScreen.classList.remove("hidden");
-    }
-
-    levelPillBtn.addEventListener("click", () => {
-      clearInterval(timerInterval);
-      clearInterval(levelTimerInterval);
-      modalBox.classList.remove("animate-pop");
-      void modalBox.offsetWidth;
-      modalBox.classList.add("animate-pop");
-      modalScreen.classList.remove("hidden");
-      showLevelSelectMenu();
-    });
-
-    loadProgress();
-    showStartScreen();
-
-    nextBtnEl.addEventListener("click", () => {
-      if (waitingForNext && !isGameOver) {
-        pickNextTarget();
-      }
-    });
-  </script>
+        window.onload = () => {
+            const game = new VocabSweeperGame();
+            game.startLevel(0);
+        };
+    </script>
 </body>
 </html>
