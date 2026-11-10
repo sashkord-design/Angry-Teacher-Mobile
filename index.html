@@ -410,7 +410,7 @@
       cursor: not-allowed;
     }
 
-    /* Стилі для повноекранного відеоплеєра вибуху */
+    /* Контейнер вибуху поверх усього, але під ним уже лежить вікно BOOM */
     #explosion-overlay {
       position: fixed;
       top: 0;
@@ -421,7 +421,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 2000;
+      z-index: 1500; /* Менше ніж у модального вікна (1000 + підкладка), але перекриває гру */
     }
 
     #explosion-video {
@@ -437,13 +437,8 @@
 </head>
 <body>
 
-  <!-- Оверлей для відео вибуху (з'являється при програші) -->
-  <div id="explosion-overlay" class="hidden">
-    <video id="explosion-video" src="video_1.mov" playsinline preload="auto"></video>
-  </div>
-
-  <!-- Стартове модальне вікно -->
-  <div class="modal-overlay" id="modal-screen">
+  <!-- Модальне вікно (теж відкривається під час вибуху на задньому плані, але ховається до кінця відео) -->
+  <div class="modal-overlay hidden" id="modal-screen">
     <div class="modal-box">
       <img src="teacher-face.png" alt="Angry Teacher" class="modal-avatar-img" />
       
@@ -458,6 +453,11 @@
         <button class="modal-btn" id="modal-start-main-btn">START GAME</button>
       </div>
     </div>
+  </div>
+
+  <!-- Відео вибуху поверх вікна, що зникає після завершення -->
+  <div id="explosion-overlay" class="hidden">
+    <video id="explosion-video" src="video_1.mov" playsinline preload="auto"></video>
   </div>
 
   <div id="app-container">
@@ -787,14 +787,17 @@
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // Показати відео вибуху зі звуком
+      // 1. Одразу готуємо та показуємо вікно BOOM у фоні (під відео)
+      showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
+
+      // 2. Вмикаємо повноекранне відео вибуху поверх вікна
       explosionOverlay.classList.remove("hidden");
       explosionVideo.currentTime = 0;
       
       const playPromise = explosionVideo.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // Якщо браузер заблокував автоплей зі звуком, одразу показуємо модалку
+          // Якщо браузер блокує автоплей, одразу ховаємо відео і показуємо вікно
           onExplosionEnded();
         });
       }
@@ -805,8 +808,8 @@
     }
 
     function onExplosionEnded() {
+      // Як тільки відео закінчилось — приховуємо його, залишаючи видимим вікно BOOM!
       explosionOverlay.classList.add("hidden");
-      showGameOverScreen("BOOM!", "💥 Your teacher exploded!", "RETRY LEVEL", () => startGame(currentLevelIdx));
     }
 
     function startGame(levelIdx = 0) {
