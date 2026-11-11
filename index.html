@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Підключаємо Howler.js для всіх аудіофайлів -->
+  <!-- Підключаємо Howler.js для аудіо -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
   <!-- Підключаємо бібліотеку для ефекту конфеті -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.min.js"></script>
@@ -694,14 +694,14 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
-    // Ініціалізуємо всі аудіо через Howler.js
+    // Ініціалізація Howler для всіх аудіофайлів
     const bellSound = new Howl({
       src: ['bell.mp3'],
       rate: 1.2,
       html5: false
     });
 
-    const fanfaresSound = new Howl({
+    const fanfareSound = new Howl({
       src: ['fanfares.mp3'],
       html5: false
     });
@@ -757,30 +757,21 @@
       } catch (e) {}
     }
 
-    // Функція запуску фанфар та ефекту конфеті для останньої правильної картки
+    // Запуск фанфар та ефекту конфеті
     function playFanfaresAndConfetti() {
       try {
-        fanfaresSound.play();
+        fanfareSound.play();
       } catch (e) {}
 
-      // Запуск ефекту конфеті (салют з кількох сторін)
-      const duration = 2.5 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
-
-      const interval = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) {
-          return clearInterval(interval);
-        }
-        const particleCount = 50 * (timeLeft / duration);
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-      }, 250);
-    }
-
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min;
+      // Ефект конфеті (салют)
+      try {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          zIndex: 2000
+        });
+      } catch (e) {}
     }
 
     function initVoices() {
@@ -969,14 +960,14 @@
         score++;
         updateProgress();
 
-        // Перевіряємо, чи це остання правильна картка на рівні (progress стає 9/9)
-        const remainingUnmatchedBefore = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
-        const isLastCard = remainingUnmatchedBefore.length === 1;
+        // Перевіряємо, чи це остання картка на рівні
+        const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
+        const isLastCard = remainingUnmatched.length === 1;
 
         if (isLastCard) {
           playFanfaresAndConfetti(); // Запускаємо фанфари та конфеті для останньої картки
         } else {
-          playSuccessSound(); // Звичайний дзвіночок для звичайних карток
+          playSuccessSound(); // Звичайний дзвіночок
         }
         
         setTimeout(() => {
@@ -989,8 +980,8 @@
           cardNode.classList.remove("highlighted");
           cardNode.classList.add("flipped", "matched");
 
-          const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
-          if (remainingUnmatched.length === 0) {
+          const remainingCheck = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
+          if (remainingCheck.length === 0) {
             setTimeout(() => {
               clearInterval(timerInterval);
               clearInterval(levelTimerInterval);
