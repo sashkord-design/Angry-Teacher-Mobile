@@ -658,7 +658,7 @@
         { word: "Guarantee", entries: [{ def: "A formal promise that certain conditions will be met", example: "The store offers a two-year product guarantee." }, { def: "To provide assurance against defects", example: "Manufacturers guarantee high quality standards." }] },
         { word: "Integrate", entries: [{ def: "To combine two or more things to form a unified whole", example: "They plan to integrate new tech into the system." }, { def: "To blend into a community seamlessly", example: "New immigrants integrate quickly through work." }] },
         { word: "Persevere", entries: [{ def: "To continue a course of action despite difficulties", example: "If you persevere, you will overcome any obstacle." }, { def: "To maintain steadfast effort in pursuits", example: "Researchers persevere despite failed tests." }] },
-        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Mobile devices are prevalent everywhere today." }, { def: "Dominant in occurrence across society", example: "Remote work models are increasingly prevalent." }] },
+        { word: "Prevalent", entries: [{ def: "Widespread or commonly accepted in a place or time", example: "Smartphones are prevalent everywhere today." }, { def: "Dominant in occurrence across society", example: "Remote work models are increasingly prevalent." }] },
         { word: "Ambiguous", entries: [{ def: "Open to more than one interpretation; unclear", example: "His ambiguous reply left us in deep doubt." }, { def: "Lacking specific definition or clarity", example: "The contract clauses were legally ambiguous." }] },
         { word: "Benevolent", entries: [{ def: "Well meaning and kindly; charitable in nature", example: "She was a benevolent founder of the clinic." }, { def: "Marked by disposition to do good", example: "The billionaire established benevolent trusts." }] },
         { word: "Candid", entries: [{ def: "Truthful and straightforward; frank in expression", example: "He gave a candid interview about past mistakes." }, { def: "Unposed and natural in photography", example: "The photographer captured candid street smiles." }] },
@@ -690,9 +690,8 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
-    // Підключаємо ваш файл Bell.MP3 з репозиторію та прискорюємо на 20%
-const successSound = new Audio('bell.mp3');
-successSound.playbackRate = 1.2;
+    const successSound = new Audio('Bell.MP3');
+    successSound.playbackRate = 1.2;
 
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
@@ -925,7 +924,7 @@ successSound.playbackRate = 1.2;
       if (waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        playSuccessSound();
+        playSuccessSound(); // Дзвіночок лунає миттєво
         clearInterval(timerInterval);
         waitingForNext = true;
         
@@ -933,7 +932,10 @@ successSound.playbackRate = 1.2;
         score++;
         updateProgress();
         
-        speakWord(item.word);
+        // Розводимо звуки в часі: озвучка слова починається через 250 мс після дзвіночка
+        setTimeout(() => {
+          speakWord(item.word);
+        }, 250);
 
         nextBtnEl.classList.remove("disabled");
 
