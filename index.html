@@ -687,9 +687,12 @@
     let levelSecondsElapsed = 0;
     let isGameOver = false;
     let waitingForNext = false;
-    let audioCtx = null;
     let preferredVoice = null;
     let currentCardsPool = [];
+
+    // Підключаємо ваш файл Bell.MP3 з репозиторію та прискорюємо на 20%
+    const successSound = new Audio('Bell.MP3');
+    successSound.playbackRate = 1.2;
 
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
@@ -736,42 +739,10 @@
       return false;
     }
 
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
-
-    // Синтезований дзвіночок успішної відповіді (працює завжди без файлів і затримок)
     function playSuccessSound() {
       try {
-        initAudio();
-        const now = audioCtx.currentTime;
-        const osc1 = audioCtx.createOscillator();
-        const osc2 = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc1.type = 'sine';
-        osc2.type = 'triangle';
-
-        // Дзвінкі високі ноти прискорені на 20%
-        osc1.frequency.setValueAtTime(1580.0, now); 
-        osc2.frequency.setValueAtTime(2370.0, now);
-
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
-
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + 0.45);
-        osc2.stop(now + 0.45);
+        successSound.currentTime = 0;
+        successSound.play().catch(e => {});
       } catch (e) {}
     }
 
@@ -850,7 +821,6 @@
     }
 
     function startGame(levelIdx = 0) {
-      initAudio();
       currentLevelIdx = levelIdx;
       isGameOver = false;
       modalScreen.classList.add("hidden");
