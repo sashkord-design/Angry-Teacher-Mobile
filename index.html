@@ -8,8 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Підключаємо Howler.js через CDN для ідеальної роботи звуку -->
+  <!-- Підключаємо Howler.js для всіх аудіофайлів -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <!-- Підключаємо бібліотеку для ефекту конфеті -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.min.js"></script>
   <style>
     :root {
       --bg-color: #f7f3e9;
@@ -692,11 +694,16 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
-    // Ініціалізуємо звук через Howler.js (з попереднім завантаженням та прискоренням)
+    // Ініціалізуємо всі аудіо через Howler.js
     const bellSound = new Howl({
       src: ['bell.mp3'],
       rate: 1.2,
-      html5: false // Використовує Web Audio API для миттєвого відтворення без затримок
+      html5: false
+    });
+
+    const fanfaresSound = new Howl({
+      src: ['fanfares.mp3'],
+      html5: false
     });
 
     const gridEl = document.getElementById("cards-grid");
@@ -746,8 +753,34 @@
 
     function playSuccessSound() {
       try {
-        bellSound.play(); // Howler легко грає звук паралельно при кожному кліку
+        bellSound.play();
       } catch (e) {}
+    }
+
+    // Функція запуску фанфар та ефекту конфеті для останньої правильної картки
+    function playFanfaresAndConfetti() {
+      try {
+        fanfaresSound.play();
+      } catch (e) {}
+
+      // Запуск ефекту конфеті (салют з кількох сторін)
+      const duration = 2.5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
+    }
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
     }
 
     function initVoices() {
@@ -929,15 +962,23 @@
       if (waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        playSuccessSound(); // Дзвіночок лунає ідеально через Howler
         clearInterval(timerInterval);
         waitingForNext = true;
         
         cardNode.classList.add("highlighted");
         score++;
         updateProgress();
+
+        // Перевіряємо, чи це остання правильна картка на рівні (progress стає 9/9)
+        const remainingUnmatchedBefore = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
+        const isLastCard = remainingUnmatchedBefore.length === 1;
+
+        if (isLastCard) {
+          playFanfaresAndConfetti(); // Запускаємо фанфари та конфеті для останньої картки
+        } else {
+          playSuccessSound(); // Звичайний дзвіночок для звичайних карток
+        }
         
-        // Голос стартує через 250 мс без перекриття звуків
         setTimeout(() => {
           speakWord(item.word);
         }, 250);
