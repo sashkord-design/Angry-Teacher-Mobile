@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Outfit:wght@400;500;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Підключаємо Howler.js через CDN для ідеальної роботи звуку -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
   <style>
     :root {
       --bg-color: #f7f3e9;
@@ -690,6 +692,13 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
+    // Ініціалізуємо звук через Howler.js (з попереднім завантаженням та прискоренням)
+    const bellSound = new Howl({
+      src: ['bell.mp3'],
+      rate: 1.2,
+      html5: false // Використовує Web Audio API для миттєвого відтворення без затримок
+    });
+
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
     const levelNumEl = document.getElementById("level-num");
@@ -735,12 +744,9 @@
       return false;
     }
 
-    // Створюємо новий незалежний аудіо-потік щоразу для ідеального відтворення без накладання
     function playSuccessSound() {
       try {
-        const sound = new Audio('bell.mp3');
-        sound.playbackRate = 1.2;
-        sound.play().catch(e => {});
+        bellSound.play(); // Howler легко грає звук паралельно при кожному кліку
       } catch (e) {}
     }
 
@@ -923,7 +929,7 @@
       if (waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        playSuccessSound(); // Миттєво лунає дзвіночок без перекриття
+        playSuccessSound(); // Дзвіночок лунає ідеально через Howler
         clearInterval(timerInterval);
         waitingForNext = true;
         
@@ -931,7 +937,7 @@
         score++;
         updateProgress();
         
-        // Голос озвучки стартує через 250 мс, не перекриваючи дзвіночок
+        // Голос стартує через 250 мс без перекриття звуків
         setTimeout(() => {
           speakWord(item.word);
         }, 250);
