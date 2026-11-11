@@ -690,7 +690,8 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
-    const successSound = new Audio('Bell.MP3');
+    // Підключаємо ваш файл bell.mp3 з репозиторію та прискорюємо на 20%
+    const successSound = new Audio('bell.mp3');
     successSound.playbackRate = 1.2;
 
     const gridEl = document.getElementById("cards-grid");
