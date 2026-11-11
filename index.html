@@ -66,6 +66,7 @@
       align-items: center;
       justify-content: space-between;
       height: 42px;
+      transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
 
     .teacher-badge {
@@ -172,6 +173,7 @@
       justify-content: space-between;
       gap: 8px;
       min-height: 68px;
+      transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
 
     .definition-text {
@@ -240,7 +242,7 @@
       perspective: 1000px;
       height: 82px;
       cursor: pointer;
-      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+      transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
 
     .card-inner {
@@ -329,21 +331,31 @@
       opacity: 0.8;
     }
 
-    /* Анімація розльоту карток на шматки при вибуху */
-    .cards-grid.shattered .card {
+    /* Ефект розльоту всього інтерфейсу при вибуху (більш плавний, 0.75с) */
+    body.shattered .header-panel {
+      transform: translateY(-160px) rotate(-15deg) scale(0.6);
+      opacity: 0;
+    }
+
+    body.shattered .definition-card {
+      transform: translateY(-100px) rotate(20deg) scale(0.5);
+      opacity: 0;
+    }
+
+    body.shattered .cards-grid .card {
       pointer-events: none;
       opacity: 0;
     }
 
-    .cards-grid.shattered .card:nth-child(1) { transform: translate(-140px, -140px) rotate(-120deg) scale(0.3); }
-    .cards-grid.shattered .card:nth-child(2) { transform: translate(0px, -180px) rotate(90deg) scale(0.2); }
-    .cards-grid.shattered .card:nth-child(3) { transform: translate(150px, -130px) rotate(140deg) scale(0.4); }
-    .cards-grid.shattered .card:nth-child(4) { transform: translate(-180px, 0px) rotate(-80deg) scale(0.3); }
-    .cards-grid.shattered .card:nth-child(5) { transform: translate(0px, 0px) rotate(360deg) scale(0); }
-    .cards-grid.shattered .card:nth-child(6) { transform: translate(170px, 10px) rotate(110deg) scale(0.3); }
-    .cards-grid.shattered .card:nth-child(7) { transform: translate(-130px, 150px) rotate(-160deg) scale(0.2); }
-    .cards-grid.shattered .card:nth-child(8) { transform: translate(20px, 190px) rotate(-70deg) scale(0.3); }
-    .cards-grid.shattered .card:nth-child(9) { transform: translate(140px, 160px) rotate(150deg) scale(0.2); }
+    body.shattered .cards-grid .card:nth-child(1) { transform: translate(-140px, -140px) rotate(-120deg) scale(0.3); }
+    body.shattered .cards-grid .card:nth-child(2) { transform: translate(0px, -180px) rotate(90deg) scale(0.2); }
+    body.shattered .cards-grid .card:nth-child(3) { transform: translate(150px, -130px) rotate(140deg) scale(0.4); }
+    body.shattered .cards-grid .card:nth-child(4) { transform: translate(-180px, 0px) rotate(-80deg) scale(0.3); }
+    body.shattered .cards-grid .card:nth-child(5) { transform: translate(0px, 50px) rotate(360deg) scale(0); }
+    body.shattered .cards-grid .card:nth-child(6) { transform: translate(170px, 10px) rotate(110deg) scale(0.3); }
+    body.shattered .cards-grid .card:nth-child(7) { transform: translate(-130px, 150px) rotate(-160deg) scale(0.2); }
+    body.shattered .cards-grid .card:nth-child(8) { transform: translate(20px, 190px) rotate(-70deg) scale(0.3); }
+    body.shattered .cards-grid .card:nth-child(9) { transform: translate(140px, 160px) rotate(150deg) scale(0.2); }
 
     .modal-overlay {
       position: fixed;
@@ -776,18 +788,16 @@
       } catch (e) {}
     }
 
-    // Запуск фанфар та дрібного конфеті тривалістю 2 секунди
     function playFanfaresAndConfetti() {
       try {
         fanfareSound.play();
       } catch (e) {}
 
       if (typeof confetti === 'function') {
-        const duration = 2000; // 2 секунди
+        const duration = 2000;
         const end = Date.now() + duration;
 
         (function frame() {
-          // Дрібне конфеті (scalar: 0.65) з лівого та правого боків
           confetti({
             particleCount: 3,
             angle: 60,
@@ -856,36 +866,34 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // Ефект вибуху з розльотом карток у різні боки
+    // Одночасний запуск розльоту плашок/карток та відеовибуху
     function triggerGameOverSequence() {
       if (isGameOver) return;
       isGameOver = true;
       clearInterval(timerInterval);
       clearInterval(levelTimerInterval);
 
-      // 1. Анімація розльоту карток
-      gridEl.classList.add("shattered");
+      // 1. Запускаємо розліт всього інтерфейсу
+      document.body.classList.add("shattered");
 
-      // 2. Через 400 мс вмикаємо відео вибуху
-      setTimeout(() => {
-        explosionOverlay.classList.remove("hidden");
-        explosionVideo.currentTime = 0;
-        explosionVideo.muted = false;
+      // 2. Одночасно стартуємо відеовибух
+      explosionOverlay.classList.remove("hidden");
+      explosionVideo.currentTime = 0;
+      explosionVideo.muted = false;
 
-        const playPromise = explosionVideo.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            explosionVideo.muted = true;
-            explosionVideo.play().catch(() => {
-              onExplosionEnded();
-            });
+      const playPromise = explosionVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          explosionVideo.muted = true;
+          explosionVideo.play().catch(() => {
+            onExplosionEnded();
           });
-        }
+        });
+      }
 
-        explosionVideo.onended = () => {
-          onExplosionEnded();
-        };
-      }, 400);
+      explosionVideo.onended = () => {
+        onExplosionEnded();
+      };
     }
 
     function onExplosionEnded() {
@@ -905,7 +913,7 @@
       isGameOver = false;
       waitingForNext = false;
       
-      gridEl.classList.remove("shattered");
+      document.body.classList.remove("shattered");
       explosionVideo.pause();
       explosionVideo.currentTime = 0;
       explosionVideo.onended = null;
@@ -1006,7 +1014,6 @@
         score++;
         updateProgress();
 
-        // Перевіряємо, чи це остання картка рівню
         const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
         const isLastCard = remainingUnmatched.length === 1;
 
