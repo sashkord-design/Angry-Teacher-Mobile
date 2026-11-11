@@ -690,10 +690,6 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
-    // Підключаємо ваш файл bell.mp3 з репозиторію та прискорюємо на 20%
-    const successSound = new Audio('bell.mp3');
-    successSound.playbackRate = 1.2;
-
     const gridEl = document.getElementById("cards-grid");
     const defTextEl = document.getElementById("def-text");
     const levelNumEl = document.getElementById("level-num");
@@ -739,10 +735,12 @@
       return false;
     }
 
+    // Створюємо новий незалежний аудіо-потік щоразу для ідеального відтворення без накладання
     function playSuccessSound() {
       try {
-        successSound.currentTime = 0;
-        successSound.play().catch(e => {});
+        const sound = new Audio('bell.mp3');
+        sound.playbackRate = 1.2;
+        sound.play().catch(e => {});
       } catch (e) {}
     }
 
@@ -925,7 +923,7 @@
       if (waitingForNext) return;
 
       if (item.word === targetItem.word) {
-        playSuccessSound(); // Дзвіночок лунає миттєво
+        playSuccessSound(); // Миттєво лунає дзвіночок без перекриття
         clearInterval(timerInterval);
         waitingForNext = true;
         
@@ -933,7 +931,7 @@
         score++;
         updateProgress();
         
-        // Розводимо звуки в часі: озвучка слова починається через 250 мс після дзвіночка
+        // Голос озвучки стартує через 250 мс, не перекриваючи дзвіночок
         setTimeout(() => {
           speakWord(item.word);
         }, 250);
