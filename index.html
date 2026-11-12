@@ -219,17 +219,18 @@
       font-style: italic;
     }
 
+    /* Крок 1: Ідентичний фіксований розмір для таймера та кнопки next */
     .timer-badge, .next-btn {
       background: var(--accent-gold);
       color: var(--border-dark);
       border: 2px solid var(--border-dark);
       border-radius: 8px;
-      padding: 2px 6px;
+      padding: 0;
       font-family: var(--font-heading);
       font-size: 0.75rem;
       white-space: nowrap;
       box-shadow: 0 1.5px 0 var(--border-dark);
-      min-width: 42px;
+      width: 48px;
       height: 30px;
       display: flex;
       flex-direction: column;
@@ -249,13 +250,14 @@
       pointer-events: none;
     }
 
-    /* Збільшений текст next без збільшення рамки */
+    /* Крок 1: Трохи зменшене слово next для ідеального вписування */
     .next-label {
       font-family: var(--font-heading);
-      font-size: 0.72rem;
+      font-size: 0.62rem;
       font-weight: 700;
       text-transform: uppercase;
       line-height: 1;
+      letter-spacing: 0.2px;
     }
 
     .cards-grid {
@@ -267,7 +269,7 @@
       position: relative;
     }
 
-    /* Квадратні картки з рівними сторонами через aspect-ratio */
+    /* Квадратні картки з рівними сторонами */
     .card {
       perspective: 1000px;
       aspect-ratio: 1 / 1;
@@ -301,13 +303,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 3px 5px;
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
     .card-front {
       background-color: var(--card-bg);
       color: var(--border-dark);
+      padding: 3px 5px;
     }
 
     .card-word {
@@ -318,23 +320,25 @@
       width: 100%;
     }
 
+    /* Крок 2: Мінімальні внутрішні відступи до краю картки */
     .card-back {
       background-color: var(--card-back-bg);
       color: #ffffff;
       transform: rotateY(180deg);
       border-color: var(--border-dark);
-      padding: 4px 6px;
+      padding: 2px 3px;
     }
 
-    /* До 5 рядків тексту без лапок, оптимізований шрифт для вміщення довгих речень */
+    /* Крок 2: Повернуто більший розмір шрифту (0.64rem) на 5 рядків */
     .card-back-text {
-      font-size: 0.58rem;
-      line-height: 1.15;
+      font-size: 0.64rem;
+      line-height: 1.16;
       font-weight: 500;
       display: -webkit-box;
       -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      word-break: break-word;
     }
 
     .card.highlighted .card-front {
