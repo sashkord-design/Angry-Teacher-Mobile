@@ -161,7 +161,7 @@
       margin-top: 1px;
     }
 
-    /* Вузька утилітарна панель з таймером, новими міні-логотипами та стрілкою */
+    /* Вузька утилітарна панель з таймером, міні-логотипами та стрілкою */
     .utility-panel {
       background: #f7f3e9;
       border: 2.5px solid var(--border-dark);
@@ -771,6 +771,7 @@
 
     const bellSound = new Howl({ src: ['bell.mp3'], rate: 1.2, html5: false });
     const wrongSound = new Howl({ src: ['wrong.mp3'], html5: false });
+    const bonusSound = new Howl({ src: ['bonus.mp3'], html5: false });
     const fanfareSound = new Howl({ src: ['fanfares.mp3'], html5: false });
 
     const gridEl = document.getElementById("cards-grid");
@@ -842,6 +843,10 @@
 
     function playWrongSound() {
       try { wrongSound.play(); } catch (e) {}
+    }
+
+    function playBonusSound() {
+      try { bonusSound.play(); } catch (e) {}
     }
 
     function playFanfaresAndConfetti() {
@@ -1044,11 +1049,13 @@
         correctStreak++;
         updateProgress();
 
+        let earnedBonus = false;
         if (correctStreak >= 5 && freePasses < 3) {
           freePasses++;
           correctStreak = 0;
           localStorage.setItem("angryTeacherFreePasses", freePasses);
           updatePassesUI();
+          earnedBonus = true;
         }
 
         const remainingUnmatched = Array.from(gridEl.children).filter(c => !c.classList.contains("matched"));
@@ -1060,7 +1067,19 @@
           playSuccessSound();
         }
         
-        setTimeout(() => { speakWord(item.word); }, 250);
+        // Логіка відтворення звуку бонусу та подальшої озвучки слова
+        setTimeout(() => {
+          if (earnedBonus) {
+            playBonusSound();
+            // Даємо невелику паузу (наприклад, 600мс) для бонусного звуку перед озвучкою слова
+            setTimeout(() => {
+              speakWord(item.word);
+            }, 600);
+          } else {
+            speakWord(item.word);
+          }
+        }, 250);
+
         nextBtnEl.classList.remove("disabled");
 
         setTimeout(() => {
