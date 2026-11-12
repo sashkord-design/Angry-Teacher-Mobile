@@ -161,7 +161,7 @@
       margin-top: 1px;
     }
 
-    /* Вузька утилітарна панель з таймером, міні-логотипами та стрілкою */
+    /* Утилітарна панель з таймером, міні-логотипами та стрілкою */
     .utility-panel {
       background: #f7f3e9;
       border: 2.5px solid var(--border-dark);
@@ -262,18 +262,20 @@
       line-height: 1;
     }
 
+    /* Крок 1: Зменшено простір між картками з 6px до 4px */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      gap: 6px;
+      gap: 4px;
       width: 100%;
       position: relative;
     }
 
+    /* Крок 1: Збільшено висоту карток з 82px до 94px */
     .card {
       perspective: 1000px;
-      height: 82px;
+      height: 94px;
       cursor: pointer;
       transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
@@ -328,12 +330,13 @@
       padding: 3px 6px;
     }
 
+    /* Крок 2 та 3: Без лапок, збільшено кількість рядків до 5 та трохи зменшено шрифт для кращого вміщення */
     .card-back-text {
-      font-size: 0.64rem;
-      line-height: 1.2;
+      font-size: 0.60rem;
+      line-height: 1.15;
       font-weight: 500;
       display: -webkit-box;
-      -webkit-line-clamp: 4;
+      -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -580,7 +583,7 @@
       </div>
     </div>
 
-    <!-- Вузька утилітарна панель з таймером, міні-логотипами та стрілкою -->
+    <!-- Утилітарна панель з таймером, міні-логотипами та стрілкою -->
     <div class="utility-panel">
       <div class="timer-badge" id="timer">25s</div>
       <div class="passes-container" id="passes-container">
@@ -1004,7 +1007,7 @@
               <div class="card-word">${item.word}</div>
             </div>
             <div class="card-back">
-              <div class="card-back-text">"${item.example}"</div>
+              <div class="card-back-text">${item.example}</div>
             </div>
           </div>
         `;
@@ -1067,11 +1070,9 @@
           playSuccessSound();
         }
         
-        // Логіка відтворення звуку бонусу та подальшої озвучки слова
         setTimeout(() => {
           if (earnedBonus) {
             playBonusSound();
-            // Даємо невелику паузу (наприклад, 600мс) для бонусного звуку перед озвучкою слова
             setTimeout(() => {
               speakWord(item.word);
             }, 600);
