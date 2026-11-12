@@ -161,7 +161,7 @@
       margin-top: 1px;
     }
 
-    /* Вузька панель для таймера, зірочок та кнопки NEXT */
+    /* Вузька утилітарна панель з таймером, зірочками та стрілкою */
     .utility-panel {
       background: #f7f3e9;
       border: 2.5px solid var(--border-dark);
@@ -755,8 +755,8 @@
     let currentLevelIdx = 0;
     let maxUnlockedLevel = 1;
     let score = 0;
-    let correctStreak = 0; // Лічильник для нарахування зірочок за серію правильних відповідей
-    let freePasses = 0;   // Кількість активних зірочок (максимум 3)
+    let correctStreak = 0;
+    let freePasses = 0;
     let targetItem = null;
     let timerInterval = null;
     let levelTimerInterval = null;
@@ -767,8 +767,9 @@
     let preferredVoice = null;
     let currentCardsPool = [];
 
-    // Звуки
+    // Звуки через Howler.js (bell.mp3 та новий wrong.mp3)
     const bellSound = new Howl({ src: ['bell.mp3'], rate: 1.2, html5: false });
+    const wrongSound = new Howl({ src: ['wrong.mp3'], html5: false });
     const fanfareSound = new Howl({ src: ['fanfares.mp3'], html5: false });
 
     const gridEl = document.getElementById("cards-grid");
@@ -807,7 +808,6 @@
         maxUnlockedLevel = nextLvlNum;
         localStorage.setItem("angryTeacherMaxLevel", maxUnlockedLevel);
       }
-      // Додаємо +1 зірочку за успішне проходження рівня (якщо менше 3)
       if (freePasses < 3) {
         freePasses++;
         localStorage.setItem("angryTeacherFreePasses", freePasses);
@@ -837,6 +837,10 @@
 
     function playSuccessSound() {
       try { bellSound.play(); } catch (e) {}
+    }
+
+    function playWrongSound() {
+      try { wrongSound.play(); } catch (e) {}
     }
 
     function playFanfaresAndConfetti() {
@@ -892,21 +896,17 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // Обробка помилки з урахуванням зірочок (Free Pass)
     function handleMistakeOrTimeout() {
       if (freePasses > 0) {
-        // Витрачаємо 1 зірочку і рятуємо гравця від вибуху
         freePasses--;
         localStorage.setItem("angryTeacherFreePasses", freePasses);
         updateStarsUI();
 
-        // Скидаємо таймер і дозволяємо продовжити
         waitingForNext = false;
         resetTimer();
         return;
       }
 
-      // Якщо зірочок немає — повноцінний вибух
       triggerGameOverSequence();
     }
 
@@ -962,7 +962,7 @@
       levelTitleSubEl.textContent = config.title;
       score = 0;
       updateProgress();
-      loadProgress(); // Оновлюємо стан зірочок
+      loadProgress();
 
       levelSecondsElapsed = 0;
       clearInterval(levelTimerInterval);
@@ -1043,7 +1043,6 @@
         correctStreak++;
         updateProgress();
 
-        // Нарахування зірочки за кожні 5 правильних відповідей поспіль (якщо ще немає 3)
         if (correctStreak >= 5 && freePasses < 3) {
           freePasses++;
           correctStreak = 0;
@@ -1085,6 +1084,8 @@
         }, 1500);
 
       } else {
+        // Неправильний вибір: синхронно запускаємо звук та анімацію тремтіння/почервоніння
+        playWrongSound();
         cardNode.classList.add("error-wrong");
         waitingForNext = true;
         clearInterval(timerInterval);
@@ -1109,6 +1110,7 @@
         timeLeft--;
         timerEl.textContent = `${timeLeft}s`;
         if (timeLeft <= 0) {
+          playWrongSound(); // Звук помилки також при вичерпанні часу
           handleMistakeOrTimeout();
         }
       }, 1000);
