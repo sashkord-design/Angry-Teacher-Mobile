@@ -82,9 +82,10 @@
       flex-shrink: 0;
     }
 
+    /* Компактніший розмір аватарки для модалки, щоб гарантовано вміщатися */
     .modal-avatar-img {
-      width: 115px;
-      height: 115px;
+      width: 85px;
+      height: 85px;
       object-fit: contain;
       flex-shrink: 0;
     }
@@ -161,7 +162,6 @@
       margin-top: 1px;
     }
 
-    /* Утилітарна панель з таймером, міні-логотипами та кнопкою next */
     .utility-panel {
       background: #f7f3e9;
       border: 2.5px solid var(--border-dark);
@@ -195,7 +195,6 @@
       transform: scale(1.1);
     }
 
-    /* Панель опису слова */
     .definition-card {
       background: var(--primary-teal);
       border: 3px solid var(--border-dark);
@@ -404,7 +403,8 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 16px;
+      padding: 10px;
+      overflow-y: auto;
     }
 
     @keyframes popIn {
@@ -412,21 +412,23 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
+    /* Зменшено внутрішні відступи та міжрядковий інтервал, щоб вікно ідеально вміщалося на будь-якому екрані */
     .modal-box {
       background: var(--bg-color);
       border: 4px solid var(--border-dark);
       border-radius: 20px;
-      padding: 20px 18px;
+      padding: 12px 14px;
       width: 100%;
-      max-width: 340px;
+      max-width: 330px;
       text-align: center;
       box-shadow: 0 6px 0 var(--border-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      max-height: 90vh;
+      gap: 8px;
+      max-height: 94vh;
       overflow-y: auto;
+      margin: auto;
     }
 
     .animate-pop {
@@ -435,16 +437,16 @@
 
     .modal-title {
       font-family: var(--font-heading);
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: var(--accent-red);
       text-transform: uppercase;
       line-height: 1.1;
     }
 
     .modal-desc {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      line-height: 1.4;
+      line-height: 1.35;
       color: var(--dark-text);
     }
 
@@ -453,9 +455,9 @@
       color: var(--border-dark);
       border: 3px solid var(--border-dark);
       border-radius: 12px;
-      padding: 9px 16px;
+      padding: 8px 14px;
       font-family: var(--font-heading);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 0 3px 0 var(--border-dark);
@@ -542,7 +544,7 @@
         Guess 5 words – get 1 forgiveness for a mistake.<br><br>
         <strong>You have 25 seconds for each word.</strong>
       </div>
-      <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+      <div id="modal-buttons-container" style="width: 100%; display: flex; flex-direction: column; gap: 6px;">
         <button class="modal-btn" id="modal-start-main-btn">START GAME</button>
         <button class="modal-btn secondary" id="modal-levels-btn">SELECT LEVEL</button>
       </div>
