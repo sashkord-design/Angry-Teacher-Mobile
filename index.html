@@ -65,27 +65,31 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 42px;
+      height: 46px;
+      overflow: hidden;
       transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
 
     .teacher-badge {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
     .teacher-avatar-img {
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       object-fit: contain;
+      transform: scale(1.25);
       flex-shrink: 0;
     }
 
     .modal-avatar-img {
-      width: 85px;
-      height: 85px;
+      width: 115px;
+      height: 115px;
       object-fit: contain;
+      transform: scale(1.2);
+      margin: 4px 0;
       flex-shrink: 0;
     }
 
@@ -170,28 +174,30 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 40px;
+      height: 44px;
+      overflow: hidden;
       transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
     }
 
     .passes-container {
       display: flex;
-      gap: 5px;
+      gap: 6px;
       align-items: center;
       justify-content: center;
     }
 
     .pass-icon-img {
-      width: 22px;
-      height: 22px;
+      width: 30px;
+      height: 30px;
       object-fit: contain;
       opacity: 0.25;
+      transform: scale(1.25);
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .pass-icon-img.active {
       opacity: 1;
-      transform: scale(1.1);
+      transform: scale(1.35);
     }
 
     .definition-card {
